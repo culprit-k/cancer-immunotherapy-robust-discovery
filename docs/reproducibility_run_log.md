@@ -197,11 +197,13 @@ This pins the file for reproducible future loading. It does not verify exact coh
 
 ### Completed archive and panel audit
 
-- Successful final structural audit: [GitHub Actions run 40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869), commit `15b3516f67b815b8f17a2d1d0ddc90d6e912f7e6`.
+- Successful enhanced archive and sampled-TIFF audit: [GitHub Actions run 40214428382](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382), commit `a13476ac1d7ddf4d663d8ce9d3afcdaf55049bbc`.
 - Archive size 1,541,132,381 bytes equals Zenodo metadata; published MD5 `a842fa253ac2f0eda3cbf4d41e1b0ec1` matched; downloaded SHA-256 `8d09d946659164bb2275468ca4ad3239819b2036af83e63ab7b586ddbfc47f72`.
 - ZIP inventory: 325 entries (324 TIFFs and one CSV). The actual panel is `DiscoveryCohort_panel.csv`, 42 rows, columns `Channel`, `MetalTag`, `Target`.
+- The image, cell-mask and stroma-mask directories each contain 108 TIFFs. Twelve evenly spaced image stacks were readable; sample stack dtype is `float32`, 42 pages/channels match the panel, and representative shapes include `(42, 1300, 1300)` and `(42, 1500, 1500)`.
+- Pixel summaries were taken from first/middle/last pages of the 12 sampled image stacks; all 42 pages were read for three representative ROIs (126 planes). Sampled pixel values were finite and within `[0,1]` (min 0.0, max 1.0). For the three representative ROIs, cell and stroma mask spatial dimensions matched (3/3 per mask directory); sampled masks are `uint16`. This is deterministic sparse sampling, not an exhaustive full-pixel scan.
 - Structural QC passed: required columns present, no blank required cells, no duplicated channel/metal-tag/target values, and channel numbers 1–42 are numeric and contiguous.
-- Metadata-only artifact ID `12606106783`, SHA-256 digest `302d7a0bc55bbb32748185f97fa6e6b2110964dd56e7ec901371fc839bc452a3`; raw TIFFs/masks were not published as workflow artifacts or committed.
+- Metadata-only artifact ID `12607480794`, SHA-256 digest `40cbe02a0e40939354bd1acacba177303321cee934b146f23de23fbc6502d282`; raw TIFFs/masks were not published as workflow artifacts or committed.
 - Direct Zenodo API metadata reported `cc-by-4.0` for both records. The 42-patient ICI image archive was not downloaded.
 
 ### Preprocessing decision — resolved as a NO-GO for direct inference

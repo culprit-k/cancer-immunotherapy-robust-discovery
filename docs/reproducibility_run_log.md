@@ -138,3 +138,9 @@
 - Inspected the GitHub Actions failure at commit `612acf98c486423be2df1bd3f4a72beb5da728b7`. The tests did not reveal a logic failure; four tests errored because the workflow's “minimal test dependencies” omitted **SciPy**, which pandas' Spearman correlation implementation imports at runtime (`ModuleNotFoundError: No module named 'scipy'`).
 - Fixed `.github/workflows/tests.yml` to install `scipy` explicitly (commit `a04fcc072386f5fc7cd1ffda78238e1ed1a482a7`). The subsequent hosted GitHub Actions run **passed: 19 passed in 1.13 seconds**: https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40196134743.
 - Later commits in this decision pass changed documentation, CSV/YAML templates and audit notes, not Python analysis/test source. Follow-up Actions runs are triggered for the latest documentation commits; check the current run before treating the latest HEAD as CI-green.
+
+
+## 25 October 2026 — checkpoint pinning workflow added
+
+- Added `scripts/resolve_virtues_imc14_checkpoint.py` and `.github/workflows/resolve_virtues_imc14_checkpoint.yml`. The workflow downloads the official `virtues-imc14/model.safetensors` at the resolved immutable Hugging Face repository revision, computes SHA-256 and file size, and uploads only a JSON provenance manifest; the weights are not committed to GitHub.
+- Workflow run was triggered on commit `d926c2d354ded6f95ba9b14d2b2115cf41115953`; final run outcome and actual hash are pending at the time of this note. Do not replace the revision/hash placeholder until the manifest is retrieved and checked.

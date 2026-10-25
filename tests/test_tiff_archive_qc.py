@@ -20,7 +20,7 @@ def test_summarize_array_reports_normalized_range_and_zero_fraction():
 
 
 def test_summarize_array_flags_values_outside_zero_one():
-    result = summarize_array(np.array([[-1, 0, 2, 65535]], dtype=np.uint16))
+    result = summarize_array(np.array([[-1, 0, 2, 65535]], dtype=np.int32))
     assert result["min"] == 0
     assert result["max"] == 65535
     assert result["fraction_above_one"] == pytest.approx(0.5)

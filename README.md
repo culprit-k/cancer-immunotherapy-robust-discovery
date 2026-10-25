@@ -1,6 +1,6 @@
 # Cancer Immunotherapy AI: Robust Target Discovery
 
-**Project status (25 October 2026): cohort and checkpoint candidates selected; HCC discovery archive integrity verified and marker panel inspected; inference has not started. Conditional GO for a narrow feasibility pilot. Novelty is not established.**
+**Project status (25 October 2026): HCC archive integrity and panel audit are verified, but the normalized HCC image format does not yet match VirTues' documented preprocessing contract. NO-GO for HCC/VirTues inference until original-scale input compatibility is resolved or a compatible dataset/model is selected. Research question remains a candidate; novelty is not established.**
 
 ## Current research candidate
 
@@ -82,7 +82,7 @@ The 54-patient cohort is for development only; keep the 42-patient cohort untouc
 
 Full decision record: [Cohort and checkpoint decision](docs/cohort_checkpoint_decision.md).
 
-The project is at **pre-inference compatibility validation**. The 54-patient discovery archive has now been downloaded in an ephemeral CI runner, its published MD5 matched, its 42-row marker panel parsed, and the metadata-only audit artifact uploaded and independently inspected (run 40198884781). See `docs/discovery_panel_audit.md`. The archive and raw images/masks were not committed to the repository. The checkpoint file identity is pinned, but weights have not been loaded for inference.
+The project is at **pre-inference compatibility validation**. The 54-patient discovery archive has now been downloaded in an ephemeral CI runner, its published MD5 matched, its 42-row marker panel parsed, and the metadata-only audit artifact uploaded and independently inspected (run 40198884781). See `docs/discovery_panel_audit.md`. The archive and raw images/masks were not committed to the repository. The checkpoint file identity is pinned, but weights have not been loaded for inference. A source-code audit found a concrete preprocessing mismatch: the HCC archive contains already-normalized TIFFs, whereas VirTues applies clipping, `log1p`, Gaussian blur and per-tissue standardization to its expected inputs.
 
 ## Important data and interpretation limits
 

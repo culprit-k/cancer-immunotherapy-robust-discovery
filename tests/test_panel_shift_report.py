@@ -6,11 +6,10 @@ from analysis.panel_shift_report import build_panel_shift_report
 
 def _example_inputs():
     reconstruction = pd.DataFrame({
-        "patient_id": ["P1", "P1", "P2", "P2", "P2", "P2", "P1", "P1", "P2", "P2"],
-        "marker": ["CXCL9", "CXCL9", "CXCL9", "CXCL9", "CXCL9", "CXCL9",
-                   "PDL1", "PDL1", "PDL1", "PDL1"],
-        "measured": [1.0, 2.0, 1.0, 2.0, 1.0, 2.0, 4.0, 3.0, 2.0, 3.0],
-        "reconstructed": [1.0, 2.0, 11.0, 12.0, 11.0, 12.0, 3.8, 3.2, 2.1, 2.9],
+        "patient_id": ["P1", "P1", "P2", "P1", "P2", "P3"],
+        "marker": ["CXCL9", "CXCL9", "CXCL9", "PDL1", "PDL1", "PDL1"],
+        "measured": [1.0, 2.0, 3.0, 4.0, 3.0, 2.0],
+        "reconstructed": [1.1, 1.9, 2.8, 3.8, 3.2, 2.1],
     })
     prediction_rows = []
     uplifts = {
@@ -45,15 +44,6 @@ def test_panel_shift_report_builds_marker_target_and_patient_outputs():
     assert "model-predicted" in report["interpretation_guardrail"]
 
 
-def test_marker_errors_are_macro_averaged_by_patient():
-    reconstruction, predictions, targets = _example_inputs()
-    report = build_panel_shift_report(reconstruction, predictions, targets)
-    # P1's CXCL9 error is 0; P2's mean error is 10. Patients receive equal weight:
-    # macro MAE = 5, whereas a pooled-cell metric would weight P2 more heavily.
-    assert report["marker_reconstruction"]["CXCL9"]["n_patients"] == 2
-    assert report["marker_reconstruction"]["CXCL9"]["patient_macro"]["mae"] == pytest.approx(5.0)
-
-
 def test_panel_shift_report_rejects_missing_strategy_for_a_patient():
     reconstruction, predictions, targets = _example_inputs()
     predictions = predictions[~((predictions["patient_id"] == "P3") &
@@ -69,16 +59,15 @@ def test_panel_shift_report_rejects_missing_required_columns():
         build_panel_shift_report(reconstruction, predictions, targets)
 
 
-
 def test_marker_reconstruction_metrics_are_macro_averaged_by_patient():
     reconstruction, predictions, targets = _example_inputs()
-    # Add many extra low-error cells to P1. The patient-macro MAE should give
-    # P1 and P2 equal weight rather than allowing P1's cell count to dominate.
+    # Add many cells to P1; each has the same error. P1 should still have one
+    # vote in the patient-macro mean, just like P2.
     extra = pd.DataFrame({
         "patient_id": ["P1"] * 100,
         "marker": ["CXCL9"] * 100,
         "measured": [1.0] * 100,
-        "reconstructed": [1.0] * 100,
+        "reconstructed": [1.1] * 100,
     })
     reconstruction = pd.concat([reconstruction, extra], ignore_index=True)
     report = build_panel_shift_report(reconstruction, predictions, targets)
@@ -86,5 +75,4 @@ def test_marker_reconstruction_metrics_are_macro_averaged_by_patient():
     assert metrics["n_patients"] == 2
     assert "patient_macro" in metrics
     assert "pooled_cells_secondary" in metrics
-    # P1's own MAE is averaged with P2's MAE; it is not weighted by 101 cells.
     assert metrics["patient_macro"]["mae"] == pytest.approx((0.1 + 0.2) / 2)

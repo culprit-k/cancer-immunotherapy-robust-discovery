@@ -39,7 +39,7 @@ The weights are CC BY-NC 4.0. They are a candidate for non-commercial academic f
 
 ## Compatibility and remaining scientific gate
 
-The cohort pair is a good modality/biology fit: both use IMC, the study describes a 41-plex panel, and the external cohort has ICI-treatment context. The exact panel mapping and endpoint implementation have not yet been checked because the data archives are not present locally.
+The cohort pair is a good modality/biology fit: both use IMC, the study describes a 41-plex panel, and the external cohort has ICI-treatment context. The exact panel mapping and endpoint implementation have not yet been checked because the data archives are not present locally. The source files are per-channel multistack TIFFs, whereas VirTues examples use harmonized spora-format data; a conversion to the expected data layout and a normalization audit are required before inference.
 
 VirTues reconstructs marker channels; it does not reproduce Morpheus target discovery. HCC is not Morpheus's original melanoma/colorectal task. After download, inspect both panel CSVs, reconcile image/ROI/patient identifiers, define a reproducible CD8 endpoint, and document a reproduced or explicitly adapted counterfactual baseline. Final target markers must come from the actual panel CSVs, fixed before external evaluation; never perturb the CD8 endpoint channel to predict CD8 infiltration.
 
@@ -48,6 +48,8 @@ VirTues reconstructs marker channels; it does not reproduce Morpheus target disc
 - [ ] Download both source archives outside the public GitHub repository.
 - [ ] Verify source archive integrity and record local SHA-256.
 - [ ] Inspect `DCCohort_panel.csv` and `ICICohort_panel.csv`; confirm marker overlap, image dimensions, mask quality, ROI-to-patient mapping and clinical metadata.
+- [ ] Convert TIFF stacks/masks to the official VirTues/spora input format and preserve an auditable marker/patient crosswalk.
+- [ ] Inspect numeric ranges and preprocessing metadata to avoid applying VirTues' clipping/log/normalization twice.
 - [ ] Preserve the NLM CC BY 4.0 record for the 54-patient cohort; resolve the 42-patient cohort's blank Zenodo licence display where required.
 - [ ] Download only `virtues-imc14`; pin immutable revision, SHA-256, size, download date and licence.
 - [ ] Verify model exposure before describing the 42-patient set as independent of pretraining.

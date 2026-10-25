@@ -1,5 +1,5 @@
 name: Audit Salié HCC development cohort
-# This audit downloads a ~1.5 GB source archive. Re-run only when the audit logic changes
+# This audit downloads a ~1.5 GB source archive. Trigger only when audit logic changes
 # or manually via workflow_dispatch; ordinary documentation updates do not trigger it.
 on:
   push:
@@ -7,6 +7,7 @@ on:
     paths:
       - "scripts/audit_salie_hcc_discovery_archive.py"
       - "analysis/panel_metadata_qc.py"
+      - "analysis/tiff_archive_qc.py"
   workflow_dispatch:
 
 permissions:

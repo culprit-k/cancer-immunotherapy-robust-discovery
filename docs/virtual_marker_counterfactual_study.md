@@ -161,3 +161,26 @@ A useful primary contribution must show more than a new name for Jaccard: it mus
 ## Status of actual execution
 
 No new spatial dataset was downloaded, no VirTues/SPAD-CFR/Morpheus checkpoint was executed and no biological result has been measured in this project. The protocol and analysis helpers are design/preparation work only. The next concrete gate is dataset/channel/license inspection followed by a small, reproducible smoke test.
+
+
+## Reproducible evaluation handoff
+
+The repository now includes a post-hoc report builder at analysis/panel_shift_report.py. It does not train a model or perform imputation; it evaluates tables from a separately executed pipeline.
+
+### Required derived files for each outer patient-held-out fold
+
+1. **reconstruction.csv**: one row per held-out patient / cell or location / marker, with columns patient_id, marker, measured, reconstructed. The report computes per-patient marker errors first and macro-averages across patients; pooled-cell metrics are secondary only.
+2. **heldout_predictions.csv**: columns patient_id, strategy, predicted_before, predicted_after. Each strategy must be evaluated on the same fully measured held-out patients using the same frozen evaluator. Rows may correspond to nested tiles/cores; the report averages uplift within patient before comparison.
+3. **target_sets.json**: two strategy maps, reference and reconstructed, each mapping marker name to signed direction (1 for proposed increase; -1 for proposed decrease). The sets must have been generated without using the outer held-out patients.
+
+Then run:
+
+    python -m analysis.panel_shift_report \
+      --reconstruction-csv data/derived/reconstruction.csv \
+      --predictions-csv data/derived/heldout_predictions.csv \
+      --target-sets-json data/derived/target_sets.json \
+      --output-json reports/panel_shift_fidelity.json
+
+Run the report independently per outer fold and summarize fold-level outcomes using a prespecified paired analysis. Do not concatenate patient sets that overlap between folds as if they were independent observations. The script's "reference regret" is the paired difference in model-predicted uplift, not an observed intervention or clinical effect.
+
+The helper expects clean, held-out data already exported by the model pipeline. It cannot establish whether data leakage occurred; the analyst must enforce and document patient splits before producing these tables.

@@ -108,3 +108,72 @@ These are hypotheses, not confirmed gaps. A method/dataset compatibility matrix 
 - Six synthetic unit tests for generic analysis helpers passed locally; these tests do not establish model performance or biological validity.
 
 See also the [novelty assessment](novelty_assessment.md), [method/dataset compatibility matrix](method_dataset_compatibility.md), [related-work addendum](related_work_addendum_2026.md), and [reproducibility run log](reproducibility_run_log.md).
+
+
+## 9. VirTues (Nature, 2026): spatial-proteomics foundation model and virtual staining
+
+Wenckstern J et al. *The Virtual Tissues foundation model resolves spatial proteomics across scales.* Nature 657, 744–754 (2026). DOI: https://doi.org/10.1038/s41586-026-10884-y. Code and model weights: https://github.com/bunnelab/virtues.
+
+VirTues provides marker-aware, multi-scale spatial-proteomics representations and supports marker reconstruction/virtual staining, cell segmentation and typing, niche annotation, spatial biomarker discovery and patient stratification. Its paper reports a core 15-IMC-cohort corpus (3,102 patients, 146 markers) and a larger multi-technology corpus of 32 cohorts spanning four technologies, more than 5,100 patients and 239 markers. It reports zero-shot transfer under panel/technology shifts and biomarkers for anti-PD-L1 chemo-immunotherapy response in triple-negative breast cancer, with independent-cohort survival stratification.
+
+The public spora collection has since described 35 cohorts, 5,477 patients and five imaging technologies; do not treat those live platform counts as identical to the VirTues paper's model-training corpus.
+
+**Implication:** generic virtual staining, cross-panel transfer and spatial-protein biomarker discovery are already established. The proposed angle must be narrower: whether imputation quality preserves a *downstream intervention recommendation*, not whether a marker can be reconstructed or a biomarker can be predicted. VirTues reports that the Morpheus/Wang data were obtained via access request and cannot be redistributed in the harmonized corpus because of licensing restrictions.
+
+Resources:
+- Paper: https://www.nature.com/articles/s41586-026-10884-y
+- Code: https://github.com/bunnelab/virtues
+- spora data documentation: https://spora.epfl.ch/docs/index.html
+- spora benchmark suite: https://github.com/bunnelab/spora-bench
+
+## 10. Spatium (2026): protein-language foundation model for spatial proteomics
+
+*Spatium: A Protein Language Foundation Model for Spatial Proteomics.* https://pmc.ncbi.nlm.nih.gov/articles/PMC13419744/
+
+This adjacent model reconstructs missing spatial protein signals using protein-language representations and evaluates whether reconstructed maps preserve tissue architecture. It makes generic "impute missing spatial protein markers" or "use protein embeddings for panel completion" inadequate as a novelty claim.
+
+**Implication:** any new question should measure the consequences of imputation on downstream counterfactual decisions, beyond reconstruction accuracy and spatial-map quality.
+
+## 11. Celcomen (Nature Communications, March 2026): spatial causal perturbation model
+
+Megas S et al. *Celcomen: spatial causal disentanglement for single-cell and tissue perturbation modeling.* Nature Communications 17, 4126 (2026). DOI: https://doi.org/10.1038/s41467-026-69856-5. It uses a generative graph neural network and causal structure framework to disentangle intra-/inter-cellular gene programs and generate counterfactual spatial transcriptomic responses to perturbations, with simulation and tissue analyses.
+
+**Implication:** spatial causal counterfactual generation and virtual-tissue perturbation modeling are already active, peer-reviewed directions. The project should not claim a new general spatial counterfactual model.
+
+## 12. TISSUE and imputation consequences for downstream analysis
+
+Svensson et al. developed TISSUE for uncertainty-calibrated spatial transcriptomic expression prediction, using conformal inference and assessing consequences for downstream inference. https://www.nature.com/articles/s41592-024-02184-y
+
+A 2026 iScience benchmark compared eight imputation methods for spatial metabolomics under missingness, assessing both imputation accuracy and preservation of spatial clustering. https://doi.org/10.1016/j.isci.2026.115203
+
+Virtual staining work has also explicitly examined whether image reconstruction improves downstream classification/segmentation rather than relying only on image similarity. https://doi.org/10.1364/BOE.576061
+
+**Implication:** uncertainty calibration, generic downstream evaluation and imputation benchmarks are not new. The remaining candidate is the joint *decision fidelity* of a counterfactual intervention recommendation under whole-marker-channel missingness. That is a candidate gap, not a verified one.
+
+## 13. Independent clinical-response data that may support secondary, not primary, analysis
+
+### Pybus et al. (npj Precision Oncology, January 2026)
+*Predicting anti-PD-1 immune checkpoint blockade response in melanoma patients with spatially aware machine learning models.* DOI: https://doi.org/10.1038/s41698-025-01250-8.
+
+This study reports 12 stage-IV melanoma patients (4 responders, 8 non-responders), over 8 million cells, 14 proteins across two eight-marker multiplex-immunofluorescence panels, and 100 randomized model iterations. The reported feature-rich model had ROC AUC 0.76; the authors explicitly note the small cohort as a limitation. Processed data: https://doi.org/10.5281/zenodo.16898362. Code: https://github.com/goeckslab/Melanoma-ICB-mIF.
+
+This cohort might help with exploratory external checks only if target markers overlap. It is too small to serve as the sole basis for a high-dimensional clinical-response model.
+
+### GSE300793 and GSE300445 (2026 publication/data release)
+The associated melanoma study reports 57 pretreatment bulk RNA-seq samples from stage-III primary melanoma patients and spatial transcriptomics on four primary tumours. GEO: https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE300793 and https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE300445. The study connects spatial tumour-immune ecosystems with adjuvant anti-PD-1 outcome.
+
+These data could provide an exploratory molecular-expression/outcome check for a prespecified target signature, but bulk RNA measurements are not spatial protein measurements and cannot validate a protein intervention causally.
+
+## 14. Revised research recommendation
+
+**Do not proceed with the generic robustness-only or broad cross-platform-transfer idea as a novelty claim.** The most specific candidate still worth testing is:
+
+> When one or more entire marker channels are absent and reconstructed by a spatial-proteomics foundation model, does the reconstruction preserve signed counterfactual target recommendations and held-out-patient model-predicted CD8+ infiltration changes?
+
+The potential contribution is a **counterfactual recommendation-fidelity benchmark and reliability/abstention evaluation**, not a claim to invent virtual staining or spatial causal inference. Test whether marker-level reconstruction metrics fail to reveal changes in the recommended target set or predicted objective. Compare a fully measured reference, no-imputation baseline, simple imputation and foundation-model reconstruction. Apply strict patient-grouped splits and evaluate only on held-out patients.
+
+The gap is not confirmed. A targeted search must still check if VirTues, SPORA, Spatium, Celcomen, TISSUE and related robust-counterfactual studies already evaluate this exact downstream intervention-fidelity question.
+
+## Updated decision status
+
+**CONDITIONAL GO for a narrow feasibility pilot, NOT a confirmed novelty claim.** First confirm an openly usable cohort with CD8/T-cell labels, candidate intervention channels, patient identifiers and explicit terms. Then run a small masked-channel reconstruction and downstream target-discovery test. Stop or pivot if no cohort permits a fair test or if an equivalent benchmark already exists.

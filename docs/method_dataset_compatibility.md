@@ -1,6 +1,6 @@
 # Method and dataset compatibility matrix
 
-**Status (25 October 2026): HCC discovery archive integrity, 42-row marker-panel parsing, and metadata-only artifact publication are verified. Model input compatibility, preprocessing, endpoint, counterfactual baseline and checkpoint exposure remain unresolved. This table is not evidence that cohorts can be pooled or models compared directly.**
+**Status (25 October 2026): HCC archive integrity and marker-panel structural QC PASS. Direct inference on the released HCC normalized TIFFs with pretrained VirTues is NO-GO due to a documented preprocessing-domain mismatch. Published training-corpus evidence supports no direct Salié-study exposure in the pinned core-14 `virtues-imc14` model; a separate accession-to-training-job certificate was not located. Cell labels, CD8 endpoint and counterfactual baseline remain unresolved. This table is not evidence that cohorts can be pooled or models compared directly.**
 
 | Study/resource | Modality and cohort information | Model output / endpoint | Access and rights status | Directly comparable to Morpheus CD8-infiltration intervention evaluation? |
 |---|---|---|---|---|

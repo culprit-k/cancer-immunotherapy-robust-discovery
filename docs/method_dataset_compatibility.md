@@ -62,3 +62,12 @@ Public browser: https://spora.bioimagearchive.org/projects/spora/dataset. Detail
 ## Updated novelty boundary after inspecting VirTues Methods
 
 VirTues already evaluates downstream cell-phenotyping stability after reconstructing masked markers: it removes CD20/CD38 for B-cell classification and progressively removes CD3E/CD4/CD45RA/CD8 for T-cell phenotyping, then reruns the phenotyping task. Therefore, "virtual-marker reconstruction preserves downstream analysis" is too broad to claim as new. The candidate is specifically about **counterfactual target-set and predicted-objective fidelity**, which is a different downstream decision from phenotype classification. The complete supplement and a broader prior-art search still need review before calling this an established gap.
+
+
+### Most promising initial cohort for the exact downstream test
+
+The spora catalogue lists rigamonti2024integrating as 108 patients / 158 IMC images with H&E. Its published benchmark configuration includes explicit CD4 T-cell and CD8 T-cell annotation labels. The VirTues paper describes a leave-one-dataset-out marker-reconstruction evaluation on Rigamonti et al. This makes it the strongest candidate for a downstream recommendation-fidelity pilot—if the candidate intervention channels exist and the correct leave-one-dataset-out checkpoint or retraining procedure is available. Do not assume the default released VirTues checkpoint is trained without this cohort; verify its training-data inventory first.
+
+The hoch2022multiplexed melanoma/chemokine cohort (35 patients / 50 IMC images) is more directly relevant biologically, but VirTues already performs cell-typing evaluation on it and training exposure may complicate independent validation. It should be treated as a development cohort or evaluated using a suitably held-out reconstruction checkpoint.
+
+See docs/dataset_shortlist.md for the full candidate ranking and unresolved license/panel gates.

@@ -104,3 +104,10 @@ The HCC panel does contain CD8a and multiple checkpoint/immune-state markers, in
 Whichever route is chosen, keep CD8a out of predictor inputs where required to prevent label leakage, define a cell-/patch-level CD8 endpoint using documented masks/annotations, and distinguish marker reconstruction from a biologically actionable intervention. A virtual change in measured intensity is not equivalent to a drug perturbation or causal therapeutic effect.
 
 This crosswalk is based on the published Morpheus reported target sets and the parsed `DiscoveryCohort_panel.csv`; it is a compatibility screen, not model validation.
+
+
+## End-to-end audit outcome — 25 October 2026
+
+The corrected audit workflow passed end-to-end in [run 40198884781](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40198884781). Its metadata-only artifact (ID `12601036644`) was downloaded and inspected. It confirms a matching archive MD5, the actual panel filename `DiscoveryCohort_panel.csv`, 42 parsed marker rows and `cc-by-4.0` in the direct Zenodo API metadata for both the development and proposed ICI records. The external ICI images were not downloaded. This resolves the archive/panel discovery and artifact-upload blockers, not model/data compatibility or legal review.
+
+**Updated gate status:** archive integrity, panel parsing and metadata artifact publication are complete. Remaining gates are exact checkpoint exposure, VirTues input/normalization contract, endpoint and cell-label validity, pre-specified intervention/baseline compatibility, and a one-channel reconstruction smoke test. Do not claim a biological result or independent external validation yet.

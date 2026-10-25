@@ -1,66 +1,88 @@
-# Preliminary analysis plan
+# Analysis plan: intervention decision fidelity under virtual marker reconstruction
 
-**Status (25 October 2026): exploratory feasibility plan only. The generic robustness-only paper has a NO-GO novelty decision; this plan documents a possible reproducibility pilot, not a validated primary study question.**
+**Status (25 October 2026): pilot plan only. The old generic robustness-only novelty claim is rejected. The new candidate gap remains unverified.**
 
 ## Objective
 
-For a preliminary reproducibility audit, estimate whether variation in patient/core sampling and model seeds/retraining changes the complete signed molecular target sets proposed by spatial-proteomic counterfactual discovery, and whether a stability-aware consensus has different held-out-patient model-predicted CD8+ infiltration uplift than the reproduced published strategy at a matched target budget.
+Test whether reconstruction of missing spatial protein-marker channels preserves (a) the signed target combinations chosen by a counterfactual discovery pipeline and (b) its held-out-patient **model-predicted** CD8+ infiltration change, relative to a fully measured-channel reference.
 
-This is not currently the primary novelty claim. After prior-art review, the project's preferred next step is to assess cross-method intervention decision utility or cross-cohort/platform transfer first. Do not use this plan to imply the robustness-only idea is novel. This is not a clinical treatment study. Predicted counterfactual change is not observed therapeutic effect or causal evidence.
+## Stage 0 — prior art and dataset eligibility
+- Read the complete Morpheus supplement and inspect relevant VirTues, Spora, Spatium, Celcomen, SPAD-CFR, TISSUE and downstream virtual-staining/imputation papers.
+- Search specifically for counterfactual target-set fidelity under whole-channel masking, virtual staining and imputation uncertainty.
+- Select the cohort only after auditing measured marker names, patient/core IDs, CD8/T-cell labels, patient count and the exact data-use terms.
+- Check whether the foundation-model weights saw the candidate cohort; use a leave-one-cohort-out checkpoint or other leakage-safe design if needed.
+- Do not redistribute raw or restricted data.
 
-## Stage 0 — Literature, permissions and reproduction
-- Read the complete Morpheus supplement and expand the prior-art search (robust counterfactual sets, stability selection, intervention-set stability, patient/core resampling, model-seed variability, spatial counterfactual models).
-- Verify license/terms for the exact data and source-code artifacts.
-- Reproduce at least one published Morpheus baseline result from an authorized public tutorial/preprocessed artifact.
-- Record version, checksum, environment, patient split, preprocessing, thresholding and compute time.
-- Do not invent a new algorithm before these gates pass.
+## Stage 1 — small smoke test
+- Get one permitted public cohort and one pretrained reconstruction model.
+- Verify table schema, marker aliases, patient/core grouping, and exact mapping from measured to reconstructed channels.
+- Mask one entire measured channel in a small held-out subset, reconstruct it, and calculate marker error against its true measured value.
+- Run the downstream baseline on a tiny subset if the data are compatible.
+- Record environment, model/data version, license, checksums, hardware, run time and all deviations.
+- Do not claim full baseline reproduction until a known published result is recovered.
 
-## Stage 1 — Small feasibility pilot
-- Prefer the 69-patient melanoma cohort (159 cores; 39 channels), treating patient as the independent unit.
-- First validate patient/core/patch identifiers, target direction mapping, and aggregation.
-- If permitted cached perturbations exist, re-aggregate across patient-grouped resamples as a cached-output descriptive pilot. Do not call this full pipeline robustness because the model is not retrained.
-- Measure per-patch counterfactual cost before attempting repeated full discovery.
-- Continue only when the endpoint, data terms and evaluation path are reproducible.
+## Stage 2 — panel scenarios
+Prespecify the exact scenarios after inspecting panel metadata but before examining model outcomes:
+1. Whole-channel masking, one channel at a time.
+2. A cross-panel-like missing set constructed from real panel overlaps.
+3. Optional higher-dropout scenario only if it represents a real assay difference.
+4. Cell-wise/random masking is a diagnostic only, not the principal scenario.
 
-## Stage 2 — Leakage-safe study design, if justified after Gate 0
-- Establish outer held-out patient folds before discovery. Keep all sections/cores/patches of a patient together.
-- Use only inner grouped validation to select thresholds, preprocessing choices and other hyperparameters.
-- Repeat patient-grouped training resamples and independently vary model initialization/seeds within each outer training fold.
-- Never choose target sets or tune configurations using outer test patients.
-- Prespecify run count/seed schedule after timing the pilot. Aim for at least 30 successful discovery runs per outer split if feasible; report fewer-run studies as exploratory and justify precision limits.
-- Record failed runs; do not silently discard runs that yield empty/poor target sets.
+The CD8/T-cell outcome must retain a true measured label for evaluation even when the associated input signal is masked. All input channels that directly leak the output label must be excluded or masked.
 
-## Stage 3 — Metrics
-### Discovery stability
-- Signed-target selection frequency.
-- Direction consistency conditional on target selection.
-- Pairwise Jaccard of complete signed target sets.
-- Target set size/sparsity and proportion of empty sets.
-- Separate effects of patient resampling versus model seeds.
+## Stage 3 — competing conditions
+Using the same patient-grouped outer folds and identical target budget:
+- **Reference:** full measured channels.
+- **Reduced-panel baseline:** only observed channels, with no imputation.
+- **Simple imputer:** choose a reproducible baseline after checking data structure.
+- **Foundation-model reconstruction:** e.g., VirTues reconstructed channels.
+- **Optional second imputer:** include only if licensing, method compatibility and compute allow.
 
-### Held-out model-predicted uplift
-- Apply each prespecified strategy to the same held-out patients.
-- Calculate patch/core predicted changes, summarize within patient using the predeclared paper-compatible rule, then weight patients equally.
-- Report mean, median, 10th percentile, fraction of patients with positive predicted change, and patient-level bootstrap confidence intervals.
-- Report any target-budget differences and avoid selecting the best-performing seed after viewing test results.
+Apply the same counterfactual target-discovery algorithm across conditions. Prefer Morpheus if the selected data can be converted fairly to its input/output format; otherwise label any alternative implementation as a surrogate, not as Morpheus reproduction.
 
-A high stability score alone does not imply accuracy; stability metrics must be evaluated alongside held-out predicted uplift and target set size.
+## Stage 4 — leakage-safe target discovery
+- Split by patient at the outer level. All cores, sections, tiles and cells from a patient remain in one partition.
+- Fit normalizers, model, imputation transforms, thresholds and feature selection only on training/inner-validation patients.
+- Generate target sets from training patients only.
+- Fix the candidate target marker list and target budget before outer test evaluation.
+- Encode each target with its marker identity and signed direction (+1 increase, -1 decrease).
+- Evaluate every strategy on the same held-out patients using the measured-channel values for independent downstream reference.
+- Aggregate nested patches/cores within patient and give each patient equal weight.
 
-## Stage 4 — Baselines and controls
-- Reproduced Morpheus single-run/published median-strategy baseline.
-- Simple target-frequency/rank consensus built from discovery runs.
-- Matched target-budget random/signed perturbation control when valid.
-- No-change reference.
+## Stage 5 — outcomes
+### Marker-level reconstruction
+- MAE, RMSE, bias, Pearson and Spearman correlation on held-out cells/locations.
+- Marker-stratified results; do not report only a pooled score.
 
-Finalize the exact strategy-generation and target-budget rules before inspecting outer-fold performance. If a baseline cannot be implemented fairly, document why instead of overstating results.
+### Recommendation fidelity (primary)
+- Signed target-set Jaccard similarity vs. fully measured reference.
+- Signed precision/recall.
+- Direction-flip count/rate among shared markers.
+- Set size and empty-recommendation frequency.
 
-## Stage 5 — Statistical reporting
-- Treat patient as the unit for uncertainty estimates; do not bootstrap patches as independent units.
-- Report point estimates plus confidence intervals/distributions, fold/run-level results and all predeclared metrics.
-- Separate patient-sampling uncertainty, model-seed variability, external-cohort generalization and biological validation.
-- Report negative or null findings. Do not label a computational prediction as causal, experimentally validated, therapeutically effective or clinically useful without independent evidence.
+### Predicted-uplift fidelity (key secondary)
+- Patient-level MAE/RMSE and rank correlation between predicted uplift from reconstructed-panel and reference target sets.
+- Direction/sign concordance by patient.
+- Model-based reference regret: reconstructed-selected strategy's predicted uplift minus full-measurement-reference strategy's predicted uplift, evaluated on the same fully measured held-out patients.
+- Label every uplift estimate as **model-predicted**, not observed treatment effect.
 
-## Decision gates
-- Proceed only if the broader prior-art/compatibility gate identifies a distinct gap, rights are clear, a baseline is reproduced, the pilot validates data and patient-level endpoint, and compute supports the protocol.
-- Refine if stability metrics are useful but add little beyond existing methods, or full retraining is too costly while cached outputs remain suitable for an explicitly exploratory reanalysis.
-- Pivot if equivalent methods already exist, data rights/metadata are inadequate, or the scientific endpoint cannot be evaluated without leakage.
+### Optional reliability/abstention analysis
+Only include if the pilot demonstrates meaningful decision changes. Calibrate target-set agreement or imputation uncertainty thresholds on inner validation, then report coverage vs. set disagreement and model-based regret in outer test patients. Compare with single imputation and simple selection-frequency baselines.
+
+## Stage 6 — uncertainty and inference
+- Use paired condition comparisons on the same held-out patients.
+- Bootstrap patients, not cells or patches.
+- Report confidence intervals for marker and target-level metrics; account for multiple target comparisons where relevant.
+- Report each cohort separately; pool only if endpoint and measurement scales are compatible.
+- Report null results and all failed/empty recommendations.
+- Do not infer causality from a stable counterfactual prediction or marker association.
+
+## Decision criteria
+**Proceed to full study** only if:
+- the exact downstream fidelity question survives the expanded prior-art search;
+- at least one eligible, clearly licensed cohort has sufficient markers and patient IDs;
+- model training exposure can be controlled;
+- the baseline and masked-channel reconstruction run end-to-end;
+- the result tests recommendation fidelity rather than just reconstruction accuracy.
+
+**Pivot/stop** if no dataset supports the comparison, data reuse terms are unclear, the model has unavoidable evaluation leakage, the baseline cannot run, or prior work already evaluates this same downstream decision.

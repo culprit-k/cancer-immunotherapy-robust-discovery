@@ -78,11 +78,11 @@ The VirTues paper states that:
 - the IMC-only core corpus contains **14 datasets**;
 - the extended 32-cohort corpus adds seven more IMC datasets, citing references 90–96, plus CODEX, Orion and MIBI cohorts;
 - the Salié HCC study is reference **95**;
-- the `virtues-imc14` model is the IMC-only core-14 model; `virtues-sp32` and `virtues-sp31` use the extended multi-technology corpus.
+- the `virtues-imc14` model is the IMC-only core-14 model; `virtues-sp32` uses the extended 32-cohort multi-technology corpus, which includes Salié et al. (ref. 95). `virtues-sp31` is described as a 31-cohort model, but its exact omitted cohort was not verified in this audit.
 
-Therefore, the published corpus grouping supports **no direct inclusion of the Salié HCC study in the standard core-14 `virtues-imc14` training set**. The study appears in the seven extra IMC cohorts used for the extended corpus, so `virtues-sp32` and `virtues-sp31` must not be used for a held-out HCC claim.
+Therefore, the published corpus grouping supports **no direct inclusion of the Salié HCC study in the standard core-14 `virtues-imc14` training set**. The study appears in the seven extra IMC cohorts used for the extended corpus, so `virtues-sp32` must not be used for a held-out HCC claim. Do not use `virtues-sp31` for a held-out HCC claim unless its exact training inventory confirms that Salié HCC is absent.
 
-This is substantially stronger than the prior “exposure unknown” status and resolves the practical model selection: **`virtues-imc14` is the only one of these three public variants defensible for assessing HCC as outside its published training corpus.** The official paper describes leave-one-dataset-out variants for selected core-14 cohorts (references 2, 6, 8, 42 and 48), not a special HCC-excluded variant; such a special HCC variant is unnecessary if the published core/extended corpus distinction applies to the pinned weights.
+This is substantially stronger than the prior “exposure unknown” status and resolves the practical model selection: **`virtues-imc14` is the one public variant whose published core-14 training inventory supports assessment of HCC outside its training corpus.** The multi-technology `virtues-sp32` is exposed to Salié HCC; `virtues-sp31` remains unapproved for HCC-held-out use until its omitted dataset is confirmed. The official paper describes leave-one-dataset-out variants for selected core-14 cohorts (references 2, 6, 8, 42 and 48), not a special HCC-excluded variant; such a special HCC variant is unnecessary if the published core/extended corpus distinction applies to the pinned weights.
 
 Caveat: the public paper/model card provides corpus-level, reference-level provenance rather than a machine-readable certificate mapping each Zenodo accession to every training job. We did not find a separate signed author statement confirming both accessions were excluded from the exact weight hash. In a manuscript, describe this as “the pinned core-14 checkpoint was selected because the published training inventory places Salié et al. in the extended corpus, not the core-14 corpus,” and retain the citation/hash. Do not claim independently audited row-level provenance beyond that evidence.
 
@@ -97,7 +97,8 @@ Source: [VirTues Nature paper, datasets and model instances](https://www.nature.
 | Public TIFF intensity representation | **PENGUIN-normalized, 0–1** | Preprocessed values, not the original model-input scale. |
 | Direct HCC TIFF → pretrained VirTues inference | **NO-GO** | Input contract/distribution mismatch; do not invert or invent statistics. |
 | `virtues-imc14` direct HCC training exposure | **Excluded by published corpus grouping** | Good published evidence for no direct Salié-study exposure; keep the provenance caveat above. |
-| `virtues-sp32` / `virtues-sp31` exposure | **NO-GO for held-out HCC testing** | Extended corpus includes Salié ref. 95. |
+| `virtues-sp32` exposure | **NO-GO for held-out HCC testing** | Its full extended corpus includes Salié ref. 95. |
+| `virtues-sp31` exposure | **Unresolved; not approved for held-out HCC testing** | The release states 31 cohorts, but this audit did not verify which one is omitted. |
 | Cell labels / CD8 endpoint | **OPEN** | Cell/stroma masks do not by themselves establish cell-type labels or a validated endpoint. |
 | Real model inference / biological conclusions | **NOT RUN** | No reconstruction or counterfactual results can be reported. |
 

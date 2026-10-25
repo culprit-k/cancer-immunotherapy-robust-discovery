@@ -1,10 +1,10 @@
-# Selected HCC cohort-pair candidate, but not yet runnable.
-# Rights metadata discrepancy and exact checkpoint exposure must be resolved; pin a model revision and SHA-256 after download.
-# Template only — do not run until dataset rights, marker names, model exposure,
-# and baseline compatibility are verified. Replace remaining CHANGE_ME fields.
+# HCC discovery panel parsed; config remains a non-runnable template.
+# Archive MD5 and marker inventory are verified in docs/discovery_panel_audit.md.
+# Model input compatibility, preprocessing, cohort exposure, endpoint and baseline remain unresolved.
+# Do not execute as a study until every CHANGE_ME and each pre-inference gate is resolved.
 study:
   title: "Counterfactual recommendation fidelity under virtual marker reconstruction"
-  status: "selected_cohort_pair_but_not_data_ready"
+  status: "discovery_archive_and_panel_verified_pre_inference"
   random_seed: 20261025
 
 dataset:
@@ -15,7 +15,48 @@ dataset:
   patient_id_column: "CHANGE_ME"
   image_or_core_id_column: "CHANGE_ME"
   measured_marker_channels:
-    - "CHANGE_ME"
+    - "CD45"
+    - "CD68"
+    - "HLADR"
+    - "SMA"
+    - "CD15"
+    - "LYVE1"
+    - "CD69"
+    - "CD3"
+    - "Ki67"
+    - "CD163"
+    - "TIGIT"
+    - "CXCR5"
+    - "PD-L1"
+    - "CXCR6"
+    - "TCF1"
+    - "TOX"
+    - "Tim3"
+    - "FoxP3"
+    - "CD4"
+    - "Lag3"
+    - "Ecadherin"
+    - "bCatenin"
+    - "Tbet"
+    - "CD20"
+    - "CD8a"
+    - "Eomes"
+    - "RpS6"
+    - "PD1"
+    - "CD204"
+    - "GranzymeB"
+    - "CD39"
+    - "Collagen"
+    - "CD103"
+    - "pERK12"
+    - "CD38"
+    - "CD45RO"
+    - "CD33"
+    - "CD34"
+    - "CK7"
+    - "DNA1"
+    - "DNA2"
+    - "HistoneH3"
   immune_outcome_column: "CHANGE_ME"
   outcome_definition: "CHANGE_ME"
   rights_reviewed_by: "CHANGE_ME"

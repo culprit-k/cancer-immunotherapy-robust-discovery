@@ -81,3 +81,10 @@
 - Added two more unit tests for patient-level reference regret and mismatched patient IDs.
 - Local test run of materialized copies of the committed helper/test source: **15 passed** (6 target-stability + 9 panel-shift tests) using synthetic data.
 - The GitHub Actions workflow was corrected to install pandas as well as NumPy/pytest. Its actual hosted run status remains unverified.
+
+
+### Reporting harness
+- Added analysis/panel_shift_report.py, a CLI that accepts prepared marker-reconstruction values, held-out per-core/patch predictions for both strategies, and a JSON of signed target sets; it emits a strict JSON report for reconstruction metrics, target-set fidelity, patient-level uplift fidelity and paired model-based reference regret.
+- Added three synthetic tests for the report builder, including matched-patient validation and required-column checks.
+- Updated local synthetic test run after adding the report harness: **18 passed** (6 target-stability + 9 panel-shift metric + 3 report-builder tests).
+- This harness only evaluates prepared outputs. It does not download data, run VirTues/Morpheus, reconstruct channels or generate counterfactual target sets.

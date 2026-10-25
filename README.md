@@ -21,10 +21,11 @@ The candidate question is whether good marker reconstruction scores can still ma
 - Updated literature audit with VirTues, Spatium, Celcomen, spora, the 2026 anti-PD-1 melanoma spatial-mIF dataset and the GSE300793/GSE300445 melanoma cohort.
 - Updated novelty assessment and research question.
 - Candidate study protocol with hypotheses, leakage-safe design, outcomes and go/no-go criteria.
+- Dataset shortlist ranking a melanoma chemokine cohort for development, a smaller lung IMC cohort for smoke testing, and two melanoma cohorts for possible external evaluation, with model-exposure and license caveats.
 - Method/dataset compatibility matrix and decision-gate protocol.
 - Generic target-stability metric code from the previous phase.
 - New panel-shift metrics for marker reconstruction error, signed intervention-set fidelity/direction changes and patient-level predicted-uplift fidelity.
-- Unit tests for both helper modules. Synthetic tests from the previous phase recorded **6 passed**; the new panel-shift tests have been added but a completed CI run has not been verified.
+- Unit tests for both helper modules. A local synthetic suite run on copies of the current source/test files passed **13 tests** (6 stability + 7 panel-shift tests). No completed GitHub Actions run has been verified.
 - A GitHub Actions test workflow. No raw data have been committed.
 
 ## Next steps, in order
@@ -44,6 +45,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Novelty assessment](docs/novelty_assessment.md)
 - [Related-work addendum](docs/related_work_addendum_2026.md)
 - [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
+- [Dataset shortlist and eligibility checklist](docs/dataset_shortlist.md)
 - [Pivot candidates](docs/pivot_candidates.md)
 - [Morpheus code audit](docs/morpheus_code_audit.md)
 - [Dataset feasibility audit](docs/dataset_audit.md)
@@ -54,6 +56,14 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Panel-shift fidelity metrics](analysis/panel_shift_metrics.py)
 - [Target stability tests](tests/test_target_stability.py)
 - [Panel-shift tests](tests/test_panel_shift_metrics.py)
+
+## Current recommended dataset sequence
+
+1. Use allam2022spatially only for a small data-loading/channel-mask smoke test if its dataset-specific terms and labels pass.
+2. Audit hoch2022multiplexed for the biological development run; because VirTues evaluates this cohort, do not present the standard full VirTues model on it as independent generalization.
+3. Check moldoveanu2022spatially and xiao2022multiplexed for unseen-cohort evaluation only after verifying shared markers, measured immune labels, exact data terms and whether VirTues saw the cohort during training.
+
+No dataset is approved for the final analysis yet.
 
 ## Important data and interpretation limits
 

@@ -77,6 +77,11 @@ The official VirTues repository lists `virtues-sp32` (32 datasets, CC BY-NC 4.0 
 
 Full targeted audit: [targeted prior-art and feasibility audit](targeted_prior_art_and_feasibility_audit_2026-10-25.md).
 
+
+### Cohort suitability update
+
+The initial Rigamonti 2024 NSCLC cohort is suitable as a pipeline smoke test and cell-annotation reference, but its 24-marker panel does not obviously contain a Morpheus-compatible chemokine target set. Xiao et al. 2022 includes CD8a, PD-1 and PD-L1 but is part of the VirTues extended training corpus, so the standard `virtues-sp32` weights cannot be treated as independent on it. A newly posted Godbole et al. 2026 melanoma IMC cohort (six patients) has CD8a, PD-1, PD-L1, CTLA-4, TIM-3, LAG-3, TIGIT, CCL2 and CCL4; it is a possible exploratory external test, not a powered validation cohort, and its Zenodo licence field is blank. Exact terms must be cleared before use. See the targeted audit and revised dataset shortlist.
+
 ## Decision
 
 **Conditional GO for the feasibility pilot only.** Proceed to a full protocol only if:

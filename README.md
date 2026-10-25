@@ -18,7 +18,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 
 ## Work completed in the repository
 
-- Completed the HCC archive integrity and panel structural audit: MD5 and advertised size match, SHA-256 recorded, 42-row panel passes required-column, missing-value, duplicate and channel-sequence checks. Metadata-only result artifact is linked in [run 40210741291](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40210741291).
+- Completed the HCC archive integrity and panel structural audit: MD5 and advertised size match, SHA-256 recorded, 42-row panel passes required-column, missing-value, duplicate and channel-sequence checks. Metadata-only result artifact is linked in [run 40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869).
 - Resolved current HCC inference decision: public TIFFs are PENGUIN-normalized to 0–1 and are not interchangeable with VirTues' documented clipping/log/blur/standardization input path. Do not invert or guess preprocessing statistics.
 - Exposure decision: the pinned `virtues-imc14` checkpoint aligns with the core 14-IMC cohort set; the Salié HCC paper is ref. 95 among the seven added IMC cohorts in the extended multi-technology corpus. The extended `virtues-sp32` and `virtues-sp31` variants must not be used for held-out HCC evaluation. See the evidence and caveat in the decision memo.
 

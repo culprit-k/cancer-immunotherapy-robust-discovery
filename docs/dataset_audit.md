@@ -52,6 +52,20 @@ The execution environment for this project could not retrieve the public archive
 - Keep cached-output resampling distinct from retraining/full-pipeline robustness.
 - Do not pool spatial protein measurements with bulk RNA-seq unless marker/outcome equivalence is justified.
 
-## Initial recommendation
+## Current recommendation: Salié HCC IMC cohort pair
 
-Use the tutorial/preprocessed artifacts first if their terms allow it. Test parsing, saved model loading and a published baseline on a small subset before downloading the 7.1 GB archive or retraining. If the license remains unclear, seek permission or select a dataset with explicit reuse terms. Do not commit raw or restricted data to GitHub.
+The primary development candidate is the 54-patient HCC discovery cohort (Zenodo 10793609). The NLM Dataset Catalog reports CC BY 4.0; the archive is described as normalized per-channel multistack TIFF images, cell/stroma masks and `DCCohort_panel.csv`. The proposed untouched external evaluation is the 42-patient ICI cohort (Zenodo 10794904), which supplies the analogous `ICICohort_panel.csv`, cell/stroma masks and treatment-context metadata. OpenAIRE/Datacite metadata reports CC BY for the latter, but the direct Zenodo Rights field appears blank. Preserve the metadata and resolve this discrepancy where required before redistribution.
+
+Use official VirTues `virtues-imc14/model.safetensors` as the preferred **checkpoint variant candidate**. It is trained on 14 IMC datasets and its weights are CC BY-NC 4.0. The Salié study is listed among the extended 32-cohort model's seven additional IMC cohorts, so this variant is the strongest public option for a same-modality held-out reconstruction test. Pin the exact Hugging Face revision and SHA-256 when downloaded; verify accession-level model exposure before calling either cohort fully independent. Do not use `virtues-sp32` or `virtues-sp31` for this held-out claim.
+
+The previous Morpheus melanoma dataset remains a useful reference for a published counterfactual baseline, but its data access and licence were not established in this audit. It is no longer the primary cohort selection. Reproduce or carefully adapt the target-discovery method to the HCC panel; VirTues is only the marker reconstruction component, not the counterfactual target optimizer.
+
+## Immediate gates
+
+1. Retrieve archives only from their official Zenodo records and store the files outside public GitHub.
+2. Verify archive integrity and record local SHA-256; inspect panel CSVs, image dimensions, masks, ROI-to-patient mapping and clinical endpoint metadata.
+3. Preserve the 54-patient cohort's CC BY 4.0 evidence and resolve the 42-patient cohort's blank Zenodo licence display where required.
+4. Download and pin the official `virtues-imc14` artifact, record its licence/hash/revision and verify exact training exposure.
+5. Freeze preprocessing, endpoint, eligible target markers, target budget and thresholds on development patients. Keep the 42-patient cohort untouched for external evaluation.
+
+Do not commit raw data or model weights to the public research repository. See [cohort/checkpoint decision](cohort_checkpoint_decision.md) and [dataset shortlist](dataset_shortlist.md).

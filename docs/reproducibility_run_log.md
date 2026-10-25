@@ -110,3 +110,11 @@
 - Inspected the official VirTues repository's published weight table: `virtues-sp32` is trained on 32 datasets and uses CC BY-NC 4.0 weights; `virtues-sp31` is trained on 31 datasets with MIT weights; `virtues-imc14` is trained on 14 IMC datasets with CC BY-NC 4.0 weights. Exact training exposure of the checkpoint selected for Rigamonti is still unverified.
 - Ran `python -m pytest -q` in the available isolated test-copy directory `/mnt/data/research-helper-tests`: **19 passed** in 1.20 seconds. This verifies the current local source/test copies only; it does not prove the repository's current checkout or hosted GitHub Actions passed.
 - No dataset downloaded, checksum recorded, licence cleared, model loaded, counterfactual generated or biological experiment performed.
+
+
+## 25 October 2026 — cohort panel re-ranking
+
+- Inspected the official spora-bench Rigamonti dataset and cell-annotation configs. They confirm a CD8 T-cell annotation but do not establish a Morpheus-compatible perturbation marker panel. The original Rigamonti paper describes a 24-marker NSCLC panel focused on tumour, architecture and immune-lineage markers; demote it to pipeline smoke testing unless a narrower target question is justified before analysis.
+- Inspected the published Xiao et al. 2022 41-channel panel: CD8a, PD-1 and PD-L1 are present, but the VirTues extended corpus lists Xiao et al. 2022 among its 32 cohorts. Standard `virtues-sp32` therefore cannot be treated as an independent imputer for Xiao.
+- Inspected the panel CSV in the Godbole et al. melanoma IMC dataset posted 17 September 2026 (Zenodo 15124735). It lists CD8a, PD-1, PD-L1, CTLA-4, TIM-3, LAG-3, TIGIT, CCL2 and CCL4. This is a promising external exploratory candidate because it postdates the VirTues release, but has only six patients, no displayed dataset licence, and unverified exact checkpoint exposure. Do not use until terms are clarified; not suitable as definitive external validation.
+- Dataset shortlist and README have been corrected. No cohort is yet rights-cleared or approved for the primary experiment.

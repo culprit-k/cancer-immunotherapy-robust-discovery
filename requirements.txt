@@ -1,0 +1,9 @@
+# Initial minimal environment for data audit and baseline work.
+# Pin exact versions after confirming the original implementation and environment.
+numpy
+pandas
+scikit-learn
+matplotlib
+seaborn
+jupyter
+pytest

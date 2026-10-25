@@ -51,6 +51,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Checkpoint resolver workflow](.github/workflows/resolve_virtues_imc14_checkpoint.yml)
 - [Related-work addendum](docs/related_work_addendum_2026.md)
 - [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
+- [Verified HCC discovery marker-panel audit and inference gates](docs/discovery_panel_audit.md)
 - [Dataset shortlist and eligibility checklist](docs/dataset_shortlist.md)
 - [Cohort screening template](data/cohort_screening_template.csv)
 - [Pilot configuration template](configs/panel_shift_pilot.example.yaml)
@@ -81,7 +82,7 @@ The 54-patient cohort is for development only; keep the 42-patient cohort untouc
 
 Full decision record: [Cohort and checkpoint decision](docs/cohort_checkpoint_decision.md).
 
-The project is at **pre-inference compatibility validation**. The 54-patient discovery archive has now been downloaded in an ephemeral CI runner and its published MD5 matched; its marker panel was parsed. The archive and raw images/masks were not committed to the repository. The checkpoint file identity is pinned, but weights have not been loaded for inference.
+The project is at **pre-inference compatibility validation**. The 54-patient discovery archive has now been downloaded in an ephemeral CI runner and its published MD5 matched; its 42-row marker panel was parsed and documented in `docs/discovery_panel_audit.md`. The archive and raw images/masks were not committed to the repository. The checkpoint file identity is pinned, but weights have not been loaded for inference.
 
 ## Important data and interpretation limits
 

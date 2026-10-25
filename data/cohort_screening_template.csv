@@ -1,0 +1,6 @@
+cohort_id,source_paper_doi,accession,technology,cancer_type,n_patients,n_images,marker_panel_url,has_cd8_or_tcell_labels,has_patient_ids,has_candidate_target_markers,has_clinical_response_labels,dataset_terms_url,derived_results_publication_allowed,raw_redistribution_allowed,foundation_model_exposure,checkpoint_id,eligible_for_smoke_test,eligible_for_development,eligible_for_independent_test,decision,review_notes
+allam2022spatially,,,,,,,,,,,,,,,,,UNKNOWN,UNKNOWN,UNKNOWN,NOT_REVIEWED,
+hoch2022multiplexed,,,,,,,,,,,,,,,,,UNKNOWN,UNKNOWN,UNKNOWN,NOT_REVIEWED,
+moldoveanu2022spatially,,,,,,,,,,,,,,,,,UNKNOWN,UNKNOWN,UNKNOWN,NOT_REVIEWED,
+xiao2022multiplexed,,,,,,,,,,,,,,,,,UNKNOWN,UNKNOWN,UNKNOWN,NOT_REVIEWED,
+schurch2020coordinated,,,,,,,,,,,,,,,,,UNKNOWN,UNKNOWN,UNKNOWN,NOT_REVIEWED,

@@ -1,6 +1,6 @@
 # HCC discovery panel parsed; config remains a non-runnable template.
 # Archive MD5 and marker inventory are verified in docs/discovery_panel_audit.md.
-# Confirmed blocker: HCC TIFFs are already normalized, while VirTues applies clipping/log1p/blur/standardization. Do not run this pairing unless compatible original-scale inputs and required statistics are recovered. Model exposure, endpoint and baseline also remain unresolved.
+# Confirmed blocker: HCC TIFFs are already normalized, while VirTues applies clipping/log1p/blur/standardization. Direct inference is NO-GO unless original-scale compatible inputs are recovered or a different compatible cohort/model is selected. The pinned `virtues-imc14` checkpoint is outside the Salié study by the published core-versus-extended corpus grouping, with no accession-to-training-run certificate; endpoint, marker mapping and baseline remain unresolved.
 # Do not execute as a study until every CHANGE_ME and each pre-inference gate is resolved.
 study:
   title: "Counterfactual recommendation fidelity under virtual marker reconstruction"
@@ -10,7 +10,7 @@ study:
 dataset:
   cohort_id: "salie_hcc_imc_pair"
   version_or_accession: "development=10.5281/zenodo.10793609; external_test=10.5281/zenodo.10794904"
-  license_or_terms_url: "development=CC-BY-4.0 (NLM Dataset Catalog); external_test=CC-BY reported by OpenAIRE/Datacite, Zenodo Rights field blank; confirm discrepancy"
+  license_or_terms_url: "development=CC-BY-4.0 and external_test=CC-BY-4.0 according to completed Zenodo API metadata audit; the ICI landing-page licence display remains visually blank; retain API audit evidence"
   source_paper_doi: "10.1136/gutjnl-2024-332837"
   patient_id_column: "CHANGE_ME"
   image_or_core_id_column: "CHANGE_ME"
@@ -72,8 +72,8 @@ foundation_model:
   checkpoint_retrieved_at_utc: "2026-10-25T13:10:07.676504+00:00"
   checkpoint_manifest_action_run: "https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40196348184"
   model_license: "CC BY-NC 4.0 weights; non-commercial only"
-  training_cohort_manifest_url: "https://www.nature.com/articles/s41586-026-10884-y; published 14-IMC versus extended-32 cohort inventory; exact exposure still needs confirmation"
-  evaluation_cohort_exposure: "published_inventory_suggests_excluded; accession-level exposure unconfirmed" # Resolve against exact artifact before independent-test claim.
+  training_cohort_manifest_url: "https://www.nature.com/articles/s41586-026-10884-y; Salié et al. ref. 95 is among extra IMC cohorts in extended corpus, outside the pinned core-14 model; publication-level evidence only"
+  evaluation_cohort_exposure: "published_inventory_supports_exclusion_for_core14; no accession-to-training-run certificate located" # Report this as reference-level provenance, not internal training-log proof.
 
 splits:
   grouping_unit: "patient"

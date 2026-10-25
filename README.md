@@ -1,43 +1,47 @@
 # Cancer Immunotherapy AI: Robust Target Discovery
 
-**Project status (25 October 2026): conditional GO for a small feasibility pilot; no verified novelty claim, new algorithm, therapeutic effect, or patentability conclusion.**
+**Project status (25 October 2026): NO-GO for the generic robustness-only paper as currently phrased; conditional GO to investigate a more specific comparative or transfer question. No novel method or therapeutic effect has been established.**
 
-## Current research candidate
+## Current research area
 
-**Patient-Level Reproducibility of Spatial-Proteomic Counterfactual Target Combinations for Cancer Immunotherapy**
+Cancer immunotherapy target discovery using computational models.
 
-Primary question: Across patient-grouped resamples and model seeds, how reproducible are spatial-proteomic counterfactual target sets, and does a prespecified stability-aware consensus improve held-out-patient **model-predicted** CD8+ infiltration uplift over the reproduced published median-strategy baseline at a matched target budget?
+The first proposed paper was to measure how spatial-proteomic counterfactual target sets vary across patient-grouped resamples and model seeds. That is still a useful reproducibility audit, but it no longer looks strong enough by itself as a high-novelty paper: Morpheus (2025) already does spatial counterfactual target discovery and held-out-patient evaluation; PHAROS (a September 2026 preprint) searches target-directed combinations with sample-based robustness-aware reranking; a MICCAI 2026 method evaluates counterfactual spatial-cell influence with core-level bootstrap; and SPAD-CFR (Biology, 2026) proposes spatial counterfactual tissue reprogramming including melanoma immune-focused interventions.
 
-This is a candidate research question—not a confirmed literature gap. Morpheus already performs counterfactual target discovery, patient-level splitting, median aggregation and held-out-patient in-silico evaluation, with selected in-vitro validation. PHAROS (a September 2026 preprint) already searches target-directed drug combinations and uses sampled batches/robustness-aware re-ranking. A bootstrap/Jaccard score or “AI for cancer” alone would not be a strong novelty claim.
+## Current decision
 
-## Research gate decision
-
-- **Conditional GO:** verify data/code rights, read the complete Morpheus supplementary PDF, reproduce at least one baseline result, and test a small feasibility subset.
-- **Not cleared for full method development yet:** the separate supplement has not been read; the original data/model pipeline has not been executed; the proposed gap remains unverified.
+- **No-go:** presenting bootstrap, Jaccard similarity, or repeated Morpheus runs alone as a novel algorithm.
+- **Conditional next step:** investigate whether a more substantive question about cross-method intervention decision utility or cross-cohort/platform transfer is feasible with compatible data and endpoints.
+- **Pilot may proceed for feasibility/familiarization:** use a small permitted tutorial/preprocessed artifact to reproduce a baseline, but the pilot is not evidence of novelty.
 - **Scientific boundary:** model-predicted uplift is not observed therapeutic effect, causal evidence, clinical utility, or patient-specific treatment advice.
 
 ## Work completed in this repository
 
-- First-pass paper, public-code, notebook, dataset and prior-method audits.
+- First-pass literature, paper Methods, public-code, notebook, dataset and prior-method audits.
+- Updated prior-art addendum for recent spatial counterfactual methods.
+- Novelty assessment now explicitly records a no-go decision for the current generic robustness-only framing.
+- Pivot candidates and a decision tree for choosing a stronger question.
 - Written decision-gate protocol and reproducibility run log.
-- Patient-aware evaluation helpers: target selection frequency, pairwise Jaccard for complete sets, signed-target direction consistency, patient-equal-weight predicted uplift, and patient-level bootstrap confidence intervals.
-- Six synthetic unit tests for those generic helper functions; local result: **6 passed**. These tests do not reproduce or validate Morpheus or any biological hypothesis.
+- Generic analysis helpers: target selection frequency, pairwise/full-set Jaccard, signed-direction consistency, patient-equal-weight predicted uplift, and patient-level bootstrap confidence intervals.
+- Six synthetic unit tests for those helpers; recorded local result: **6 passed**. These tests validate generic metric code only—not Morpheus, its data, or a biological hypothesis.
 - No raw data have been committed.
 
 ## Next steps, in order
 
-1. Retrieve/read the full supplementary PDF and confirm usage terms for the exact data and code.
-2. Get the public tutorial/preprocessed artifacts in a network-enabled environment; record versions and checksums.
-3. Reproduce a published baseline and measure runtime on a small subset.
-4. Run cached-output resampling only as an explicitly descriptive first pilot; then separately run full discovery/retraining across patient-grouped resamples and model seeds if compute permits.
-5. Evaluate every strategy on untouched patients and compare with prespecified baselines at a matched target budget.
+1. Finish reading the full Morpheus supplementary PDF. Its download redirect could not be retrieved in the current execution environment.
+2. Verify reuse terms for the exact code/data artifacts and build a dataset/method compatibility table.
+3. Compare Candidate A (cross-method intervention decision utility) and Candidate B (cross-cohort/platform transfer) against current prior art.
+4. If a small permitted tutorial bundle is obtainable in a network-enabled environment, reproduce a published baseline and record compute needs.
+5. Select one primary question only after the compatibility/prior-art gate passes.
 
 ## Repository map
 
-- [Research question](docs/research_question.md)
+- [Research question and revised scope](docs/research_question.md)
 - [Initial literature review](docs/literature_review.md)
 - [Novelty assessment](docs/novelty_assessment.md)
 - [Existing-method comparison matrix](docs/existing_methods_matrix.md)
+- [October 2026 related-work addendum](docs/related_work_addendum_2026.md)
+- [Pivot candidates](docs/pivot_candidates.md)
 - [Morpheus code audit](docs/morpheus_code_audit.md)
 - [Dataset feasibility and permissions](docs/dataset_audit.md)
 - [Prespecified analysis plan](docs/analysis_plan.md)
@@ -47,16 +51,16 @@ This is a candidate research question—not a confirmed literature gap. Morpheus
 - [Unit tests](tests/test_target_stability.py)
 - [Data handling policy](data/README.md)
 
-## Initial literature and artifacts
+## Key prior-art links
 
-1. Wang et al. (2025). *Identifying perturbations that boost T-cell infiltration into tumours via counterfactual learning of their spatial proteomic profiles.* Nature Biomedical Engineering. https://doi.org/10.1038/s41551-025-01357-0
-2. Shen et al. (2026). *Generalizable AI predicts immunotherapy outcomes across cancers and treatments.* Nature Medicine. https://doi.org/10.1038/s41591-026-04502-7
-3. PHAROS (bioRxiv preprint, September 2026): https://www.biorxiv.org/content/10.64898/2026.09.08.749477v1.full
-4. Original melanoma IMC data-for-analysis record: https://doi.org/10.5281/zenodo.5994136
-5. Morpheus code and tutorial: https://github.com/cellethology/morpheus-spatial
+1. Morpheus (2025), *Identifying perturbations that boost T-cell infiltration into tumours via counterfactual learning of their spatial proteomic profiles*: https://doi.org/10.1038/s41551-025-01357-0
+2. PHAROS (bioRxiv preprint, September 2026): https://www.biorxiv.org/content/10.64898/2026.09.08.749477v1.full
+3. Anzum et al., MICCAI 2026, *A Counterfactual Framework for Directional Cell-Cell Interaction Analysis in Spatial Transcriptomics*: https://papers.miccai.org/miccai-2026/0006-Paper6105.html
+4. Ding et al., Biology 2026, *Counterfactual Diffusion Modeling Enables Spatially Targeted Reprogramming of Tissue Microenvironments*: https://doi.org/10.3390/biology15141097
+5. Original melanoma IMC data-for-analysis record: https://doi.org/10.5281/zenodo.5994136
 
 ## Data and intellectual property
 
 Do not upload raw or restricted data to GitHub. The original melanoma data record's license field was not clear in this audit; verify reuse rights for the exact artifact. The article's CC BY-NC-ND license does not automatically license separate dataset or code assets.
 
-This repository is public. If later work appears genuinely inventive, get qualified institutional/IP advice before disclosing enabling details. No claim about patentability is made here.
+This repository is public. If later work appears genuinely inventive, get qualified institutional/IP advice before disclosing enabling details. No patentability claim is made.

@@ -7,7 +7,8 @@ Do not run pretrained VirTues on the current normalized HCC discovery TIFFs. The
 
 Publicly listed contact: Prof. Bertram Bengsch, University Medical Center Freiburg, bertram.bengsch@uniklinik-freiburg.de (institutional contact page: https://www.bioss.uni-freiburg.de/person/prof-dr-dr-bertram-bengsch/).
 
-### Draft email — not sent
+### Email status — sent by the researcher on 2026-10-25
+The email draft below was sent by the researcher, who confirmed sending it in chat. Awaiting a response; no response has been received or verified here.
 **Subject:** Request for original-scale IMC data and preprocessing details for HCC cohort (Zenodo 10793609 / 10794904)
 
 Dear Professor Bengsch and colleagues,
@@ -52,7 +53,14 @@ Sources:
 ## Preliminary alternative-cohort assessment
 The CODEX/Visium HCC dataset is attractive because it provides normalized per-cell protein features, cell labels, spatial coordinates and treatment-response metadata. This permits a controlled **cell-level** missing-marker benchmark without pretending the data are compatible with VirTues image preprocessing. The benchmark would need a separate, appropriately validated tabular/cell-graph model and must account for patient-level grouping to prevent leakage across regions from the same patient. It is not yet selected: license/reuse terms and the actual metadata/panel contents still need checking.
 
-The newer Zenodo record (19123188) is listed as open and includes the same CODEX-MIF, metadata and Visium files plus a set of co-registered H&E images. The landing page's license field does not visibly identify a license, so permission for the intended reuse must be confirmed before analysis or redistribution.
+The newer Zenodo record (19123188) is listed as open and includes CODEX-MIF, metadata, Visium data and co-registered H&E images. Its landing page does not visibly identify a license; do not assume that “Open” alone resolves reuse rights. Confirm the file-level license and permitted research use with the authors/Zenodo metadata before substantive analysis or redistribution.
+
+### Public metadata audit completed 2026-10-25
+- **CODEX/Visium HCC alternative (Zenodo 19123188):** downloaded/read the small public `metadata.csv` preview only; no large archives were downloaded. It has 48 region rows and 7 columns: `region_id`, `region_label`, `patient_id`, `state`, `response`, `species`, `treatment`. The rows identify 13 distinct patient IDs, with both pre- and post-treatment regions and responder/non-responder labels. This is repeated-region metadata, not 48 independent patients. A patient-level split is mandatory to prevent leakage. The records are split across treatment labels “List A” and “List B”; the exact clinical meaning of those labels must be checked against the paper/supplement before analysis.
+- **CODEX feature format:** the archive preview lists per-region cell-data, cell-type, cell-feature and expression CSV files. The expression tables are documented as normalized protein biomarker levels, so the dataset is suitable in principle for a cell-level masking benchmark if marker columns and preprocessing are verified. It is not a VirTues image input.
+- **Scientific-overlap caution:** the accompanying HCC study already analyzes spatial multi-omics and deep-learning fingerprints of immunotherapy response/resistance. Our contribution must therefore be tightly framed around marker-missingness, reconstruction error, and the effect on downstream marker/target ranking; generic prediction of immunotherapy response is not a novel claim.
+- **HCC ICI cohort (Zenodo 10794904):** the public record describes 42 ICI-treated HCC patients and an 882 MB archive containing normalized multichannel TIFFs, cell masks, stromal/parenchymal masks and `ICICohort_panel.csv`. Its image representation is likewise preprocessed/normalized, so it is not automatically compatible with VirTues. The archive itself is too large for the web preview, and the full archive/panel have **not** been downloaded or structurally audited here. The landing page's license field is not visibly populated; confirm rights and cite the source study before reuse.
+- **License status:** the Zenodo record pages show an empty visible “License” field for both the CODEX/Visium HCC alternative and the HCC ICI record. The discovery cohort has a separate CC BY 4.0 catalog listing, but do not transfer that license assumption to another record. Treat reuse as **pending clarification** until authoritative metadata or the depositor confirms terms.
 
 ## Selection rule
 Do not choose a dataset solely because it is available. It must have:
@@ -64,9 +72,9 @@ Do not choose a dataset solely because it is available. It must have:
 - reuse terms that permit the intended analysis.
 
 ## Next go/no-go gate
-1. Send the email above (manual action; no email has been sent by this workflow).
-2. Inspect the HCC ICI archive structure and panel, without committing raw images.
-3. Inspect the latest CODEX/Visium HCC record's license/reuse terms, metadata and marker panel.
+1. Await the author response to the email sent by the researcher on 2026-10-25; follow up if appropriate.
+2. Download and structurally audit the HCC ICI archive/panel only after verifying reuse terms; keep raw images out of GitHub.
+3. Obtain authoritative reuse terms for the CODEX/Visium record; then audit the expression-table marker columns and missingness.
 4. Inspect the VirTues cohort inventory to rule out training overlap for any candidate validation cohort.
 5. Select one route and document the rationale before inference.
 

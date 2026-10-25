@@ -1,6 +1,6 @@
 # Method and dataset compatibility matrix
 
-**Status (25 October 2026): HCC cohort pair and reconstruction-checkpoint variant selected from public evidence; archives, exact marker crosswalk, target-baseline compatibility and immutable checkpoint exposure remain unverified. This table is not evidence that cohorts can be pooled or models compared directly.**
+**Status (25 October 2026): HCC discovery archive integrity, 42-row marker-panel parsing, and metadata-only artifact publication are verified. Model input compatibility, preprocessing, endpoint, counterfactual baseline and checkpoint exposure remain unresolved. This table is not evidence that cohorts can be pooled or models compared directly.**
 
 | Study/resource | Modality and cohort information | Model output / endpoint | Access and rights status | Directly comparable to Morpheus CD8-infiltration intervention evaluation? |
 |---|---|---|---|---|
@@ -86,3 +86,24 @@ The 54-patient cohort is assigned to development/calibration only. The 42-patien
 **Checkpoint choice:** use `virtues-imc14`, not `virtues-sp32` or `virtues-sp31`. All released weights are licensed separately from the MIT-licensed source code; the selected weight variant is non-commercial. If future commercial development or patent licensing is contemplated, obtain the appropriate written permissions and legal review before relying on this checkpoint.
 
 See [cohort/checkpoint decision record](cohort_checkpoint_decision.md) for the rights evidence and exact go/no-go checklist.
+
+
+## Verified VirTues implementation compatibility gate (25 October 2026)
+
+The official VirTues repository implementation was inspected after the HCC panel audit. The dataset loader in `virtues/data/multiplex_dataset.py` documents and applies the following steps in order: per-tissue/channel 99th-percentile clipping, `log1p`, Gaussian blur, and per-tissue log-standardization using quantiles, means and standard deviations. It also filters channels based on whether their `protein_id` has a matching marker embedding. Its channel metadata is therefore more than a list of display names. The official README specifies marker embeddings named by UniProt ID and identifies the published weights as model-specific licenses. Sources: [VirTues repository](https://github.com/bunnelab/virtues), [VirTues dataset loader](https://github.com/bunnelab/virtues/blob/main/virtues/data/multiplex_dataset.py), [VirTues README/model table](https://github.com/bunnelab/virtues#models).
+
+The HCC archive is described as containing normalized multichannel TIFFs and masks, while its discovered panel provides `Channel`, `MetalTag` and `Target` only. That is not yet the VirTues data contract. **Do not apply VirTues preprocessing blindly to already-normalized values and do not feed the TIFF channels to the checkpoint by channel position alone.** We must establish whether the archive retains compatible preprocessed intensities or recover the original intensity scale and per-tissue statistics; map each target to a canonical protein/UniProt identifier; preserve exact channel order; confirm pixel resolution and crop conventions; and create the required quantile/mean/std metadata. Any required conversion must be validated against the official reconstruction demo on a known-compatible example first.
+
+The selected `virtues-imc14` checkpoint is listed by the official model table as trained on 14 IMC datasets and has **no segmentation head**. It may be a reasonable candidate for marker reconstruction, but it does not itself supply cell segmentation/phenotyping labels or a validated CD8-infiltration endpoint. The current HCC masks are cell/stroma masks; they must not be treated as CD8 labels without checking their semantics and source annotations. A target-discovery stage must be separately reproduced or specified, with a fixed objective and allowed intervention markers, before any recommendation-fidelity result is interpretable.
+
+### Required gates before a real-data inference run
+
+1. **Input-format gate:** document archive intensity scale, normalization history, pixel size, TIFF axis/channel order, masks, per-tissue quantiles, means and standard deviations. If information required by the checkpoint cannot be recovered, stop and choose a compatible dataset or a method that accepts this format.
+2. **Marker identity gate:** create a 42-row mapping from `Target`/metal tag/channel to canonical protein name and UniProt ID; record aliases, mapping source, ambiguity and whether the checkpoint's embedding directory supports every marker. No silent alias guessing.
+3. **Model contract gate:** pin the source-code revision as well as weight revision/hash, follow the official inference notebook, load the exact model configuration and marker embeddings, and confirm output shapes/channel order on a known-compatible example.
+4. **Exposure gate:** resolve whether the exact HCC accession or closely related source cohort appears in any pretraining/fine-tuning data used for the checkpoint. The label `imc14` alone is not accession-level proof.
+5. **Endpoint gate:** define CD8 infiltration from documented cell labels or a validated, prespecified phenotype rule. If no defensible cell-level labels exist, change the endpoint to a supported marker reconstruction/phenotype outcome rather than inventing CD8 truth.
+6. **Counterfactual gate:** reproduce the baseline method or clearly specify a defensible alternative, intervention semantics, allowed targets and directions, target budget, and evaluation objective. Predicted uplift must remain labelled model-predicted, not a treatment effect.
+7. **Pilot gate:** run one compatible image and one masked marker, verify finite outputs, scale, spatial alignment and reconstruction metrics against the truly measured channel. No held-out patient experiment until this passes.
+
+**Current execution decision: NO-GO for HCC model inference until gates 1–3 pass.** This is a data-contract blocker, not a failure of the research question. If original-scale intensities/statistics or canonical marker embeddings cannot be established, the responsible choice is to change dataset or model—not force an invalid conversion.

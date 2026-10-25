@@ -91,3 +91,11 @@ The full-measurement reference is itself a model output, not biological truth. "
 ## Intellectual property and transparency
 
 The repository is public. No patentability or novelty claim is made. If a genuinely distinct invention emerges, consult institutional technology-transfer or qualified patent advice before disclosing enabling details.
+
+## Operational cohort and checkpoint choice
+
+The current best-fit system is the Salié et al. HCC IMC pair: 54-patient discovery cohort (Zenodo 10793609, CC BY 4.0 per NLM Dataset Catalog) for development/calibration, and the 42-patient ICI cohort (Zenodo 10794904) as an untouched external evaluation set. OpenAIRE metadata reports CC BY for the latter, but its direct Zenodo licence field appears blank; preserve evidence and resolve the discrepancy where required.
+
+The preferred reconstruction checkpoint is official VirTues `virtues-imc14/model.safetensors` (14 IMC datasets; CC BY-NC 4.0 weights). The Salié study is in the extended 32-cohort additions, so `virtues-imc14` is the best published same-modality candidate; exact artifact revision/hash and accession-level exposure must still be confirmed. Do not use `virtues-sp32` or `virtues-sp31` to claim held-out Salié evaluation.
+
+Selection references and required gates: [cohort/checkpoint decision record](cohort_checkpoint_decision.md). The current choice is not equivalent to completed legal sign-off, panel inspection, baseline reproduction or real-data execution.

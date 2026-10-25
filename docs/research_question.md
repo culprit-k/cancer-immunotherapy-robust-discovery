@@ -1,53 +1,40 @@
 # Research question and scope
 
-## Working title
+## Project direction
 
-**Patient-Level Reproducibility of Spatial-Proteomic Counterfactual Target Combinations for Cancer Immunotherapy**
+Cancer immunotherapy target discovery using computational models is the broad research area. The initially proposed robustness-only study now appears too incremental to carry a strong novelty claim, given Morpheus (2025), PHAROS (2026 preprint), spatial counterfactual core-bootstrap work at MICCAI 2026, and SPAD-CFR (Biology, 2026).
 
-Possible paper subtitle: *Separating patient-sampling and model-seed variability in predicted interventions for CD8+ T-cell infiltration.*
+## Current recommendation
 
-## Primary question
+**Do not proceed with the original study as a novelty-led paper yet.** Investigate a more specific decision-level question instead:
 
-Across patient-grouped resamples and model seeds, how reproducible are spatial-proteomic counterfactual target sets, and does a prespecified stability-aware consensus improve held-out-patient model-predicted CD8+ infiltration uplift over a reproduced published median-strategy baseline at a matched target budget?
+> When spatial counterfactual methods propose molecular interventions for cancer immune activity, does a prespecified, target-budget-matched consensus across methods/cohorts identify intervention directions that replicate better in untouched patients and retain model-predicted immune uplift than the strongest single-method baseline?
 
-## Hypothesis to test
+This candidate may need to be narrowed further after checking compatible datasets, endpoints and intervention definitions. It is not a confirmed literature gap or an algorithm claim.
 
-The proposed target sets may vary due to two distinct sources: which patients/cores enter the discovery sample and which model seed/retraining run is used. A patient/core-hierarchical reproducibility analysis may characterize those sources separately and test whether the stability information is associated with more consistent predicted uplift on untouched patients.
+## Candidate alternatives
 
-This is an unverified hypothesis, not proof of a literature gap.
+1. **Cross-method intervention decision utility.** Compare two or more methods only when they can be evaluated on a common data representation and same held-out patient endpoint. Test whether consensus changes decisions compared with best single method at equal target budget. Main risks: methods may predict different objects, and adapting them could itself introduce bias.
+2. **Cross-cohort/platform transfer of signed target directions.** Test whether target directions discovered in one patient cohort/platform transfer to another using only preregistered shared markers and compatible outcomes. Main risks: small patient counts, incomplete overlap of channels, and cross-cohort prediction already being a mature field.
+3. **Mechanistic admissibility of counterfactual interventions.** Test whether predicted target sets are consistent with prespecified molecular/signalling constraints and whether such constraints improve independent plausibility. Main risk: existing work already proposes biologically informed spatial counterfactuals and knowledge-graph constraints; adding a graph term is not enough.
 
-## Why this is not just “new AI for cancer”
+## What was already established in the first audit
 
-Morpheus already proposes spatial-proteomic counterfactual perturbations, median-aggregates them into whole-tumour strategies, evaluates strategies in silico on held-out patients, and reports selected in-vitro experiments. PHAROS, a 2026 preprint, already searches for target-directed combinations using a single-cell perturbation model and includes robustness-aware re-ranking. General combination discovery and a generic stability metric are therefore not sufficient novelty claims.
+Morpheus applies counterfactual optimization to spatial proteomic tissue images, creates perturbations per patch, aggregates these into whole-tumour strategies, evaluates them in silico on held-out patients, and validates selected predictions in vitro. PHAROS searches target-directed combinations in single-cell perturbation space and uses controls/sample-based reranking. A MICCAI 2026 spatial transcriptomics method uses counterfactual neighbour replacement and core-level bootstrap evaluation. SPAD-CFR (Biology, 2026) generates spatial counterfactual tissue states and includes melanoma immune-focused interventions.
 
-The candidate distinction—if confirmed by the complete supplementary material and expanded prior art—is a spatial patient/core-hierarchical benchmark that separately varies patient sampling and model retraining, evaluates full signed intervention-set stability, and relates it to held-out-patient model-predicted uplift.
+These methods make broad “AI for cancer immunotherapy”, generic combinations, spatial counterfactual generation, core-level bootstrap, or generic stability scoring insufficient as novelty claims.
 
-## Scope
+## Required next gate
 
-- Computational hypothesis generation and reproducibility evaluation.
-- Spatial-protein / imaging mass cytometry setting, initially the Morpheus melanoma cohort if licensing permits.
-- Patient is the inferential unit; cores and patches are nested observations.
-- Compare the published method with prespecified baselines under equal target budgets.
-- Separate model-seed variability from patient-sampling variability.
-- Evaluate on untouched patients; use an external cohort only if markers, endpoints, identifiers and reuse terms are compatible.
+- Complete the Morpheus supplement audit.
+- Compare the three alternatives against recent papers and preprints.
+- Verify data licenses/terms and whether an endpoint is shared across methods.
+- Create a feasibility matrix before choosing a new primary question.
+- Reproduce a baseline only after rights and data access are clear.
 
-## Out of scope
+## Definitions and guardrails
 
-- Patient-specific treatment advice.
-- Claims of target causality or treatment efficacy based on model predictions alone.
-- Claims of novelty before full prior-art and supplementary-material audit.
-- Patentability conclusions.
-
-## Key definitions
-
-- **Signed target:** molecular marker plus proposed increase/decrease direction.
-- **Selection stability:** frequency of a signed target across repeated discovery runs.
-- **Combination stability:** overlap/consistency of complete signed target sets.
-- **Patient-level predicted uplift:** predicted after-minus-before change summarized within each patient, without treating patches as independent patients.
-- **Model-seed variability:** variation across independently initialized/retrained models under an otherwise fixed design.
-- **Biological validity:** independent empirical evidence for the predicted perturbation; not implied by stability.
-- **External generalization:** evaluation in independent patients/cohorts never used in discovery or model selection.
-
-## Decision gate
-
-Do not build a purportedly novel algorithm until (1) the full Morpheus supplement and targeted prior art are examined, (2) data rights and patient identifiers are verified, (3) a baseline is reproduced, and (4) a pilot demonstrates that a prespecified, leakage-safe patient-level evaluation is technically feasible and adds information beyond established baselines.
+- Model-predicted uplift is a model output, not an observed treatment effect.
+- Biological validity requires independent experiments or a well-justified orthogonal benchmark.
+- Patient is the inferential unit; all cores/patches from one patient must remain together.
+- Do not claim novelty, causal efficacy, clinical utility, or patentability before supporting evidence is available.

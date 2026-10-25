@@ -42,7 +42,7 @@ Why this variant:
 
 - [ ] Download the 54-patient and 42-patient archives from their official records; store outside the public GitHub repository.
 - [ ] Verify archive integrity against source checksums and record new SHA-256 values locally.
-- [ ] Inspect `DCCohort_panel.csv` and `ICICohort_panel.csv`; compare marker names, metal channels, image dimensions, masks and patient metadata.
+- [ ] Inspect the actual `DiscoveryCohort_panel.csv` from the audited discovery ZIP and `ICICohort_panel.csv` in the not-yet-downloaded ICI archive; compare marker names, metal channels, image dimensions, masks and patient metadata.
 - [ ] Obtain or recover an input representation and the required per-tissue preprocessing statistics compatible with VirTues; directory/layout conversion alone is insufficient. If those inputs cannot be obtained, select a compatible cohort/model or pre-specify a separate HCC-specific adaptation. Preserve channel order and ROI/patient identities.
 - [x] Audit stored intensity ranges and published normalization. Sampled float32 pixels are within [0,1] as expected for PENGUIN-normalized images. These values do not reverse the transformation; direct VirTues inference remains NO-GO.
 - [x] Save the metadata-only Zenodo API audit evidence for both HCC accessions; it reports `cc-by-4.0` for each. The ICI image archive remains undownloaded; confirm landing-page display with the data contact/institution if needed.

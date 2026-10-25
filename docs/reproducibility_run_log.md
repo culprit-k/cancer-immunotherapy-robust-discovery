@@ -101,3 +101,12 @@
 - Per-marker MAE/RMSE/bias/correlation are now computed within each patient first and then macro-averaged across patients; pooled-cell metrics are explicitly secondary. This prevents patients with many more cells from dominating the primary reconstruction summary.
 - Added a synthetic test that adds many rows to one patient and checks equal patient weighting.
 - The previous local test run was **18 passed** before this latest test was added. The current committed suite should contain 19 tests, but a completed hosted CI run for the latest commit has not been verified; do not state 19 passed until CI or a local run confirms it.
+
+
+## 25 October 2026 — targeted prior-art and local test verification
+
+- Added `docs/targeted_prior_art_and_feasibility_audit_2026-10-25.md` with the decision boundary, licensing/exposure gates and stop conditions.
+- Added Spatium (spatial-protein imputation), CONCERT (spatial-transcriptomics imputation plus counterfactual perturbation simulation), and the 2026 spatial-metabolomics imputation benchmark to the nearby-prior-art risk list. These do not prove exact equivalence, but make a broad imputation-plus-counterfactual claim unsafe without a full methods/supplement comparison.
+- Inspected the official VirTues repository's published weight table: `virtues-sp32` is trained on 32 datasets and uses CC BY-NC 4.0 weights; `virtues-sp31` is trained on 31 datasets with MIT weights; `virtues-imc14` is trained on 14 IMC datasets with CC BY-NC 4.0 weights. Exact training exposure of the checkpoint selected for Rigamonti is still unverified.
+- Ran `python -m pytest -q` in the available isolated test-copy directory `/mnt/data/research-helper-tests`: **19 passed** in 1.20 seconds. This verifies the current local source/test copies only; it does not prove the repository's current checkout or hosted GitHub Actions passed.
+- No dataset downloaded, checksum recorded, licence cleared, model loaded, counterfactual generated or biological experiment performed.

@@ -194,3 +194,16 @@ Source catalogue: https://spora.bioimagearchive.org/projects/spora/dataset. Data
 ## 16. Adjacent missing-data benchmark in spatial omics (2026)
 
 *Overcoming missing data in spatial metabolomics with machine learning imputation to accelerate downstream discovery* (iScience, 17 April 2026; DOI 10.1016/j.isci.2026.115203) benchmarks eight imputation methods and evaluates both imputation accuracy and preservation of spatial clustering. It is a useful conceptual precedent that reconstruction quality and downstream structure should be evaluated together, but it concerns mass-spectrometry imaging of spatial metabolites rather than multiplexed spatial proteins, and it does not establish whether counterfactual immunotherapy intervention recommendations remain faithful. It reinforces the need for a clearly defined downstream decision endpoint rather than imputation accuracy alone.
+
+ 
+## 17. Cohort and checkpoint selection (25 October 2026)
+
+The current preferred cohort system is the Salié et al. HCC IMC study, which includes a 54-patient discovery cohort and a separate 42-patient ICI-treated validation cohort. The paper reports a 41-plex panel and examines CD8 T-cell infiltration, PD-1-positive/exhausted CD8 T cells, TIM-3/LAG-3 and immunosuppressive myeloid/APC states (DOI 10.1136/gutjnl-2024-332837). The discovery archive is available at https://zenodo.org/records/10793609; the ICI cohort at https://zenodo.org/records/10794904.
+
+The NLM Dataset Catalog reports CC BY 4.0 for the 54-patient discovery accession. For the 42-patient ICI accession, OpenAIRE/Datacite-linked metadata report CC BY, whereas the direct Zenodo Rights/License field appears blank. This is a rights-metadata discrepancy, not a reason to claim the license is certain: retain the metadata evidence and clarify with the data contact/institutional office where required.
+
+The selected reconstruction model variant is the official VirTues `virtues-imc14/model.safetensors` (14 IMC cohorts; CC BY-NC 4.0 weights). VirTues' paper separates the core 14-IMC corpus from an extended 32-cohort corpus that adds seven extra IMC datasets (refs. 90–96) and other imaging technologies. The Salié paper appears as ref. 95 in the extended set, making `virtues-imc14` the strongest current same-modality checkpoint candidate. The exact loaded artefact must still be pinned to an immutable revision and SHA-256, and exposure to the two specific Zenodo accessions must be confirmed before making a strict held-out claim.
+
+Primary source links: VirTues paper https://www.nature.com/articles/s41586-026-10884-y; official repo/weight table https://github.com/bunnelab/virtues; model hub https://huggingface.co/bunnelab/virtues; NLM record https://datasetcatalog.nlm.nih.gov/dataset?q=0002065446; OpenAIRE licence metadata https://explore.openaire.eu/search/result?pid=10.5281/zenodo.10794904; Salié et al. paper https://doi.org/10.1136/gutjnl-2024-332837.
+
+This selection improves feasibility and clinical relevance but does not resolve novelty. The model checkpoint has a non-commercial weight licence, the 42-patient accession's licence display requires clarification, the marker CSVs have not been inspected locally, and the counterfactual baseline has not been reproduced on HCC.

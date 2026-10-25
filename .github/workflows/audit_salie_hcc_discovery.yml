@@ -29,6 +29,6 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: salie-hcc-discovery-metadata-audit
-          path: \${{ runner.temp }}/salie-hcc-discovery-audit.json
+          path: ${{ runner.temp }}/salie-hcc-discovery-audit.json
           if-no-files-found: error
           retention-days: 30

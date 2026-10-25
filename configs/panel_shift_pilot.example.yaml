@@ -1,3 +1,5 @@
+# Selected HCC cohort-pair candidate, but not yet runnable.
+# Rights metadata discrepancy and exact checkpoint exposure must be resolved; pin a model revision and SHA-256 after download.
 # Template only — do not run until dataset rights, marker names, model exposure,
 # and baseline compatibility are verified. Replace every CHANGE_ME field.
 study:
@@ -6,10 +8,10 @@ study:
   random_seed: 20261025
 
 dataset:
-  cohort_id: "CHANGE_ME"
-  version_or_accession: "CHANGE_ME"
-  license_or_terms_url: "CHANGE_ME"
-  source_paper_doi: "CHANGE_ME"
+  cohort_id: "salie_hcc_imc_pair"
+  version_or_accession: "development=10.5281/zenodo.10793609; external_test=10.5281/zenodo.10794904"
+  license_or_terms_url: "development=CC-BY-4.0 (NLM Dataset Catalog); external_test=CC-BY reported by OpenAIRE/Datacite, Zenodo Rights field blank; confirm discrepancy"
+  source_paper_doi: "10.1136/gutjnl-2024-332837"
   patient_id_column: "CHANGE_ME"
   image_or_core_id_column: "CHANGE_ME"
   measured_marker_channels:
@@ -20,12 +22,12 @@ dataset:
   rights_review_date: "CHANGE_ME"
 
 foundation_model:
-  name: "CHANGE_ME"
-  repository_url: "CHANGE_ME"
-  checkpoint_id_or_hash: "CHANGE_ME"
-  model_license: "CHANGE_ME"
-  training_cohort_manifest_url: "CHANGE_ME"
-  evaluation_cohort_exposure: "unknown" # Must be resolved before independent evaluation.
+  name: "VirTues"
+  repository_url: "https://github.com/bunnelab/virtues"
+  checkpoint_id_or_hash: "bunnelab/virtues:virtues-imc14/model.safetensors@PIN_REVISION_AND_SHA256_ON_DOWNLOAD"
+  model_license: "CC BY-NC 4.0 weights; non-commercial only"
+  training_cohort_manifest_url: "https://www.nature.com/articles/s41586-026-10884-y; published 14-IMC versus extended-32 cohort inventory; exact exposure still needs confirmation"
+  evaluation_cohort_exposure: "likely_excluded_from_imc14_but_unverified" # Resolve against exact artifact before independent-test claim.
 
 splits:
   grouping_unit: "patient"

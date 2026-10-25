@@ -10,7 +10,8 @@
 - Archive: `HCC_DiscoveryCohort.zip`
 - Downloaded size: 1,541,132,381 bytes
 - Expected and observed MD5: `a842fa253ac2f0eda3cbf4d41e1b0ec1` (match)
-- ZIP entries: 325
+- ZIP entries: 325 (324 TIFFs and one CSV)
+- Top-level image/mask directories: `DC_img_normalized`, `DC_cellmasks`, `DC_stromamasks`; no raw-MCD/raw-intensity directory or per-tissue quantile/mean/std tables were present in this archive.
 - Actual panel member: `DiscoveryCohort_panel.csv` (not the `DCCohort_panel.csv` filename described in the record text)
 - Parsed panel: 42 rows; columns `Channel`, `MetalTag`, `Target`
 - Raw images and masks were not committed to the repository. The original run's artifact upload failed due to a workflow path expression defect; the workflow path has since been corrected, but successful publication must be confirmed by a new run.
@@ -69,7 +70,7 @@ The panel has a plausible set of immune-state and checkpoint-associated markers,
 That does **not** establish compatibility with the selected foundation model or with a counterfactual intervention algorithm. In particular:
 
 1. The VirTues input-channel and marker-embedding contract must be read from the exact pinned code/checkpoint implementation. Marker spelling and aliases (for example, `PD1` versus `PD-1`, `Tim3` versus `TIM-3`, `Lag3` versus `LAG-3`, `CD8a` versus `CD8`) must be resolved explicitly, never silently guessed.
-2. The panel does not by itself define cell phenotypes or a validated CD8 infiltration endpoint. The existing masks are cell/stroma masks, not automatically immune-cell labels.
+2. The panel does not by itself define cell phenotypes or a validated CD8 infiltration endpoint. The existing masks are cell/stroma masks, not automatically immune-cell labels. The audit inventory confirms the archive contains normalized image stacks plus cell/stroma masks, with no raw-MCD directory or VirTues per-tissue preprocessing-statistics tables.
 3. A marker's presence does not mean that marker is a valid intervention target. Target eligibility, intervention direction and the counterfactual baseline must be pre-specified and biologically justified.
 4. A reconstructed-marker model's predictions are not observed treatment effects. A high-fidelity recommendation is not evidence that intervening on the recommended target will benefit a patient.
 5. Exact training/fine-tuning exposure of the HCC accession to the selected checkpoint remains a separate gate.

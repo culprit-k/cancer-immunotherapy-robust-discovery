@@ -69,7 +69,22 @@ Investigate whether existing methods adequately assess **the joint reliability o
 
 This remains a candidate gap, not a verified one. Morpheus already has patient-level splits and discusses within-patient tissue variability, so we must establish exactly what its supplement and implementation do before proceeding.
 
-## 7. Next review questions
+
+## 7. PHAROS (2026 preprint) — important adjacent work
+
+*PHAROS: turning single-cell perturbation models into target-directed drug-combination screens.* bioRxiv preprint, posted September 2026. https://www.biorxiv.org/content/10.64898/2026.09.08.749477v1.full
+
+PHAROS uses a pretrained single-cell perturbation model to simulate effects of drugs one at a time, chains these predictions to search combinations, and ranks combinations by their predicted movement toward a target state. It reports evaluation on two independent combinatorial perturbation datasets and exploratory patient-derived tumour analyses.
+
+**Implication:** The broad idea of using perturbation models to search for cancer drug combinations is also being pursued. PHAROS is not the same as Morpheus: it focuses on single-cell perturbation models and drug-combination search rather than spatial-proteomic counterfactual changes. However, our proposed work must now distinguish itself from both target-generation systems and robust-counterfactual evaluation. We must explicitly assess whether the intended contribution is merely a reliability wrapper around existing methods, which may be too incremental.
+
+## 8. Updated candidate gap and decision
+
+The only candidate worth further investigation at this stage is a prespecified, leakage-safe **reliability evaluation of full spatially derived target combinations under repeated patient/core resampling and model retraining**, with an assessment of whether the rankings and predicted objectives remain stable on untouched patients. This would be an evaluation study unless a genuinely new method is justified by the evidence.
+
+This is not yet a confirmed gap. Morpheus already has fixed patient-level splits, derives cohort strategies from per-sample perturbations, and evaluates median strategies in silico on a test cohort. PHAROS already searches combinations in perturbation models. Robust counterfactuals and feature stability are also established. We should not proceed to invent an algorithm unless the supplementary methods and targeted prior-art search establish a specific unmet need.
+
+## 9. Next review questions
 
 1. Does Morpheus's full supplement quantify target/combination stability under patient resampling or model retraining?
 2. Does the public reproduction notebook expose the full discovery pipeline and saved split metadata?

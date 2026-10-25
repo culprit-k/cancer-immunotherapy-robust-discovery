@@ -54,3 +54,8 @@ Why this variant:
 ## Scope and honest status
 
 This establishes a **specific, scientifically compatible cohort pair and the most appropriate public checkpoint variant** based on available paper, repository and catalogue evidence. It does not mean data or weights have been downloaded, checksummed, model outputs generated, legal clearance formally issued, or zero exposure proven. No biological result exists yet. The first true-data milestone is a panel/metadata audit and one-channel reconstruction smoke test.
+
+
+## Checkpoint pinning implementation
+
+A small script, `scripts/resolve_virtues_imc14_checkpoint.py`, resolves the official Hugging Face repository's current immutable revision, downloads only `virtues-imc14/model.safetensors` to a temporary runner cache, computes file SHA-256/size and emits a JSON provenance manifest. The workflow `.github/workflows/resolve_virtues_imc14_checkpoint.yml` uploads only that manifest (not the model weights). Once the first run finishes, copy the exact revision and checksum into the study configuration and run log. This does not independently certify training exposure; it only makes the fetched artifact reproducible.

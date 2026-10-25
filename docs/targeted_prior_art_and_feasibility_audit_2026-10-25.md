@@ -101,3 +101,16 @@ The first-choice dataset requires correction after inspecting the published pane
 - **Godbole et al. 2026 melanoma IMC** (Zenodo 15124735, posted 17 September 2026) includes CD8a, PD-1, PD-L1, CTLA-4, TIM-3, LAG-3, TIGIT, CCL2 and CCL4 among its listed channels. The post-release date makes it a promising candidate for an external exploratory test with a frozen VirTues model, but this is not proof of zero training exposure. It includes only six patients and the Zenodo page shows no explicit licence; do not use it until the applicable terms are verified, and do not treat six patients as definitive external validation.
 
 Sources: Rigamonti article (https://doi.org/10.1158/0008-5472.CAN-23-1698), Xiao panel (https://zenodo.org/records/6836992), Godbole panel/cohort (https://zenodo.org/records/15124735), VirTues article (https://www.nature.com/articles/s41586-026-10884-y).
+
+## Operational selection: cohort pair and model checkpoint
+
+A concrete best-fit pair is now selected:
+
+- **Development:** 54-patient Salié et al. HCC discovery IMC cohort, Zenodo 10793609. The NLM Dataset Catalog reports CC BY 4.0. It supplies normalized channel-wise multistack images, cell/stroma masks and a panel CSV.
+- **External evaluation:** 42-patient Salié et al. HCC ICI cohort, Zenodo 10794904. Its direct Zenodo rights display is blank, but OpenAIRE/Datacite-linked metadata for DOI 10.5281/zenodo.10794904 reports CC BY. This discrepancy must be documented and clarified with the data contact/institutional research office before any redistribution or where institutional policy requires source-page confirmation.
+- **Checkpoint:** official `bunnelab/virtues` model file `virtues-imc14/model.safetensors`. The official model table specifies 14 IMC pretraining datasets and CC BY-NC 4.0 weights. The Salié paper appears as reference 95 among the seven extra IMC cohorts in the extended 32-cohort corpus; therefore `virtues-imc14` is the appropriate checkpoint *candidate* and `virtues-sp32`/`virtues-sp31` should not be used for an independent-test claim. Freeze a Hugging Face revision and file SHA-256 at download and confirm exact training exposure before declaring the test fully unseen.
+- **Compatibility caveat:** this establishes a strong cohort fit for testing *marker reconstruction and decision fidelity*, but it does not yet establish that Morpheus's target-discovery model can be directly applied to the HCC images. The HCC panel CSVs, cell-label/endpoint definition and the counterfactual baseline must be audited before model fitting.
+
+Official records: 54-patient cohort https://zenodo.org/records/10793609; 42-patient cohort https://zenodo.org/records/10794904; OpenAIRE metadata and CC BY indication https://explore.openaire.eu/search/result?pid=10.5281/zenodo.10794904; HCC paper https://doi.org/10.1136/gutjnl-2024-332837; VirTues code/model/weight licence table https://github.com/bunnelab/virtues and https://huggingface.co/bunnelab/virtues.
+
+The full operational decision, role split, permissions caveat and checklists are in [docs/cohort_checkpoint_decision.md](cohort_checkpoint_decision.md).

@@ -67,3 +67,24 @@ def test_panel_shift_report_rejects_missing_required_columns():
     reconstruction = reconstruction.drop(columns=["reconstructed"])
     with pytest.raises(ValueError):
         build_panel_shift_report(reconstruction, predictions, targets)
+
+
+
+def test_marker_reconstruction_metrics_are_macro_averaged_by_patient():
+    reconstruction, predictions, targets = _example_inputs()
+    # Add many extra low-error cells to P1. The patient-macro MAE should give
+    # P1 and P2 equal weight rather than allowing P1's cell count to dominate.
+    extra = pd.DataFrame({
+        "patient_id": ["P1"] * 100,
+        "marker": ["CXCL9"] * 100,
+        "measured": [1.0] * 100,
+        "reconstructed": [1.0] * 100,
+    })
+    reconstruction = pd.concat([reconstruction, extra], ignore_index=True)
+    report = build_panel_shift_report(reconstruction, predictions, targets)
+    metrics = report["marker_reconstruction"]["CXCL9"]
+    assert metrics["n_patients"] == 2
+    assert "patient_macro" in metrics
+    assert "pooled_cells_secondary" in metrics
+    # P1's own MAE is averaged with P2's MAE; it is not weighted by 101 cells.
+    assert metrics["patient_macro"]["mae"] == pytest.approx((0.1 + 0.2) / 2)

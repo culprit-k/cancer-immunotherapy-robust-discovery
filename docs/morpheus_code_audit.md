@@ -17,8 +17,9 @@
 2. Splits patients into training, validation, and test groups (the article describes an approximate 65/15/20 ratio with class-balance constraints).
 3. Generates counterfactual perturbations per image patch using prediction, distance, and prototype-related objectives.
 4. Aggregates and clusters patient-level perturbation patterns and reports cohort-dependent target combinations.
-5. Reports in-vitro validation of selected predicted combinations.
-6. Discusses variation between tissue samples, including samples from the same patient, and proposes future testing where perturbations derived from some samples are assessed on remaining samples.
+5. Takes median perturbations across samples to define whole-tumour strategies, then evaluates predicted T-cell distribution after applying those strategies in silico to a test patient cohort.
+6. Reports in-vitro validation of selected predicted combinations.
+7. Discusses variation between tissue samples, including samples from the same patient, and proposes future testing where perturbations derived from some samples are assessed on remaining samples.
 
 These points rule out claiming novelty for patient-level splitting, per-patch counterfactual discovery, patient-specific variation, or experimental testing of selected combinations.
 
@@ -28,7 +29,7 @@ The repository contains a reproduction notebook, helper code for retrieving coun
 
 The package includes a TrustScore implementation for assessing whether classifier inputs resemble examples from predicted classes. This is not equivalent to measuring whether a complete therapeutic recommendation remains stable across patient resampling or model retraining.
 
-In the portions of the article and repository inspected, we did not identify a dedicated benchmark that systematically repeats the full therapeutic-target discovery pipeline across patient-level bootstrap samples and retrained models, then quantifies complete-combination stability alongside independent predictive/biological evaluation. This is a **provisional observation**, not proof that no such analysis exists in the full supplement, notebook, or related literature.
+In the main article and inspected public helper code, we found a fixed patient-level train/validation/test design, aggregation of per-patch perturbations into cohort strategies, and in-silico evaluation on test patients. We did not identify a dedicated benchmark that systematically repeats the *entire discovery pipeline* across many patient-level resamples and retrained models, then quantifies complete-combination stability alongside independent predictive/biological evaluation. This is a **provisional observation**: the full supplementary material and all notebook cells have not yet been exhaustively audited, and related literature remains to be searched.
 
 ## Key methodological distinction
 
@@ -47,11 +48,12 @@ Our possible gap, if confirmed, is therefore not “patient-level validation.”
 
 ## Next reproducibility gate
 
-1. Verify the preprocessed data DOI resolves and list the available files and licence.
-2. Inspect the notebook's exact data paths, model checkpoints, and expected outputs.
-3. Determine whether the saved patient split and target perturbations are sufficient for an initial analysis.
-4. Attempt a small smoke test before a full reproduction.
-5. Record missing files, environment conflicts, runtime, and any deviation from the paper.
+1. Inspect the full supplementary material and notebook for any existing robustness or resampling analyses.
+2. Verify the preprocessed data DOI resolves and list the available files and licence.
+3. Inspect the notebook's exact data paths, model checkpoints, and expected outputs.
+4. Determine whether the saved patient split and target perturbations are sufficient for an initial analysis.
+5. Download a manageable permitted subset or preprocessed artifact and attempt a smoke test; do not begin a full reproduction before this succeeds.
+6. Record missing files, environment conflicts, runtime, and any deviation from the paper.
 
 ## Preliminary conclusion
 

@@ -8,7 +8,7 @@
 
 - Development archive: Zenodo 10793609; checksum `a842fa253ac2f0eda3cbf4d41e1b0ec1` verified.
 - Actual panel file: `DiscoveryCohort_panel.csv`; 42 rows parsed.
-- Latest metadata-only audit artifact: [run 40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869), artifact [12606106783](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869/artifacts/12606106783). A further sparse TIFF-storage audit is running; use its completed artifact when available. Do not commit the archive, images or masks.
+- Latest enhanced metadata-only audit: [run 40214428382](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382), artifact [12607480794](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382/artifacts/12607480794). Sampled TIFF-storage QC is complete: image dtype/ranges, 42-page panel match and mask-grid alignment passed on checked samples. Do not commit the archive, images or masks.
 - Checkpoint: `bunnelab/virtues/virtues-imc14/model.safetensors`, immutable model revision and SHA-256 recorded in `configs/panel_shift_pilot.example.yaml`.
 - HCC/VirTues inference is blocked until compatible inputs are established; the existence of a pinned checkpoint does not make a dataset compatible.
 
@@ -16,9 +16,10 @@
 
 1. Send the draft in `docs/data_clarification_request_salie_hcc.md` to the corresponding author or data curator, after adding the student's name/institution and obtaining supervisor approval if required.
 2. Ask for raw/compensated intensity data, normalization provenance, channel order, per-ROI statistics and cell phenotype labels.
-3. In parallel, inspect the exact VirTues inference notebook and pin the *code* commit separately from the weight revision.
-4. Build a canonical channel table: image channel index, metal tag, panel target, canonical protein name, UniProt ID, embedding availability, transformation history, and any unresolved alias.
-5. Do not infer raw intensity by inverting already-normalized TIFF values. If the source cannot provide compatible data, take Stage 1B instead.
+3. **Completed at storage-audit level:** sample TIFF series/page axes, channel count, pixel dtype/range and mask-grid alignment. Twelve image stacks were readable; sampled values were float32 and within [0,1]; sampled stack page counts matched the 42-row panel; paired mask shapes matched in three representative ROIs. This is representative sampling, not an exhaustive full-pixel scan, and it does not establish pretrained-model compatibility.
+4. In parallel, inspect the exact VirTues inference notebook and pin the *code* commit separately from the weight revision.
+5. Build a canonical channel table: image channel index, metal tag, panel target, canonical protein name, UniProt ID, embedding availability, transformation history, and any unresolved alias.
+6. Do not infer raw intensity by inverting already-normalized TIFF values. If the source cannot provide compatible data, take Stage 1B instead.
 
 ### Stage 1A — If compatible original-scale data are available
 

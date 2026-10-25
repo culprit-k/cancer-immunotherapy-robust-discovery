@@ -1,7 +1,12 @@
 name: Audit Salié HCC development cohort
-# This audit downloads a ~1.5 GB source archive. Run it manually when source or audit logic changes,
-# rather than on every code/documentation push.
+# This audit downloads a ~1.5 GB source archive. Re-run only when the audit logic changes
+# or manually via workflow_dispatch; ordinary documentation updates do not trigger it.
 on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/audit_salie_hcc_discovery_archive.py"
+      - "analysis/panel_metadata_qc.py"
   workflow_dispatch:
 
 permissions:
@@ -19,7 +24,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install HTTP client
-        run: python -m pip install --upgrade pip requests
+        run: python -m pip install --upgrade pip requests numpy tifffile
       - name: Download, verify and inspect licensed metadata
         run: python scripts/audit_salie_hcc_discovery_archive.py --output "$RUNNER_TEMP/salie-hcc-discovery-audit.json"
       - name: Upload metadata-only audit report

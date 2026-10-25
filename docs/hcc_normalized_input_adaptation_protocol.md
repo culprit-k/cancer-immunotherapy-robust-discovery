@@ -1,6 +1,6 @@
 # HCC normalized-input adaptation protocol
 
-**Status:** Proposed validation protocol only. Not yet implemented end-to-end, and no VirTues inference result exists.
+**Status:** Proposed validation protocol only. The storage-level TIFF audit (Step 0) has passed on representative samples; the adaptation is not implemented end-to-end, and no VirTues inference result exists.
 
 ## Decision in one sentence
 
@@ -20,15 +20,16 @@ Sources:
 - [VirTues paper, dataset preprocessing and model instances](https://www.nature.com/articles/s41586-026-10884-y)
 - [Official VirTues loader](https://github.com/bunnelab/virtues/blob/main/virtues/data/multiplex_dataset.py)
 
-## Step 0 — finish the storage-level TIFF audit
+## Step 0 — storage-level TIFF audit: PASS
 
-The discovery archive integrity and panel structure already pass. The current extended audit samples the TIFF stacks and mask metadata to record:
-- series and page shapes, page counts and data types;
-- numeric min/median/99th percentile/max for a deterministic sparse sample of image pages;
-- whether sampled image stack page counts align with the 42-row panel;
-- mask image shapes and types.
+Enhanced audit workflow: [run 40214428382](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382); metadata-only artifact [12607480794](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382/artifacts/12607480794). Audit result:
+- ZIP inventory: 108 TIFFs each in `DC_img_normalized`, `DC_cellmasks`, and `DC_stromamasks` (324 TIFFs total), plus the panel CSV.
+- Twelve evenly spaced image stacks sampled by the enhanced TIFF audit were readable. Sampled image stacks were `float32`, had 42 pages/channels, and page count agreed with the 42-row panel.
+- Sampled stack shapes included `(42, 1300, 1300)` and `(42, 1500, 1500)`; preserve ROI-specific spatial dimensions rather than forcing one common shape.
+- Sparse pixel summaries were taken from first/middle/last pages of 12 sampled stacks; in addition, all 42 planes were read for the first, middle and last representative ROIs (126 planes total). All sampled pixels were finite and within `[0,1]` (min `0.0`, max `1.0`; no sampled out-of-range values).
+- Corresponding cell and stroma masks were present and spatial dimensions matched for all three checked ROIs (3/3 per mask directory); sampled mask storage was `uint16`.
 
-These values describe the *stored pixel encoding*, not the raw acquisition scale. If integer TIFF storage is used, only apply a numeric decode to [0,1] when the TIFF encoding and source metadata support that mapping. Never guess a divisor from observed maxima alone.
+**Scope limitation:** this is a sparse TIFF storage audit, not a complete pixel-by-pixel scan of all 108 normalized stacks. It verifies the stored float32 [0,1] representation in sampled planes, not original raw acquisition values. Do not invert normalized values or assume that matching spatial shapes establishes cell labels or model compatibility. This audit makes direct HCC-TIFF → pretrained VirTues inference more clearly **NO-GO**, not GO.
 
 ## Step 1 — make the panel and spatial axes auditable
 

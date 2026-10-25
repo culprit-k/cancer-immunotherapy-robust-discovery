@@ -174,60 +174,13 @@ def main() -> None:
                     rows = []
 
             # Structural metadata QC; deliberately does not imply model compatibility.
-            panel_qc = None
-            normalized_fields = {str(field).strip().lower() for field in fields if field}
-            required_fields = {"channel", "metaltag", "target"}
-            if panel_member and not panel_parse_error:
-                panel_qc = {
-                    "required_columns_present": required_fields.issubset(normalized_fields),
-                    "missing_required_columns": sorted(required_fields - normalized_fields),
-                    "blank_required_cells": {},
-                    "duplicate_channel_values": [],
-                    "duplicate_metaltag_values": [],
-                    "duplicate_target_values": [],
-                    "channels_numeric_and_contiguous_from_1": False,
-                }
-                if required_fields.issubset(normalized_fields):
-                    field_lookup = {str(field).strip().lower(): field for field in fields}
-                    for normalized_name in sorted(required_fields):
-                        actual_field = field_lookup[normalized_name]
-                        panel_qc["blank_required_cells"][actual_field] = [
-                            index + 2 for index, row in enumerate(rows)
-                            if not str(row.get(actual_field, "") or "").strip()
-                        ]
-                    for normalized_name, qc_key in (
-                        ("channel", "duplicate_channel_values"),
-                        ("metaltag", "duplicate_metaltag_values"),
-                        ("target", "duplicate_target_values"),
-                    ):
-                        actual_field = field_lookup[normalized_name]
-                        values = [
-                            str(row.get(actual_field, "") or "").strip().casefold()
-                            for row in rows
-                        ]
-                        counts = Counter(value for value in values if value)
-                        panel_qc[qc_key] = sorted(
-                            value for value, count in counts.items() if count > 1
-                        )
-                    try:
-                        channels = sorted(
-                            int(str(row[field_lookup["channel"]]).strip())
-                            for row in rows
-                        )
-                        panel_qc["channels_numeric_and_contiguous_from_1"] = (
-                            channels == list(range(1, len(rows) + 1))
-                        )
-                    except (TypeError, ValueError, KeyError):
-                        panel_qc["channels_numeric_and_contiguous_from_1"] = False
-                panel_qc["structural_qc_pass"] = bool(
-                    panel_qc["required_columns_present"]
-                    and not any(panel_qc["blank_required_cells"].values())
-                    and not panel_qc["duplicate_channel_values"]
-                    and not panel_qc["duplicate_metaltag_values"]
-                    and not panel_qc["duplicate_target_values"]
-                    and panel_qc["channels_numeric_and_contiguous_from_1"]
-                    and len(rows) > 0
-                )
+            from analysis.panel_metadata_qc import audit_panel_structure
+
+            panel_qc = (
+                audit_panel_structure(fields, rows)
+                if panel_member and not panel_parse_error
+                else None
+            )
 
             extension_counts = Counter(Path(name).suffix.lower() or "[no extension]" for name in names)
             top_dirs = sorted({name.split("/", 1)[0] for name in names if "/" in name})

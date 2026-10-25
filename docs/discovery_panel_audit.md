@@ -2,7 +2,7 @@
 
 **Audit date:** 25 October 2026  
 **Source:** [Zenodo record 10793609](https://zenodo.org/records/10793609)  
-**Metadata source:** GitHub Actions run [40198072585](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40198072585)  
+**Latest verified audit:** GitHub Actions run [40214428382](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382)  
 **Status:** Archive integrity and panel structural QC verified PASS; direct VirTues inference on these normalized TIFFs is NO-GO. Checkpoint exposure is assessed in [the HCC preprocessing/exposure decision](hcc_preprocessing_and_checkpoint_exposure_decision_2026-10-25.md).
 
 ## Integrity and panel parsing
@@ -14,8 +14,19 @@
 - Top-level image/mask directories: `DC_img_normalized`, `DC_cellmasks`, `DC_stromamasks`; no raw-MCD/raw-intensity directory or per-tissue quantile/mean/std tables were present in this archive.
 - Actual panel member: `DiscoveryCohort_panel.csv` (not the `DCCohort_panel.csv` filename described in the record text)
 - Parsed panel: 42 rows; columns `Channel`, `MetalTag`, `Target`
-- Raw images and masks were not committed or uploaded. The completed final audit is [GitHub Actions run 40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869); metadata-only artifact ID `12606106783`, digest `sha256:302d7a0bc55bbb32748185f97fa6e6b2110964dd56e7ec901371fc839bc452a3`, expires 24 November 2026 UTC.
+- Raw images and masks were not committed or uploaded. The completed enhanced audit is [GitHub Actions run 40214428382](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382); metadata-only artifact ID `12607480794`, digest `sha256:40cbe02a0e40939354bd1acacba177303321cee934b146f23de23fbc6502d282`, expires 24 November 2026 UTC.
 - SHA-256 of the downloaded archive: `8d09d946659164bb2275468ca4ad3239819b2036af83e63ab7b586ddbfc47f72`.
+
+## Sampled TIFF storage audit
+
+The workflow counted 108 TIFFs in each of `DC_img_normalized`, `DC_cellmasks`, and `DC_stromamasks`. It sampled 12 evenly spaced image stacks, all readable, and read first/middle/last pages for their scalar pixel summaries. It also read all 42 pages/channels from three representative ROIs (126 planes).
+
+- Sampled image stack dtype: `float32`; sampled stack shape examples: `(42, 1300, 1300)` and `(42, 1500, 1500)`. The differing ROI dimensions must be preserved in the spatial crosswalk.
+- Sampled pages have observed minimum `0.0` and maximum `1.0`; all sampled values were finite and within `[0,1]`.
+- The corresponding cell-mask and stroma-mask TIFFs were present for the three representative ROIs; spatial dimensions matched in all checks (3/3 per mask directory), with mask storage observed as `uint16`.
+- Scope limitation: this is sparse TIFF QC, not an exhaustive pixel-by-pixel scan of all 108 stacks. No pixel arrays were saved to the audit JSON/artifact.
+
+These stored values are consistent with the publication's PENGUIN-normalized image representation. They do not restore raw intensities or make the images compatible with pretrained VirTues preprocessing.
 
 ## Marker panel inventory
 
@@ -84,9 +95,10 @@ That does **not** establish compatibility with the selected foundation model or 
 - [x] Run the corrected workflow and verify the metadata-only artifact uploads successfully.
 - [x] Validate required columns, blank values, duplicate channels/tags/targets and channel numbering automatically; structural QC passes.
 - [x] Read the pinned VirTues preprocessing contract and compare it with the HCC publication: released PENGUIN-normalized 0–1 images are not compatible with the pretrained pipeline.
-- [x] Assess checkpoint exposure against the published training corpus: Salié et al. (ref. 95) is within the extended corpus, while the pinned core-14 model is documented as trained on the original 14 IMC datasets. Do not use `virtues-sp32` or `virtues-sp31` for a held-out HCC claim.
+- [x] Assess checkpoint exposure against the published training corpus: Salié et al. (ref. 95) is in the extended additions, outside the core-14 `virtues-imc14` training set at the published-reference level. `virtues-sp32` includes Salié HCC; `virtues-sp31` is unapproved for a held-out HCC claim until its omitted cohort is verified.
+- [x] Complete sparse TIFF metadata/pixel-range, sampled channel-count, and mask-grid checks in the enhanced audit (sampled, not exhaustive). 
 - [ ] Define and lock patient-level split, endpoint/cell labels, eligible intervention targets and counterfactual baseline before evaluating held-out patients.
-- [ ] Run a one-image/one-channel reconstruction smoke test with quantitative sanity checks.
+- [ ] Run a one-image/one-channel reconstruction smoke test with quantitative sanity checks only after compatible input data or a separately specified normalized-domain adaptation passes held-out reconstruction evaluation.
 - [ ] Only after the smoke test passes, run patient-level held-out reconstruction and signed recommendation-fidelity experiments.
 
 **Current decision:** Archive integrity and panel structural QC **PASS**. Direct inference on the public HCC normalized TIFFs using pretrained VirTues is **NO-GO**. Use original-scale inputs if supplied by the study team, or pivot to a verified VirTues/spora-compatible cohort. Cell labels, CD8 endpoint, counterfactual baseline, real-data inference and biological conclusions remain open.

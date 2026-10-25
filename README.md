@@ -66,10 +66,10 @@ The candidate question is whether good marker reconstruction scores can still ma
 
 ## Current recommended dataset sequence
 
-1. Check rigamonti2024integrating first for a held-out recommendation-fidelity test: spora lists 108 patients / 158 IMC images and a CD8 T-cell annotation. Use only after verifying the panel, exact data terms and a VirTues checkpoint trained without this cohort.
-2. Audit hoch2022multiplexed for the biological development run; because VirTues evaluates this cohort, do not present the standard full VirTues model on it as independent generalization.
-3. Use allam2022spatially only for a small data-loading/channel-mask smoke test if its dataset-specific terms and labels pass.
-4. Check moldoveanu2022spatially and xiao2022multiplexed as alternatives after verifying shared markers, measured immune labels, exact data terms and foundation-model exposure.
+1. Treat rigamonti2024integrating as a pipeline smoke-test cohort, not the primary target-discovery cohort: its published 24-marker panel supports CD8 annotation but does not obviously contain the chemokine target set needed for a Morpheus-style intervention-fidelity test.
+2. Evaluate the Godbole et al. 2026 melanoma IMC cohort (Zenodo 15124735) as a possible small external exploratory test: its panel includes CD8a, PD-1, PD-L1, CTLA-4, TIM-3, LAG-3, TIGIT, CCL2 and CCL4, but it has only six patients and the Zenodo record displays no explicit licence. Do not use it until terms are clarified, and do not call six patients definitive validation.
+3. Xiao et al. 2022 has a useful CD8a/PD-1/PD-L1 panel, but the VirTues 32-cohort corpus includes this cohort; the standard virtues-sp32 weights are not an independent imputer for it. Any use requires an alternative independent imputer or leave-one-cohort-out retraining, plus a restricted target set justified in advance.
+4. Keep hoch2022multiplexed as a biological development candidate only after auditing its relation to the Morpheus melanoma data and the exact model training exposure. Use allam2022spatially only for pipeline smoke testing if terms and labels pass.
 
 No dataset is approved for the final analysis yet. The cohort screening CSV and YAML pilot config are templates with unresolved fields; they are not evidence that a cohort has passed the gates.
 
@@ -86,7 +86,10 @@ No dataset is approved for the final analysis yet. The cohort screening CSV and 
 
 1. Morpheus (2025): https://doi.org/10.1038/s41551-025-01357-0
 2. VirTues (Nature, 2026): https://doi.org/10.1038/s41586-026-10884-y
-3. Spatium (2026): https://pmc.ncbi.nlm.nih.gov/articles/PMC13419744/
+3. Spatium preprint (2026): https://doi.org/10.64898/2026.07.23.740264
+4. CONCERT preprint (2025): https://doi.org/10.1101/2025.11.08.686890
+5. Godbole et al. 2026 melanoma IMC cohort: https://zenodo.org/records/15124735
+6. Xiao et al. 2022 melanoma IMC panel: https://zenodo.org/records/6836992
 4. Celcomen (Nature Communications, 2026): https://doi.org/10.1038/s41467-026-69856-5
 5. SPAD-CFR (Biology, 2026): https://doi.org/10.3390/biology15141097
 6. spora data documentation: https://spora.epfl.ch/docs/index.html

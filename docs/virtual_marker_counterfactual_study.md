@@ -184,3 +184,13 @@ Then run:
 Run the report independently per outer fold and summarize fold-level outcomes using a prespecified paired analysis. Do not concatenate patient sets that overlap between folds as if they were independent observations. The script's "reference regret" is the paired difference in model-predicted uplift, not an observed intervention or clinical effect.
 
 The helper expects clean, held-out data already exported by the model pipeline. It cannot establish whether data leakage occurred; the analyst must enforce and document patient splits before producing these tables.
+
+
+## Preferred dataset sequence after the catalogue audit
+
+1. **First-choice candidate for the held-out recommendation-fidelity evaluation: rigamonti2024integrating.** The spora catalogue lists 108 patients and 158 IMC images, paired with H&E, and the spora-bench cell-annotation configuration includes CD4 T-cell and CD8 T-cell labels. The VirTues paper reports a leave-one-dataset-out, zero-shot marker-reconstruction evaluation on the Rigamonti et al. cohort. This gives a plausible route for evaluating downstream recommendation fidelity on a cohort not seen by the corresponding leave-one-out reconstruction model. This depends on using the correct leave-one-dataset-out checkpoint (or reproducing that training exclusion), verifying target marker channels, and confirming dataset/model permissions.
+2. **Biological development cohort: hoch2022multiplexed.** This melanoma IMC cohort has 35 patients and 50 images and is based on a chemokine-milieu study of immunotherapy response. It is directly relevant to chemokines and immune infiltration, but VirTues already evaluates cell phenotyping on Hoch and its training exposure must be handled explicitly. It is not an unseen-cohort test for the standard full VirTues model by default.
+3. **Small pipeline smoke test: allam2022spatially.** This lung IMC cohort has 26 patients and 26 images and is advertised by spora as approximately 500 MB. Use it only to validate loading, patient grouping and channel masking until the required target markers and T-cell labels are confirmed.
+4. **Later alternatives:** moldoveanu2022spatially and xiao2022multiplexed, subject to the same checks.
+
+Do not treat a paper's leave-one-dataset-out experiment as proof that a released default checkpoint was trained without that dataset. The exact checkpoint file and its recorded training cohort list must match the evaluation claim.

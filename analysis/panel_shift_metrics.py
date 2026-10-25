@@ -157,3 +157,42 @@ def target_sets_from_runs(
             mapping[str(marker)] = int(direction)
         result.append(mapping)
     return result
+
+
+def patient_reference_regret(
+    reference_strategy_uplift: Mapping[Hashable, float],
+    candidate_strategy_uplift: Mapping[Hashable, float],
+) -> dict[str, float | int]:
+    """Compare two strategies using the same evaluator on the same full-measured patients.
+
+    Each mapping must hold one model-predicted uplift per patient, after
+    aggregating any nested cores/tiles/cells within patient. The difference
+    candidate - reference is a model-based comparison, not a measured causal
+    or clinical treatment effect. Positive values mean the candidate strategy
+    has higher predicted uplift than the reference strategy.
+    """
+    if not reference_strategy_uplift:
+        raise ValueError("reference_strategy_uplift must contain at least one patient")
+    if set(reference_strategy_uplift) != set(candidate_strategy_uplift):
+        raise ValueError("patient identifiers must match between both strategy maps")
+
+    patient_ids = list(reference_strategy_uplift)
+    reference = _finite_vector(
+        [reference_strategy_uplift[patient] for patient in patient_ids],
+        "reference_strategy_uplift",
+    )
+    candidate = _finite_vector(
+        [candidate_strategy_uplift[patient] for patient in patient_ids],
+        "candidate_strategy_uplift",
+    )
+    difference = candidate - reference
+    return {
+        "n_patients": int(len(patient_ids)),
+        "mean_reference_uplift": float(np.mean(reference)),
+        "mean_candidate_uplift": float(np.mean(candidate)),
+        "mean_candidate_minus_reference": float(np.mean(difference)),
+        "median_candidate_minus_reference": float(np.median(difference)),
+        "mean_absolute_difference": float(np.mean(np.abs(difference))),
+        "fraction_candidate_lower": float(np.mean(difference < 0)),
+        "fraction_candidate_higher": float(np.mean(difference > 0)),
+    }

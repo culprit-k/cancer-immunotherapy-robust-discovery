@@ -67,3 +67,23 @@ def test_target_runs_validate_directions_and_duplicates():
         target_sets_from_runs([[("A", 0)]])
     with pytest.raises(ValueError):
         target_sets_from_runs([[("A", 1), ("A", -1)]])
+
+
+def test_patient_reference_regret_compares_same_patients_and_evaluator():
+    from analysis.panel_shift_metrics import patient_reference_regret
+
+    result = patient_reference_regret(
+        {"P1": 0.4, "P2": 0.2, "P3": -0.1},
+        {"P1": 0.3, "P2": 0.25, "P3": -0.2},
+    )
+    assert result["n_patients"] == 3
+    assert result["mean_candidate_minus_reference"] == pytest.approx(-0.05)
+    assert result["fraction_candidate_lower"] == pytest.approx(2 / 3)
+    assert result["mean_absolute_difference"] == pytest.approx(0.08333333333333333)
+
+
+def test_patient_reference_regret_rejects_patient_mismatch():
+    from analysis.panel_shift_metrics import patient_reference_regret
+
+    with pytest.raises(ValueError):
+        patient_reference_regret({"P1": 0.1}, {"P2": 0.1})

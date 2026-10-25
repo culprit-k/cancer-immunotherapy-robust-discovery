@@ -84,3 +84,23 @@ The first complete archive-inspection step has now run on a hosted GitHub Action
 The 42-patient ICI cohort's current Zenodo API metadata reports `cc-by-4.0` and a present license field, though the previously observed blank landing-page display should be reconciled in the rights log before redistribution or external evaluation.
 
 The development panel includes CD8a, PD1, PD-L1, TIGIT, Tim3 and Lag3. This is relevant immune/checkpoint coverage, but not yet proof that the Morpheus intervention targets and objective are available or compatible. The cohort remains **pre-inference**, pending a marker crosswalk, input/preprocessing contract, cell-label/endpoint audit, and exposure/rights documentation.
+
+
+## Intervention-marker compatibility crosswalk — checked 25 October 2026
+
+A direct comparison against the published Morpheus target sets shows that the HCC discovery panel is **not a drop-in replication cohort for the original Morpheus target-discovery experiment**:
+
+| Published Morpheus cancer setting | Reported intervention targets | Present in HCC discovery panel? |
+|---|---|---|
+| Melanoma | CXCL9, CXCL10, CCL22, CCL18 | None of these four is listed in the 42-row HCC panel |
+| Colorectal cancer liver metastases | CXCR4, PD-1, PD-L1, CYR61 | PD-1 and PD-L1 are present; CXCR4 and CYR61 are absent |
+
+The HCC panel does contain CD8a and multiple checkpoint/immune-state markers, including PD1, PD-L1, TIGIT, Tim3, Lag3, CD4, CD3 and GranzymeB. That supports a **restricted, pre-specified checkpoint-marker exploratory question**, but does not justify claiming the original Morpheus target set can be reproduced or validated on this cohort. Do not substitute other markers post hoc and call them the same intervention.
+
+**Decision gate:** before model inference, choose and justify one of two routes:
+1. Narrow the study to a clearly labeled *checkpoint-marker decision-fidelity adaptation* (e.g. a fixed eligible subset of measured markers), with the endpoint and perturbation semantics explicitly redefined and all limits reported; or
+2. Select a different licensed spatial-proteomics cohort that measures the relevant Morpheus target channels, and separately verify that the frozen imputer did not train on it.
+
+Whichever route is chosen, keep CD8a out of predictor inputs where required to prevent label leakage, define a cell-/patch-level CD8 endpoint using documented masks/annotations, and distinguish marker reconstruction from a biologically actionable intervention. A virtual change in measured intensity is not equivalent to a drug perturbation or causal therapeutic effect.
+
+This crosswalk is based on the published Morpheus reported target sets and the parsed `DiscoveryCohort_panel.csv`; it is a compatibility screen, not model validation.

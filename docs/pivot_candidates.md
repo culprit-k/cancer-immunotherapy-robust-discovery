@@ -1,24 +1,38 @@
-# Pivot candidates after the October 2026 prior-art update
+# Pivot-candidate update: prioritize decision fidelity under marker reconstruction
 
-**Purpose:** choose the next research question by novelty, evidence and feasibility rather than committing to an algorithm prematurely.
+**Decision (25 October 2026):** generic robustness-only and broad cross-platform-transfer proposals are too crowded to carry a novelty claim on their own. Conditional GO for the specific virtual-marker / counterfactual recommendation-fidelity question, subject to prior-art and dataset gates.
 
-Scores are expert planning judgments from the current targeted audit, not measured performance. "Novelty potential" is not a novelty finding.
+## Ranked candidates
 
-| Candidate | Scientific question | Novelty potential (provisional) | Feasibility with current resources | Main risk | Decision |
-|---|---|---:|---:|---|---|
-| A. Cross-method intervention decision utility | Does a prespecified consensus across compatible spatial counterfactual methods identify interventions with better held-out-patient model-predicted immune uplift than the best single method, at equal target budget? | Medium, potentially stronger than a single-method stability score | Low–medium; intervention outputs/endpoints must be made comparable | Morpheus and SPAD-CFR do not natively generate identical intervention objects. A comparison can be invalid if forced onto a common scale after looking at results. | **Investigate first if common data/endpoint exists** |
-| B. Cross-cohort/platform transfer of signed target direction | Do target directions discovered in one patient cohort or spatial platform transfer to an independent cohort with shared markers and a compatible endpoint? | Medium–high if truly independent, prespecified and biologically interpretable | Low–medium; marker intersection, access and endpoint compatibility are unknown | Cross-cohort prediction is already established; small independent patient counts and differing assays can make this underpowered or incoherent. | **High value but first check data compatibility** |
-| C. Mechanistic admissibility / target plausibility | Do intervention sets that satisfy prespecified pathway, sign, druggability and molecular constraints outperform unconstrained suggestions on independent plausibility checks? | Low–medium without a new formal principle or strong empirical result | Medium for computational implementation, low for independent ground truth | Morpheus itself discusses interaction-graph constraints; SPAD-CFR is biologically informed and PHAROS contains admissibility checks. A graph regularizer alone is not novel. | **Do not lead with this without a sharper gap** |
-| D. Original robustness-only benchmark | Re-run Morpheus with grouped patient resamples and seeds, calculate selection frequency/Jaccard and held-out uplift | Low as a standalone novelty-led paper; useful for reproducibility | Medium after data and compute gates; repeated optimization may be expensive | Very close to established bootstrap/stability practices; likely incremental unless it changes scientific decisions. | **No-go as the primary novelty claim; acceptable as an exploratory baseline** |
+| Candidate | Question | Novelty risk | Feasibility | Decision |
+|---|---|---|---|---|
+| **1. Counterfactual recommendation fidelity under virtual marker reconstruction** | When whole protein channels are masked and reconstructed, do signed target recommendations and held-out model-predicted CD8 uplift remain faithful to a fully measured reference? Does an abstention rule detect unstable recommendations? | Medium–high risk; combines existing components, but the exact downstream decision-fidelity evaluation may be underexplored. Must search for direct overlap. | Medium only if a suitable public cohort, patient IDs, markers and a compatible baseline are found. | **Investigate first.** |
+| 2. Cross-method intervention decision utility | Does a consensus across spatial counterfactual methods beat the best single method at a matched target budget? | High risk because methods output different objects/endpoints and this requires a defensible common scale. | Low–medium. | Defer unless a common test representation is clear. |
+| 3. Cross-cohort/platform transfer of signed target direction | Do target directions transfer across independent cohorts and measurement platforms? | High risk; VirTues and related foundation models already cover cross-panel/technology transfer and independent biomarker prediction. | Data compatibility uncertain. | Do not lead with transfer alone. |
+| 4. Generic patient-resampling target stability | Does repeated Morpheus discovery produce stable signed target sets? | Very high risk of being incremental. | Useful for reproducibility but compute-intensive and Morpheus supplemental audit is incomplete. | Retain only as a baseline/feasibility exercise. |
 
-## Minimum decision tree
+## Candidate 1: minimum valid design
 
-1. **Dataset/endpoint map first:** list every candidate dataset, platform, patient count, shared markers, target direction, label/end point, code/data access and license.
-2. **Common-support test:** verify that at least two methods can generate comparable intervention hypotheses and can be evaluated on an identical untouched-patient endpoint. If not, Candidate A is invalid.
-3. **Independent-transfer test:** verify whether an independent cohort has shared markers and the same or defensibly harmonizable endpoint. If not, Candidate B is invalid.
-4. **Prior-art test:** search exact phrases and methods for intervention consensus, counterfactual transfer, target-direction stability, and clinically grounded intervention validation before selecting a gap.
-5. **Choose exactly one primary question** only after these checks. Do not turn all options into one large project; that would make interpretation and MBBS-level execution harder.
+- Start from a public spatial-proteomics cohort with fully measured channels that can be intentionally masked.
+- Keep patient IDs and all nested cores/tiles/cells together in each split.
+- Compare full measurement, observed-only reduced panel, simple imputation, and foundation-model reconstruction.
+- Use the same target discovery method and target budget in every condition.
+- Calculate both marker reconstruction metrics and downstream signed target-set fidelity, direction flips and held-out-patient model-predicted uplift fidelity.
+- If justified by pilot results, test a reliability/abstention rule selected on validation data and report coverage versus recommendation error/regret.
 
-## Recommended next move
+Do not call the fully measured model output biological ground truth. A new algorithm should be proposed only after showing that established methods cannot answer the new decision-level question.
 
-Build a compact dataset/method compatibility table and conduct a targeted prior-art search for Candidates A and B. If no compatible dataset exists, pivot to an entirely different cancer-immunotherapy question rather than presenting generic robustness as invention. Do not claim patentability.
+## Data search priority
+
+First examine the current spora data catalogue and dataset terms. Filter by:
+1. explicit right to use for research and publication of derived findings;
+2. patient/core identifiers;
+3. CD8/T-cell label that can be held out as an outcome;
+4. enough candidate measured target markers to define a meaningful intervention budget;
+5. known foundation-model training exposure, so the evaluation cohort is not accidentally used as a nominally held-out dataset.
+
+The 12-patient anti-PD-1 melanoma spatial-mIF cohort may support a small exploratory external check, but it has only four responders and limited target-marker overlap. The 57-patient GSE300793 bulk RNA-seq cohort is also potentially useful for a pre-specified expression/relapse check, but it is not spatial protein ground truth.
+
+## Stop rules
+
+Stop or pivot if no eligible cohort exists, the model has unavoidable evaluation leakage, the target-discovery baseline cannot be reproduced, direct prior art already measures this exact decision-fidelity problem, or the result adds nothing beyond standard marker reconstruction metrics.

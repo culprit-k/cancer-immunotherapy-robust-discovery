@@ -83,7 +83,7 @@ See docs/dataset_shortlist.md for the full candidate ranking and unresolved lice
 
 The 54-patient cohort is assigned to development/calibration only. The 42-patient ICI cohort is untouched external evaluation only; do not use its outcome labels, cell/ROI distributions or reconstruction errors to select targets, thresholds, or an abstention rule. Exact panel and marker names must be read from `DCCohort_panel.csv` and `ICICohort_panel.csv` before finalizing the target set. Never perturb the CD8 marker if the objective is CD8 infiltration.
 
-**Checkpoint choice:** use `virtues-imc14`, not `virtues-sp32` or `virtues-sp31`. All released weights are licensed separately from the MIT-licensed source code; the selected weight variant is non-commercial. If future commercial development or patent licensing is contemplated, obtain the appropriate written permissions and legal review before relying on this checkpoint.
+**Checkpoint choice:** use the pinned `virtues-imc14` when evaluating HCC exposure separation; the published core-14 training inventory excludes direct Salié-study exposure at the reference level. `virtues-sp32` includes Salié HCC and is ineligible for held-out evaluation. The exact cohort omitted from `virtues-sp31` was not verified; do not use it for held-out HCC until that list confirms the HCC study is absent. The `virtues-imc14` weights are CC BY-NC 4.0, separate from the MIT-licensed code. Obtain separate permission/legal review before any commercial reliance.
 
 See [cohort/checkpoint decision record](cohort_checkpoint_decision.md) for the rights evidence and exact go/no-go checklist.
 

@@ -1,78 +1,66 @@
-# Dataset shortlist for the virtual-marker / counterfactual fidelity pilot
+# Dataset shortlist and locked cohort selection
 
 **Last checked:** 25 October 2026  
-**Status:** evidence-based selection made; data archives and weights have not yet been downloaded or locally inspected.
+**Status:** a compatible, licensed development cohort and best available reconstruction-checkpoint variant have been selected. Data/model files have not yet been downloaded or checksummed.
 
-## Decision summary
+## Selected study system
 
-**Selected cohort pair:** Salié et al. HCC imaging mass cytometry (IMC) study.
+### Development cohort — HCC discovery IMC (54 patients)
 
-- **Development cohort:** 54-patient HCC discovery set, Zenodo [10793609](https://zenodo.org/records/10793609). The NLM Dataset Catalog identifies the dataset licence as **CC BY 4.0**. It contains normalized multichannel TIFF stacks, cell and stroma masks, and `DCCohort_panel.csv`.
-- **Independent test cohort:** 42-patient HCC immunotherapy cohort, Zenodo [10794904](https://zenodo.org/records/10794904), DOI 10.5281/zenodo.10794904. It contains normalized per-channel TIFF stacks, cell masks, stroma masks and `ICICohort_panel.csv`; patient metadata are in Supplementary Table 3 of the linked paper. OpenAIRE/Datacite-linked metadata lists **CC BY**, while the direct Zenodo page's rights field appears blank. Resolve this discrepancy with the data contact or institutional research office before redistribution and record the metadata evidence.
-- **Selected model variant to investigate:** official VirTues checkpoint `virtues-imc14/model.safetensors` from [Hugging Face](https://huggingface.co/bunnelab/virtues), paired with [official source code](https://github.com/bunnelab/virtues). The official repository lists this model as trained on 14 IMC datasets and gives the weights a **CC BY-NC 4.0** licence. This is the most appropriate candidate for non-commercial IMC reconstruction because Salié et al. appears among the seven extra IMC cohorts added to the extended 32-cohort model, not the core 14-IMC corpus. Exact checkpoint accession-level training exposure still needs confirmation and immutable revision/hash pinning.
-- **Scientific rationale:** the associated paper describes a 41-plex IMC panel, 54-patient discovery cohort and 42-patient ICI validation cohort. It analyses CD8 T-cell infiltration, PD-1-positive/exhausted CD8 T cells, TIM-3/LAG-3, PD-L1-positive myeloid/APC states and CD204 macrophages. This is a stronger spatial immuno-oncology match than the previously shortlisted cohorts.
+- Zenodo: https://zenodo.org/records/10793609; DOI 10.5281/zenodo.10793609.
+- Modality: imaging mass cytometry (IMC); the linked study describes a 41-plex panel.
+- Data: normalized per-channel multistack TIFF images, cell masks, stromal masks, and `DCCohort_panel.csv`.
+- Rights: the NLM Dataset Catalog reports **CC BY 4.0** for this record: https://datasetcatalog.nlm.nih.gov/dataset?q=0002065446. Use with attribution and the required indication of changes; preserve a copy of this metadata in study records.
+- Role: development and calibration only. Use patient-level splits for preprocessing, marker mapping, endpoint definition, and any calibration/abstention thresholds.
 
-**Important:** `virtues-sp32` and `virtues-sp31` are not appropriate independent checkpoints for this evaluation, because their extended multitechnology corpus includes the Salié study. Use `virtues-imc14` only after verifying the exact artefact's training history. Its non-commercial weight licence must be respected.
+### Untouched external evaluation cohort — HCC ICI cohort (42 patients)
 
-Full decision record and a pre-inference checklist: [Cohort and checkpoint decision](cohort_checkpoint_decision.md).
+- Zenodo: https://zenodo.org/records/10794904; DOI 10.5281/zenodo.10794904.
+- Data: normalized channel-wise TIFF stacks, cell masks, stroma masks, and `ICICohort_panel.csv`; patient metadata are in Supplementary Table 3 of the associated paper.
+- Rights: OpenAIRE/Datacite-linked metadata for this exact accession reports **CC BY** (https://explore.openaire.eu/search/result?pid=10.5281/zenodo.10794904), but the direct Zenodo Rights/License field appears blank. Treat reuse as provisionally supported by mirrored metadata, retain the evidence, and confirm with the data contact/institutional office before redistribution or where source-page confirmation is required.
+- Role: external evaluation only. Do not use this cohort to select targets, tune thresholds, define endpoints or calibrate an abstention rule.
 
-## Candidate details
+Associated paper: Salié et al., *Gut*, DOI https://doi.org/10.1136/gutjnl-2024-332837. It describes a 54-patient discovery cohort and independent 42-patient ICI cohort, using a 41-plex IMC panel to study CD8 T-cell infiltration and immune states involving PD-1, TIM-3/LAG-3, PD-L1-positive myeloid/APC states and CD204 macrophages.
 
-| Priority | spora cohort ID | Public catalogue information | Strength for this question | Critical unresolved checks |
-|---|---|---|---|---|
-| 1 — potential held-out fidelity test | rigamonti2024integrating | 108 patients, 158 images, lung cancer, IMC + H&E. The spora benchmark has cell annotation classes including CD4 T cell and CD8 T cell. | VirTues reports a leave-one-dataset-out zero-shot reconstruction test on this cohort; useful for testing whether reconstruction affects counterfactual target recommendations in a cohort excluded from that specific model's pretraining. | Exact checkpoint/weight variant, marker panel, model training exposure, permissions, and whether the measured markers support a meaningful target set. |
-| 2 — biological development | hoch2022multiplexed | 35 patients, 50 images, melanoma, IMC; published chemokine-milieu study of immunotherapy response. Original raw-data record: https://zenodo.org/records/6004986 | Most direct connection between chemokines and immune infiltration. | VirTues exposure and cell-typing use; panel names/units, outcome labels, rights and raw-to-spora mapping. |
-| 3 — smoke test | allam2022spatially | 26 patients, 26 images, lung cancer, IMC; spora describes a downloadable cohort around 500 MB. | Smaller route to validate spora-io, channel masking, metadata parsing and patient splits. | Does its panel contain suitable perturbation markers? Are CD8/T-cell labels and terms available? |
-| 4 — potential external test | moldoveanu2022spatially | 90 patients, 90 images, melanoma, IMC; Spatially mapping the immune landscape of melanoma using imaging mass cytometry. | Larger melanoma cohort; possible marker-mask fidelity test. | Panel, labels, access and model-training overlap must be verified. |
-| 5 — potential external test | xiao2022multiplexed | 26 patients, 158 images, melanoma, IMC; anti-PD-1 response context. | Clinical response context with cell-level annotations. | Marker/channel overlap, patient IDs, response label availability, pretraining overlap and terms. |
-| 6 — secondary/alternative | schurch2020coordinated | 35 patients, 251 images, colorectal cancer, CODEX/H&E. | Useful alternative tissue architecture and immune-neighbourhood context. | Not a direct substitute for an IMC panel without mapping and endpoint justification. |
+## Selected reconstruction checkpoint variant
 
-Catalogue source: https://spora.bioimagearchive.org/projects/spora/dataset. The catalog currently lists 35 cohorts, 5,477 patients and five spatial imaging technologies. It says the standardized collection includes multiplex images and, where available, H&E, cell/tissue masks, cell types, patient metadata and other metadata. Dataset terms vary by cohort; the spora software license is not the same as the dataset license.
+**Official repository:** https://github.com/bunnelab/virtues  
+**Model hub:** https://huggingface.co/bunnelab/virtues  
+**Variant/file:** `virtues-imc14/model.safetensors`  
+**Weights licence:** **CC BY-NC 4.0**; non-commercial use only.
 
-## Specific VirTues exposure warning
+The official VirTues model table says `virtues-imc14` was trained on 14 IMC datasets. The paper distinguishes this core corpus from its extended 32-cohort corpus, which adds seven further IMC cohorts (refs. 90–96) as well as CODEX, Orion and MIBI cohorts. The Salié HCC paper appears as reference 95 among the extended-corpus additions. Accordingly, `virtues-imc14` is the strongest published candidate for this IMC cohort pair; do **not** use `virtues-sp32` or `virtues-sp31` for a clean held-out Salié claim.
 
-The VirTues paper explicitly uses Hoch et al. for cell typing and describes a marker-reconstruction stability experiment for other cohorts (Danenberg B-cell markers and Cords T-cell markers). It also describes zero-shot evaluation using models trained with an evaluation dataset withheld from pretraining. This is direct evidence that the candidate question must be more specific than generic cell phenotyping under marker masking. For a valid held-out cohort claim, use the official leave-one-dataset-out procedure or a model checkpoint whose training cohort list demonstrates that the selected evaluation cohort was excluded.
+**Exposure is strongly suggested, not finally certified.** The 14-IMC training inventory supports exclusion, but it is not an accession-level certificate for both Zenodo files. When downloading, pin an immutable Hugging Face revision, file SHA-256, size, date and licence; verify exact cohort exposure from the release/model manifest or author confirmation. Do not invent a hash or call the cohort strictly held out until this is resolved.
 
-Sources:
-- VirTues paper: https://www.nature.com/articles/s41586-026-10884-y
-- VirTues/Spora benchmark configuration for Rigamonti cell annotation (includes CD8 T-cell labels): https://github.com/bunnelab/spora-bench/blob/master/configs/benchmarks/cell_annotation/rigamonti2024integrating.yaml
-- VirTues code/weights: https://github.com/bunnelab/virtues
-- spora dataset collection: https://spora.bioimagearchive.org/
-- Hoch et al. raw data: https://zenodo.org/records/6004986
-- Moldoveanu et al.: https://doi.org/10.1126/sciimmunol.eabi5072
-- Xiao et al.: https://pmc.ncbi.nlm.nih.gov/articles/PMC9587266/
+### Commercial/IP constraint
 
-## Metadata checklist before committing to one dataset
+The weights are CC BY-NC 4.0. They are a candidate for non-commercial academic feasibility research, subject to compliance, but are not cleared for commercial deployment. If commercialization is planned, obtain written model-weight permission or replace/retrain with a separately licensed model before commercial reliance. This licence does not itself determine whether a separate invention is patentable.
 
-- Dataset ID/version and per-dataset license in the BioImage Archive/spora interface.
-- Source paper and original-data license.
-- Number of independent patients, image cores, tiles, and cells after QC.
-- Exact channel/marker names, UniProt IDs, transformations, and available target directions.
-- Patient IDs and all aliases linking cores/tiles to a patient.
-- Definition and completeness of CD8/T-cell phenotype labels.
-- Availability and reliability of immunotherapy response/outcome labels.
-- Whether the foundation-model checkpoint saw any cells/images/patients from that cohort during pretraining or fine-tuning.
-- Whether the counterfactual model's output can be evaluated on fully measured, untouched patients.
-- Storage, compute, and per-run inference/training time.
+## Compatibility and remaining scientific gate
 
-## Immediate gate
+The cohort pair is a good modality/biology fit: both use IMC, the study describes a 41-plex panel, and the external cohort has ICI-treatment context. The exact panel mapping and endpoint implementation have not yet been checked because the data archives are not present locally.
 
-Start by downloading only allam2022spatially or an equally small permitted cohort to validate data loading, while separately auditing Hoch's channels and rights for the biological study. Do not use a smoke-test cohort as the primary endpoint unless it passes the biological and marker criteria. Do not commit raw data to GitHub.
+VirTues reconstructs marker channels; it does not reproduce Morpheus target discovery. HCC is not Morpheus's original melanoma/colorectal task. After download, inspect both panel CSVs, reconcile image/ROI/patient identifiers, define a reproducible CD8 endpoint, and document a reproduced or explicitly adapted counterfactual baseline. Final target markers must come from the actual panel CSVs, fixed before external evaluation; never perturb the CD8 endpoint channel to predict CD8 infiltration.
 
+## Go/no-go checklist
 
-## Updated checkpoint and rights gate (25 October 2026)
+- [ ] Download both source archives outside the public GitHub repository.
+- [ ] Verify source archive integrity and record local SHA-256.
+- [ ] Inspect `DCCohort_panel.csv` and `ICICohort_panel.csv`; confirm marker overlap, image dimensions, mask quality, ROI-to-patient mapping and clinical metadata.
+- [ ] Preserve the NLM CC BY 4.0 record for the 54-patient cohort; resolve the 42-patient cohort's blank Zenodo licence display where required.
+- [ ] Download only `virtues-imc14`; pin immutable revision, SHA-256, size, download date and licence.
+- [ ] Verify model exposure before describing the 42-patient set as independent of pretraining.
+- [ ] Keep all images/ROIs from the same patient in one split.
+- [ ] Freeze endpoint, eligible target markers, target budget, thresholds and analysis script before external-test inference.
+- [ ] Reproduce or justify adaptation of the counterfactual baseline; do not call an adaptation a direct reproduction.
 
-The official VirTues repository lists `virtues-sp32` trained on 32 datasets with CC BY-NC 4.0 model weights, `virtues-sp31` trained on 31 datasets with MIT-licensed weights, and `virtues-imc14` trained on 14 IMC datasets with CC BY-NC 4.0 weights. These weight licences are distinct from both the code licence and the underlying cohort's terms. Before describing any cohort as held out, record the exact checkpoint name/version and its full training cohort list. The default `virtues-sp32` model cannot be treated as independent on any cohort included in its 32-dataset training mixture.
+## Deprioritized alternatives
 
-For `rigamonti2024integrating`, the published leave-one-dataset-out result is a reason to investigate—not evidence that the specific public checkpoint currently available to us excludes Rigamonti. Confirm the exact model artifact and training composition, candidate channel overlap, patient split, and dataset reuse terms before approval. Do not download or redistribute restricted artifacts, and do not commit raw patient-level data to GitHub.
+- Rigamonti 2024 NSCLC IMC: CD8 annotations are useful for smoke testing, but its 24-marker panel does not obviously support the intended target set.
+- Hoch et al. melanoma IMC: biologically relevant, but VirTues directly evaluates cell typing on the cohort.
+- Xiao et al. melanoma IMC: includes CD8a/PD-1/PD-L1 but appears in the extended VirTues training corpus.
+- Godbole et al. 2026 melanoma IMC: interesting panel, but only six patients and no explicit licence displayed.
+- Other spora cohorts remain candidates only after panel, rights and checkpoint-exposure audits.
 
-See [targeted prior-art and feasibility audit](targeted_prior_art_and_feasibility_audit_2026-10-25.md) for the complete gate checklist.
-
-
-## New post-VirTues-release exploratory cohort candidate
-
-**Godbole et al. 2026 melanoma IMC cohort** — Zenodo record 15124735, posted 17 September 2026; six patients with multiple regions of interest. The downloadable panel table lists CD8a, PD-1, PD-L1, CTLA-4, TIM-3, LAG-3, TIGIT, CCL2, CCL4, VEGF and macrophage markers. The panel is biologically relevant to immunotherapy resistance and has a CD8 endpoint. Because the record postdates the VirTues article/model release, it is a promising *candidate external exploratory test* for a frozen pre-existing checkpoint, but exact training exposure still needs documentation and the Zenodo page's licence field is blank. Contact the data custodian or verify applicable terms before use. Six patients are far too few to claim a definitive external validation; treat it as a feasibility/exploratory cohort only.
-
-**Panel-level findings from source metadata:** the Rigamonti 2024 panel is a 24-marker NSCLC panel focused on tumour, tissue architecture and immune lineages; it supports CD8 annotation but not an obvious Morpheus-style chemokine target set. Xiao 2022's 41-channel melanoma panel includes CD8a, PD-1 and PD-L1, but the VirTues 32-cohort training corpus includes Xiao. The recent Godbole 2026 panel includes multiple checkpoint and chemokine markers but only six patients and no displayed dataset licence.
-
-Source records: Godbole et al. dataset https://zenodo.org/records/15124735; Xiao panel https://zenodo.org/records/6836992; Rigamonti article DOI 10.1158/0008-5472.CAN-23-1698; VirTues article https://www.nature.com/articles/s41586-026-10884-y.
+Evidence sources: VirTues paper https://www.nature.com/articles/s41586-026-10884-y; official model/code https://github.com/bunnelab/virtues and https://huggingface.co/bunnelab/virtues; HCC discovery cohort https://zenodo.org/records/10793609; HCC ICI cohort https://zenodo.org/records/10794904; NLM catalogue https://datasetcatalog.nlm.nih.gov/dataset?q=0002065446; OpenAIRE metadata https://explore.openaire.eu/search/result?pid=10.5281/zenodo.10794904; HCC paper https://doi.org/10.1136/gutjnl-2024-332837.

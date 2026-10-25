@@ -1,44 +1,48 @@
 # Reproducibility run log
 
 **Last updated:** 25 October 2026  
-**Status:** Public-code audit completed to a first-pass level; synthetic unit tests pass; data/model reproduction blocked and not yet performed.
+**Status:** Main-article/public-code audit and synthetic helper-function tests completed; current robustness-only novelty proposal rejected as a standalone novelty claim; data/model reproduction still pending.
 
 ## Source audit completed
 
 ### Morpheus paper and public implementation
-- Inspected the main published article and Methods PDF, Morpheus README, tutorial notebook, `main.py`, counterfactual-generation code, analysis helper, and TrustScore implementation.
-- Confirmed public tutorial path uses `crc_tutorial.zip` from Caltech Data Portal record `pr14s-wgk05`, a pretrained `unet.ckpt`, and `patient_split.json`.
-- Confirmed top-level runnable example sets `seed_everything(42)`; this establishes a deterministic starting seed, not robustness across seeds.
-- Confirmed the code tracks `PatientID`, `ImageNumber`, and `patch_id`, and the analysis helper maps patch counterfactuals back to patient/image metadata.
-- Confirmed TrustScore is a nearest-neighbour distance-based classifier-input trust score; it is not a measure of stability of complete intervention sets across retrained models or patient resamples.
-- Confirmed counterfactual-generation helper derives its decision threshold from a validation split, then generates perturbations for selected patches.
-- The paper's methods include patient-level splits, within-patient aggregation, across-patient median strategies, and held-out-patient in-silico evaluation. Its results/discussion acknowledge variability between samples and samples from the same patient.
+- Inspected the main published article/Methods PDF, Morpheus README, tutorial notebook, main.py, counterfactual-generation code, analysis helper, and TrustScore implementation.
+- Confirmed the public tutorial path uses crc_tutorial.zip from Caltech Data Portal record ID pr14s-wgk05, a pretrained unet.ckpt, and patient_split.json.
+- Confirmed the runnable example sets seed_everything(42); this is a fixed seeded starting setup, not robustness across seeds.
+- Confirmed code tracks PatientID, ImageNumber and patch_id and maps perturbation outputs back to patient/image metadata.
+- Confirmed TrustScore is a nearest-neighbour distance-based classifier-input trust score, not the stability of complete intervention sets across patient resamples/retrained models.
+- Confirmed the generation helper chooses a decision threshold using the validation split before generating counterfactuals.
+- The main article establishes patient-level splits, within-patient and across-patient median aggregation, in-silico held-out-patient evaluation, sensitivity to sparsity and marked sample variability.
 
-### Data and access trail
-- The paper cites separate melanoma data, original melanoma data-for-analysis, preprocessed Morpheus data/model outputs, and a small CRC tutorial bundle. These should not be treated as interchangeable archives.
-- The original melanoma data-for-analysis deposit is reported as approximately 7.1 GB, plus a code archive of roughly 41 MB. The source record's reuse/licence terms were not clear in this audit; check them before relying on or redistributing files.
-- The paper reports 159 melanoma cores from 69 patients. The CRC liver-metastasis cohort has 209 cores from 30 patients and is described as available from authors on request. The paper describes a breast cohort of 749 cores from 693 patients, but says its marker panel is not suitable for the same perturbation analysis.
-- PHAROS (bioRxiv preprint, September 2026) is an adjacent combination-search approach that uses multiple sampled cell groups and robustness-aware re-ranking. That means generic combination discovery, resampling, or ranking is not enough to claim novelty.
+### New nearby literature identified
+- PHAROS (bioRxiv preprint, September 2026): single-cell perturbation-model search for target-directed combinations with controls, sampled batches, independent combinatorial data evaluation and robustness-aware reranking.
+- Anzum et al., MICCAI 2026: counterfactual directional cell-cell influence in spatial transcriptomics, with held-out cores, permutation/spatial-shuffle controls and core-level bootstrap uncertainty.
+- Ding et al., SPAD-CFR, Biology 2026: spatial point-cloud/diffusion counterfactual tissue reprogramming with molecular profiles and coordinates changed together, including melanoma immune-focused intervention hypotheses.
+- Consequence: a generic paper that bootstraps/retrains Morpheus and reports selection frequency/Jaccard alone is now considered too incremental for a high-novelty contribution. See docs/related_work_addendum_2026.md and docs/pivot_candidates.md.
+
+## Data and access trail
+- The paper cites a melanoma dataset, original melanoma data-for-analysis, Morpheus-preprocessed data/model outputs, and a small CRC tutorial bundle. These are distinct resources.
+- The original melanoma data-for-analysis record lists data_for_analysis.zip at approximately 7.1 GB and a code archive around 41 MB. The license field is not clear in the record; check terms before reuse/re-distribution.
+- Morpheus reports 159 melanoma cores from 69 patients; CRC liver-metastasis cohort 209 cores from 30 patients; breast cohort 749 cores from 693 patients, with a marker panel described as unsuitable for the same therapeutic perturbation task.
+- The separate supplementary PDF is available as a listed artifact from CaltechAUTHORS, but retrieval through its signed download redirect failed. The supplement has not been read and must not be reported as audited.
 
 ## What did not run
-- No data archive was successfully downloaded into this runtime.
+- No data archive was downloaded into this runtime.
 - No Morpheus dependency environment was installed.
 - No original checkpoint was loaded.
-- No model training, counterfactual generation, full notebook reproduction, or biological validation was run.
-- The separate supplementary PDF was identified on the publisher repository trail, but the downloadable artifact was served through a signed redirect that this runtime could not retrieve. Its full text has **not** been audited.
-- Attempts to retrieve public data via direct network access from the execution environment failed due name-resolution/network access errors. Do not interpret that as the public dataset itself being unavailable.
+- No model training, counterfactual generation, full notebook reproduction or biological validation was performed.
+- Direct network retrieval from this execution environment failed with name-resolution/network errors; this does not show the public data host is unavailable.
 
 ## Code added to this research repo
-- `analysis/target_stability.py`: target selection frequency, pairwise/full-set Jaccard, signed-direction consistency, patient-equal-weight predicted uplift summary, and patient-level bootstrap confidence interval utilities.
-- `tests/test_target_stability.py`: six synthetic unit tests covering metric conventions, equal patient weighting, deterministic bootstrap, and invalid input handling.
-- Local unit-test command: `python -m pytest -q`
+- analysis/target_stability.py: target selection frequency, pairwise/full-set Jaccard, signed-direction consistency, patient-equal-weight predicted uplift summary and patient-level bootstrap confidence intervals.
+- tests/test_target_stability.py: six synthetic unit tests covering metric conventions, equal patient weighting, deterministic bootstrap and invalid inputs.
+- Local unit-test command: python -m pytest -q
 - Result: **6 passed** on synthetic inputs.
-- These tests validate the helper functions only; they do **not** validate the Morpheus model, original data, or scientific hypothesis.
+- These tests validate generic helper code only; they do not reproduce Morpheus or establish a scientific result.
 
-## Outstanding reproducibility steps
+## Updated next steps
 1. Retrieve and read the complete Morpheus supplementary PDF.
-2. Resolve licences/terms for the exact dataset bundle and code version.
-3. Obtain the tutorial bundle or other authorized preprocessed artifacts in an environment with network access.
-4. Create a pinned Python 3.9–3.11 environment matching the published dependencies.
-5. Reproduce a small known result and log wall-time, hardware, versions, logs, checksums and deviations.
-6. Only then start the cached-output patient-resampling pilot and, if compute permits, the separate model-seed/full retraining experiment.
+2. Resolve license/terms for the exact data and code artifacts.
+3. Build a dataset/method compatibility matrix for cross-method intervention decision utility and cross-cohort/platform transfer.
+4. Run a small permitted baseline reproduction in a network-enabled environment, recording versions, checksums, hardware, runtime and deviations.
+5. Choose one primary research question only after the prior-art and compatibility gates pass.

@@ -9,7 +9,7 @@ Test whether reconstruction of missing spatial protein-marker channels preserves
 ## Stage 0 — prior art and dataset eligibility
 - Read the complete Morpheus supplement and inspect relevant VirTues, Spora, Spatium, Celcomen, SPAD-CFR, TISSUE and downstream virtual-staining/imputation papers.
 - Search specifically for counterfactual target-set fidelity under whole-channel masking, virtual staining and imputation uncertainty.
-- Select the cohort only after auditing measured marker names, patient/core IDs, CD8/T-cell labels, patient count and the exact data-use terms.
+- Inspect and verify the selected Salié HCC panel CSVs, patient/core IDs, CD8/T-cell endpoint and exact data-use terms; see the cohort/checkpoint decision record.
 - Check whether the foundation-model weights saw the candidate cohort; use a leave-one-cohort-out checkpoint or other leakage-safe design if needed.
 - Do not redistribute raw or restricted data.
 
@@ -86,3 +86,14 @@ Only include if the pilot demonstrates meaningful decision changes. Calibrate ta
 - the result tests recommendation fidelity rather than just reconstruction accuracy.
 
 **Pivot/stop** if no dataset supports the comparison, data reuse terms are unclear, the model has unavoidable evaluation leakage, the baseline cannot run, or prior work already evaluates this same downstream decision.
+
+## Cohort and checkpoint decision (25 October 2026)
+
+Use the selected Salié HCC IMC cohort pair:
+- **Development/calibration:** 54-patient discovery cohort, Zenodo 10793609, with CC BY 4.0 reported by the NLM Dataset Catalog.
+- **External evaluation:** 42-patient ICI-treated cohort, Zenodo 10794904, where OpenAIRE/Datacite metadata reports CC BY but the Zenodo rights field appears blank. Preserve the metadata evidence and resolve the discrepancy before redistribution if required.
+- **Reconstruction checkpoint candidate:** official VirTues `virtues-imc14/model.safetensors` (14 IMC training datasets; CC BY-NC 4.0 weights). Do not use `virtues-sp32`/`virtues-sp31` for a held-out Salié claim. Pin the precise immutable revision and SHA-256 at download, and confirm exact cohort exposure.
+
+The exact marker panel and patient metadata still require local inspection. No channel-specific target set is final until both panel CSVs have been checked. Use development patients to freeze the endpoint, preprocessing, target budget, threshold and abstention rule. Open the 42-patient cohort only for the final external evaluation. VirTues reconstruction and the counterfactual target model are separate components; a Morpheus-style target generator has not yet been validated on this HCC data.
+
+Decision record: [docs/cohort_checkpoint_decision.md](cohort_checkpoint_decision.md).

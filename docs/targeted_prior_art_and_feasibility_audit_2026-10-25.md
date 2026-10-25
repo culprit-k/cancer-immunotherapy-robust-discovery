@@ -90,3 +90,14 @@ Do not assume the software/platform licence grants rights to every cohort. Do no
 - Morpheus baseline reproduced: no.
 - Counterfactual discovery or real-data report run: no.
 - Novelty or patentability established: no.
+
+
+## New cohort compatibility findings (25 October 2026)
+
+The first-choice dataset requires correction after inspecting the published panels:
+
+- **Rigamonti et al. 2024 NSCLC IMC** has 24 markers and CD8+ T-cell annotation, but the panel is mainly tumour/architecture/immune-lineage markers and does not obviously include the chemokine intervention targets needed for a Morpheus-style signed target-set evaluation. Keep it for a pipeline smoke test, not as the primary intervention-fidelity cohort unless a smaller target question is justified before analysis. Original article DOI: 10.1158/0008-5472.CAN-23-1698.
+- **Xiao et al. 2022 melanoma IMC** has a 41-channel panel with CD8a, PD-1 and PD-L1, but the VirTues extended corpus includes Xiao et al. (2022). Do not use the standard `virtues-sp32` weights as an independent imputer on this cohort. It lacks some Morpheus melanoma target channels, so only a pre-specified restricted target set could be considered.
+- **Godbole et al. 2026 melanoma IMC** (Zenodo 15124735, posted 17 September 2026) includes CD8a, PD-1, PD-L1, CTLA-4, TIM-3, LAG-3, TIGIT, CCL2 and CCL4 among its listed channels. The post-release date makes it a promising candidate for an external exploratory test with a frozen VirTues model, but this is not proof of zero training exposure. It includes only six patients and the Zenodo page shows no explicit licence; do not use it until the applicable terms are verified, and do not treat six patients as definitive external validation.
+
+Sources: Rigamonti article (https://doi.org/10.1158/0008-5472.CAN-23-1698), Xiao panel (https://zenodo.org/records/6836992), Godbole panel/cohort (https://zenodo.org/records/15124735), VirTues article (https://www.nature.com/articles/s41586-026-10884-y).

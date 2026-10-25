@@ -1,68 +1,47 @@
 # Novelty assessment
 
-**Status (25 October 2026): HIGH-RISK / UNVERIFIED. Conditional GO for a small feasibility pilot; NO-GO for claiming novelty or inventing a new algorithm yet.**
+**Status (25 October 2026): NO-GO for the generic robustness-only paper as currently phrased. Conditional GO to investigate a more specific comparative or cross-cohort-transfer question.**
 
-## Working candidate
+## Previous candidate now considered too incremental
 
-**Patient-level reproducibility of spatial-proteomic counterfactual target combinations.**
+The initial candidate was to repeat Morpheus discovery over patient-grouped resamples and model seeds, then report signed-target selection frequency, full-set Jaccard similarity, and held-out model-predicted CD8+ infiltration uplift. This remains useful as a reproducibility audit, but by itself it is not strong enough to support a high-novelty paper. Generic bootstrapping and target-set stability are established ideas, and several adjacent studies now overlap strongly.
 
-Research question: Across patient-grouped resamples and model seeds, how reproducible are spatial-proteomic counterfactual target sets, and does a stability-aware consensus improve held-out-patient model-predicted CD8+ infiltration uplift over a published single-run median-strategy baseline, at a matched target budget?
-
-This is a candidate question, not a validated gap, new algorithm, therapeutic recommendation, or patentability claim.
-
-## What existing methods already cover
+## Relevant prior art already checked
 
 ### Morpheus (2025)
-Morpheus performs spatial-proteomic counterfactual target discovery, patient-level train/validation/test splitting, counterfactual generation at patch level, median aggregation into whole-tumour strategies, in-silico evaluation on held-out patient samples, sparsity sensitivity analyses, and in-vitro testing of selected combinations. It also discusses sample variation, including within a patient. Thus “AI discovers combinations,” “patient-level split,” “evaluate on held-out patients,” or “tumour heterogeneity” cannot be presented as new contributions.
+Spatial-proteomic counterfactual target discovery; patient-level train/validation/test splits; per-patch counterfactuals; median aggregation to whole-tumour strategies; in-silico evaluation on held-out patient samples; variation across samples including those from the same patient; sparsity sensitivity and selected in-vitro validation.
 
 ### PHAROS (bioRxiv preprint, September 2026)
-PHAROS searches target-directed drug combinations using a pretrained single-cell perturbation model, evaluates combination recovery against independent combinatorial perturbation datasets, compares against controls, and includes multiple sampled batches and robustness-aware re-ranking. It is a preprint and the task/modality differs from Morpheus, but it rules out a broad claim that combination search, multiple sampling, or robust re-ranking is novel by itself.
+Single-cell perturbation-model search for target-directed drug combinations. It uses sampled source/target batches, control comparisons, independent combinatorial perturbation evaluation and robustness-aware re-ranking. Combination search, sampling and reranking in general are therefore not distinctive contributions.
+
+### Counterfactual directional cell-cell influence (MICCAI 2026)
+Anzum et al., *A Counterfactual Framework for Directional Cell-Cell Interaction Analysis in Spatial Transcriptomics*. https://papers.miccai.org/miccai-2026/0006-Paper6105.html. Uses counterfactual neighbor replacement on spatial transcriptomics and reports held-out core evaluation plus core-level bootstrap uncertainty. This makes generic core-level resampling/uncertainty quantification particularly hard to claim as novel.
+
+### SPAD-CFR (Biology, 2026)
+Ding, Luo and Xiong, *Counterfactual Diffusion Modeling Enables Spatially Targeted Reprogramming of Tissue Microenvironments*. https://doi.org/10.3390/biology15141097. Proposes spatial point-cloud/diffusion counterfactual generation that jointly changes molecular profiles and coordinates, and includes melanoma immune-focused intervention hypotheses involving PD-1+ CD8+ T cells. A broad “counterfactual AI for spatial cancer immunotherapy” framing is now crowded.
 
 ### Other adjacent methods
-- COMPASS (Nature Medicine, 2026): large multi-cohort evaluation and cross-cohort generalization for immunotherapy outcome prediction.
-- Jiang et al. (IJCAI 2024): survey of robust counterfactual explanations, including model/input changes and uncertainty dimensions.
-- Takefuji (Cancer Letters, 2026 issue / online 2025): stability of feature attribution/selection in oncology.
-- Christodoulou and Sun (Expert Systems with Applications, 2026): model uncertainty and counterfactual robustness.
+- COMPASS (Nature Medicine, 2026): large multi-cohort immunotherapy response prediction/generalization.
+- Jiang et al. (IJCAI 2024): robust-counterfactual methods and robustness dimensions.
+- Takefuji (Cancer Letters, 2026 issue / online 2025): oncology feature-attribution/selection stability.
+- Christodoulou and Sun (Expert Systems with Applications, 2026): uncertainty and counterfactual robustness.
 
-These papers make generic robustness metrics, generic feature stability, cross-cohort prediction, or applying an existing method to cancer alone insufficient as a novelty claim.
+See the expanded [existing-method comparison matrix](existing_methods_matrix.md) and [October 2026 addendum](related_work_addendum_2026.md).
 
-## Candidate gap that remains to be tested
+## More defensible next questions to investigate (not yet validated)
 
-The most specific candidate is a hierarchical, patient-level reproducibility benchmark for spatial-proteomic intervention sets that separates:
-1. variability caused by which patients/cores enter discovery;
-2. variability caused by retraining/model initialization;
-3. instability of each signed molecular target versus the full target combination;
-4. the relationship between these reliability measures and held-out-patient model-predicted uplift at a matched target budget.
+1. **Intervention-level decision utility across methods:** For a common evaluation cohort and compatible intervention definitions, does a prespecified cross-method consensus select target sets that are more reproducible and have better held-out-patient model-predicted immune uplift than the strongest single-method baseline at a fixed target budget? Key risk: Morpheus and SPAD-CFR have different model structures/outcomes; do not compare unlike outputs as if they were the same intervention.
+2. **Cross-cohort/platform transfer of intervention direction:** For genuinely shared molecular targets and a compatible endpoint, do signed target directions and predicted effect transfer across independent patient cohorts/platforms better than chance and better than within-cohort baselines? Key risk: data and outcomes may not be compatible, and cross-cohort prediction alone is already well studied.
+3. **Mechanistic feasibility constraints:** Evaluate whether interventions that violate prespecified molecular/signalling constraints fail independent plausibility checks. Key risk: Morpheus itself points toward knowledge-graph constraints as a future extension, and other recent models are biologically informed; “add a graph regularizer” alone is not novel.
 
-The main Morpheus article/code inspected so far appears to use fixed seeded splits and reports aggregation and held-out evaluation; we did not find a repeat-the-entire-pipeline resampling benchmark in the inspected sources. However, the separate supplement has not yet been read, and the broader literature search is not exhaustive. The gap is therefore not confirmed.
+The right next step is a targeted literature and dataset feasibility comparison for these alternatives—not immediate algorithm invention.
 
-## What would not be novel on its own
+## Decision rules
 
-- Applying AI to cancer or immunotherapy.
-- Counterfactual generation or target-combination search.
-- A patient-level split or held-out cohort.
-- A bootstrap or a Jaccard score by itself.
-- Stability selection or consensus ranking without a distinct scientific payoff.
-- A dashboard/reporting framework without methodological insight.
-- Claims that a stable model prediction is causal, biologically true, clinically useful, or patentable.
-
-## Decision
-
-**Current decision: refine and run a controlled feasibility pilot only.**
-
-### Proceed to a full study only if
-- The supplement and targeted prior-art search do not reveal an equivalent patient/core-level spatial combination robustness analysis.
-- The published baseline can be reproduced or deviations are sufficiently understood.
-- Patient identifiers, target marker definitions, directions and permitted data reuse are verified.
-- The test can distinguish sample-sampling variability from model-seed variability without patient leakage.
-- There is a predeclared baseline and evidence that the analysis changes a decision or result beyond a generic stability score.
-
-### Pivot if
-- Equivalent combination-stability analysis already exists.
-- The dataset cannot support patient-level evaluation or has unclear use rights.
-- The study can only report stability without independent held-out evaluation.
-- The added analysis does not change conclusions relative to existing baselines.
+- **Proceed to a paper protocol** only after a specific gap survives the full supplement and prior-art audit, data rights are clear, and a reproducible benchmark exists.
+- **Refine** if the topic is valuable but the main advance is an evaluation protocol rather than a new algorithm; state this accurately.
+- **Pivot** if equivalent cross-method or transfer work exists, or available data cannot test the question.
 
 ## Intellectual-property caution
 
-The project repository is public. Public disclosure can affect patent options depending on jurisdiction and facts. No patentability conclusion is made; if a genuinely distinct invention emerges, consult the institution's technology-transfer office or a qualified patent professional before disclosing enabling technical details.
+This repository is public. Public disclosure can affect patent options depending on jurisdiction and facts. No patentability conclusion is made; seek institutional technology-transfer or qualified patent-professional advice before disclosing enabling details of any genuinely distinct invention.

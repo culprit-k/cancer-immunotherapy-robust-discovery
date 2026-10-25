@@ -158,3 +158,10 @@ The checkpoint resolver workflow completed successfully: https://github.com/culp
 - Uploaded output: JSON provenance manifest only, artifact ID `12600630655`; no weight file committed to GitHub.
 
 This pins the file for reproducible future loading. It does not verify exact cohort exposure from every training/fine-tuning source, does not resolve the 42-patient Zenodo licence display, and is not an inference run. The 54-patient development archive remains the only cohort with a directly supported CC BY 4.0 metadata record at this stage.
+
+
+## 25 October 2026 — HCC archive audit diagnostic correction
+
+- The first HCC archive audit failed after downloading and checksum-verifying the archive because it assumed a member named `DCCohort_panel.csv`; the actual ZIP did not contain that exact basename. This was an audit-script assumption, not evidence that the cohort itself is invalid.
+- Updated `scripts/audit_salie_hcc_discovery_archive.py` to inventory every CSV member with its size, select the exact panel filename only when present or a unique small CSV filename containing `panel`, and emit a diagnostic report even when the panel is ambiguous or absent. It will not silently choose a non-unique candidate.
+- The rerun is GitHub Actions run https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40198072585. Do not call the cohort panel-compatible until that report identifies and parses the correct marker panel and the channel list is checked against the VirTues IMC14 input contract.

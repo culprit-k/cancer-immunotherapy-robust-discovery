@@ -1,52 +1,57 @@
 # Dataset feasibility audit
 
-## Candidate starting point
+**Status (25 October 2026): likely research candidate identified; data/model feasibility and reuse permissions not fully verified. No data downloaded or locally validated.**
 
-The Morpheus melanoma spatial-proteomics dataset is the first candidate because the original study uses it for counterfactual perturbation discovery and provides associated code and preprocessed resources.
+## Candidate starting point: Morpheus melanoma IMC
 
-- Morpheus paper: https://doi.org/10.1038/s41551-025-01357-0
-- Dataset DOI cited by the paper: https://doi.org/10.5281/zenodo.5994135
+- Paper: https://doi.org/10.1038/s41551-025-01357-0
+- Melanoma dataset cited by paper: https://doi.org/10.5281/zenodo.5994135
 - Original melanoma IMC data-for-analysis record: https://doi.org/10.5281/zenodo.5994136
-- Morpheus reproduction repository: https://github.com/cellethology/morpheus-spatial
-- Morpheus package/model code: https://github.com/neonine2/morpheus-spatial
-- Preprocessed data and model outputs cited by the paper: https://doi.org/10.22002/pr14s-wgk05
+- Morpheus preprocessed data and model outputs: https://doi.org/10.22002/pr14s-wgk05
+- Public code/tutorial: https://github.com/cellethology/morpheus-spatial
+- CRC tutorial notebook downloads crc_tutorial.zip from Caltech Data Portal record pr14s-wgk05.
 
-The original melanoma cohort comprises 159 images/cores from 69 patients, with samples from sites including skin and lymph nodes. This gives repeated tissue samples for some patients, but the independent patient count remains 69. The CRC liver-metastasis cohort has 209 cores from 30 patients and is reported as available from the authors on request. The breast tumour cohort contains 693 patients, but the Morpheus paper states that its marker panel is not suitable for the same therapeutic perturbation analysis.
+The Morpheus paper describes 159 tumour cores from 69 melanoma patients across 39 channels, including chemokines. This is the preferred candidate because it has relevant spatial molecular markers and multiple cores for some patients. The independent unit is the patient (69), not the core or image patch.
 
-## Initial access findings
+The paper describes a CRC liver-metastasis cohort with 209 sections from 30 patients and reports the source data are available from the authors on request. The public CRC tutorial bundle is a reproduction/example path and should not be confused with the full source dataset. The paper reports a breast cohort of 749 cores from 693 patients, but states its marker panel is not suitable for the same therapeutic-perturbation task.
 
-The original melanoma data-for-analysis Zenodo record describes a source archive of approximately 7.1 GB containing processed single-cell objects, clinical tables, classifier labels, and analysis code for the original melanoma IMC study. The Morpheus article separately cites preprocessed data and model outputs at the Dataverse DOI above. These are related but should not be assumed to be identical. Verify the exact files needed for reproducing Morpheus before downloading.
+## Public data archive and licensing caution
 
-## Required checks before choosing data
+The original melanoma data-for-analysis Zenodo record lists:
+- data_for_analysis.zip: approximately 7.1 GB; listed MD5 d59d8bda091da8bb053fa0df464595ee.
+- MelanomaIMC-Zenodo.zip: approximately 41.1 MB; listed MD5 79c606231e3d93bec7bd05b7afb1dedb.
 
-For every dataset, record:
-- Exact accession, version, source, publication, and retrieval date.
-- Licence and permitted reuse.
-- Number of patients, samples, tissue sections, and image patches.
-- Patient identifiers and whether samples/patches can be grouped by patient.
-- Available molecular markers and their units/normalization.
-- Availability and definition of immune-infiltration outcome.
-- Missingness, batch effects, and relevant covariates.
-- Train/test splits used in the original paper.
-- Whether the original code reproduces reported results.
-- Storage, compute, and dependency requirements.
+That record describes processed single-cell objects, clinical tables, labels, and code used for the original analysis. It is distinct from the Morpheus-preprocessed artifact/model outputs and the CRC tutorial bundle.
 
-## Leakage prevention
+The Rights/License field on the original data-for-analysis record appears blank in the audit. The Morpheus paper is licensed CC BY-NC-ND 4.0, but the paper's license does not automatically license separate datasets or source code. Check the individual accession, files, repository and any applicable data-use terms before substantive reuse or redistribution. A missing license field is not evidence of unrestricted use.
 
-- Split at the patient level wherever possible.
-- Keep all samples, cores, sections, or patches from one patient within a single partition.
-- Fit normalization, feature selection, imputation, and hyperparameter selection only on the training portion of each split.
-- Use an untouched evaluation set or nested validation for model selection.
-- Document any overlap between datasets and cohorts.
+## Required checks before analysis
 
-## Cross-cohort compatibility
+- Exact data artifact/version, source, publication and retrieval date.
+- Rights/license and whether academic reuse or derived-data publication has conditions.
+- Patient identifiers and ability to group all cores, samples and patches from each patient.
+- Channel list, marker semantics, units, normalization and intervention direction.
+- Endpoint definition and availability of true labels for validation.
+- Missingness, batch effects and clinical covariates.
+- Predefined train/validation/test patient split and any data overlap.
+- Reproduction of published outputs and checksums.
+- RAM/disk, GPU/CPU feasibility, dependency versions and runtime.
 
-Do not assume that spatial proteomics and bulk RNA-seq can be pooled directly. Before attempting cross-cohort analysis, establish compatible biological endpoints, target definitions, measurement platforms, and patient-level metadata. If they are incompatible, evaluate within-cohort robustness first and state that limitation.
+## Access/reproduction observations
 
-## Data governance
+The public Morpheus tutorial uses a trained unet.ckpt, a saved patient_split.json, and an example CRC dataset. main.py starts from seed 42. Package documentation specifies Python >=3.9 and <3.12; the workflow uses PyTorch/Lightning, and counterfactual generation can be expensive. A CPU-only small smoke test may work, but it has not been tried here.
 
-Do not commit large raw data, restricted clinical data, identifiable information, credentials, or data whose licence prohibits redistribution. Store download instructions and checksums where useful; keep raw data outside version control.
+The execution environment for this project could not retrieve the public archives because direct network access failed with name-resolution errors. No file was downloaded, no checksum was verified, no model was loaded, and no smoke test was run. This is an execution-environment limitation, not evidence that the public data host is down.
 
-## Current status
+## Leakage prevention and evaluation design
 
-Dataset feasibility is **partially assessed from published metadata only**. No files have yet been downloaded, inspected locally, or validated in this project.
+- Keep every core/patch from a patient in one partition.
+- Fit normalization, imputation, feature selection and thresholds only within the training/inner-validation data.
+- Do not use held-out patients to choose or rank target sets.
+- Evaluate model-predicted counterfactual uplift by aggregating within patient, then weighting patients equally.
+- Keep cached-output resampling distinct from retraining/full-pipeline robustness.
+- Do not pool spatial protein measurements with bulk RNA-seq unless marker/outcome equivalence is justified.
+
+## Initial recommendation
+
+Use the tutorial/preprocessed artifacts first if their terms allow it. Test parsing, saved model loading and a published baseline on a small subset before downloading the 7.1 GB archive or retraining. If the license remains unclear, seek permission or select a dataset with explicit reuse terms. Do not commit raw or restricted data to GitHub.

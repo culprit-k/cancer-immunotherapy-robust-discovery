@@ -46,3 +46,31 @@
 3. Build a dataset/method compatibility matrix for cross-method intervention decision utility and cross-cohort/platform transfer.
 4. Run a small permitted baseline reproduction in a network-enabled environment, recording versions, checksums, hardware, runtime and deviations.
 5. Choose one primary research question only after the prior-art and compatibility gates pass.
+
+
+## 25 October 2026 — virtual-marker / recommendation-fidelity pivot
+
+### Prior-art refinement
+- VirTues (Nature, 2026) is not just a marker-reconstruction model: its Methods also tests whether downstream cell phenotyping remains stable under virtual-marker replacement. It removes/reconstructs CD20 and CD20+CD38 for B-cell phenotyping on Danenberg data and progressively masks T-cell markers for phenotyping on Cords data.
+- Therefore, the candidate novelty boundary is narrower than "imputation affects downstream analyses": test whether virtual marker reconstruction changes **signed counterfactual intervention sets and their held-out-patient model-predicted objective**. This is still unverified and needs targeted prior-art review.
+- VirTues uses the Hoch et al. melanoma cohort for cell-typing evaluation and notes that some phenotype evaluations align patient-level train/test splits with pretraining. Do not label Hoch as unseen-cohort validation with the standard published full VirTues model.
+
+### Dataset shortlist
+- hoch2022multiplexed: melanoma IMC, 35 patients / 50 images in the spora catalogue; most biologically relevant development candidate for chemokines and immune infiltration, subject to panel/license and VirTues exposure checks.
+- allam2022spatially: lung IMC, 26 patients / 26 images and about 500 MB in the spora quick-download workflow; best small smoke-test candidate if markers and rights pass.
+- moldoveanu2022spatially: melanoma IMC, 90 patients / 90 images; potential independent evaluation candidate, but target markers, outcome labels and model training exposure still need verification.
+- xiao2022multiplexed: melanoma IMC, 26 patients / 158 images, anti-PD-1 context; potential external cohort subject to same checks.
+- Exact cohort licenses vary. The catalogue was reviewed, but no dataset file was downloaded or inspected locally.
+
+### Synthetic code tests
+- Helper source and test files were copied from the current GitHub contents into an isolated local test directory because a direct GitHub clone failed in the execution environment due DNS/name-resolution errors.
+- Ran pytest -q tests: **13 passed** (6 target-stability tests + 7 panel-shift metric tests) on synthetic data.
+- Test coverage includes reconstruction MAE/RMSE/correlation, signed target-set overlap/direction flips, patient-level uplift fidelity, equal weighting through the patient-level inputs, deterministic bootstrap and invalid-input checks.
+- This verifies the utility functions against synthetic cases only. It is not a test of VirTues, Morpheus, SPORA data, or a biological hypothesis. GitHub Actions status was not independently confirmed.
+
+### Still not run
+- No spatial data archive downloaded or checksummed.
+- No VirTues weights or Morpheus checkpoint loaded.
+- No masked-channel reconstruction on actual images/cells.
+- No counterfactual target discovery or held-out-patient objective evaluated.
+- No full Morpheus supplementary PDF audit; its downloadable artifact could not be retrieved in this runtime.

@@ -1,14 +1,14 @@
 # Next execution plan — decision gates and reproducible milestones
 
 **Status date:** 25 October 2026  
-**Current stage:** Archive/panel audit complete; selected HCC + VirTues pairing blocked by preprocessing contract.  
-**Do not start full inference until the input contract and endpoint are defensible.**
+**Current stage:** Discovery archive/panel audit complete; official-source-format VirTues reproduction is blocked because only PENGUIN-normalized HCC TIFFs are public. A separate normalized-domain adaptation pilot is now specified but not yet run.  
+**Do not start full counterfactual inference until input adaptation, endpoint and marker mapping are validated.**
 
 ## Stage 0 — Preserve verified state
 
 - Development archive: Zenodo 10793609; checksum `a842fa253ac2f0eda3cbf4d41e1b0ec1` verified.
 - Actual panel file: `DiscoveryCohort_panel.csv`; 42 rows parsed.
-- Metadata-only audit artifact: run 40198884781, artifact 12601036644. Do not commit the archive, images or masks.
+- Latest metadata-only audit artifact: [run 40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869), artifact [12606106783](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869/artifacts/12606106783). A further sparse TIFF-storage audit is running; use its completed artifact when available. Do not commit the archive, images or masks.
 - Checkpoint: `bunnelab/virtues/virtues-imc14/model.safetensors`, immutable model revision and SHA-256 recorded in `configs/panel_shift_pilot.example.yaml`.
 - HCC/VirTues inference is blocked until compatible inputs are established; the existence of a pinned checkpoint does not make a dataset compatible.
 
@@ -27,12 +27,15 @@
 - Run one masked-marker reconstruction; check output dimensions, finite values, spatial alignment, marker identity, and MAE/RMSE/correlation against the measured channel.
 - Only proceed if the smoke test passes without hidden preprocessing assumptions.
 
-### Stage 1B — If compatible original-scale data are not available
+### Stage 1B — If original-scale data are not available: normalized-domain feasibility pilot
 
-- Stop the VirTues/HCC pairing.
-- Select a reconstruction model that explicitly accepts the released normalized representation, or select a permitted independent dataset with raw/original-scale images and complete channel metadata.
+- Do not claim direct reproduction of the official VirTues input pipeline. Use `docs/hcc_normalized_input_adaptation_protocol.md` to compare two explicitly labeled input transforms on PENGUIN-normalized discovery images.
+- First verify the TIFF numeric storage encoding, stack axes/page count, panel/channel order and mask compatibility. Do not infer the pixel scaling factor from observed maxima alone.
+- Use patient-grouped validation and entire-channel masking. Compare each transform with constant/mean-channel and best-correlated-marker baselines; use patient-macro metrics and patient-level uncertainty.
+- Keep the 42-patient ICI cohort untouched until the transform, marker list, output-scale calibration and evaluation script are frozen. Do not tune on ICI results.
+- If no transform beats baselines robustly, stop the HCC/VirTues pathway and select a permitted compatible spora cohort or a model trained/validated for PENGUIN-normalized data.
 - If a cohort-specific model is trained, use patient-level splits and compare against simple baselines. Do not call it a foundation model or imply external generalization without evidence.
-- Re-audit training exposure and license terms for any replacement dataset/model before download or inference.
+- Re-audit training exposure and licence terms for any replacement dataset/model before inference.
 
 ## Stage 2 — Lock the clinical/statistical estimand before model comparison
 
@@ -51,7 +54,9 @@ Before drafting claims, update the prior-art table with the exact implemented es
 
 ## Go/no-go criteria
 
-**GO to pilot only when:** input contract is documented; panel-to-UniProt mapping is complete; checkpoint code/weights are pinned; exposure is screened; endpoint and baseline are locked; and one-channel reconstruction passes a sanity check.
+**GO to normalized-domain pilot only when:** TIFF encoding/axes and channel order are verified; marker-to-UniProt/embedding mapping is complete for the candidate channels; the pinned checkpoint and licence are recorded; and the pilot uses patient-grouped splits and prespecified baselines.
+
+**GO to the counterfactual pilot only when:** a normalized-domain reconstruction transform beats simple baselines on held-out patients, target output scale is calibrated without test-patient leakage, a defensible CD8 endpoint and eligible target set are locked, and a reproducible counterfactual baseline is implemented.
 
 **GO to held-out evaluation only when:** the pilot passes, patient split is frozen, all comparison conditions are run on the same held-out patients, and no target/threshold/model selection uses test patients.
 

@@ -66,3 +66,10 @@ The public spora collection documents multiple spatial-proteomics cohorts/techno
 5. The study measures decision-level fidelity beyond ordinary marker reconstruction metrics.
 
 If any of these fail, pivot rather than claim novelty. No patentability, clinical utility or biological efficacy claim is made.
+
+
+## Important additional narrowing after inspecting VirTues Methods
+
+VirTues explicitly tests downstream phenotyping after virtual marker reconstruction: it reconstructs CD20/CD20+CD38 for B-cell phenotyping and progressively masked T-cell markers (CD3E and combinations with CD4/CD45RA/CD8) for T-cell phenotyping, then reruns classification (Nature 2026 Methods, Supplementary Fig. 16; https://www.nature.com/articles/s41586-026-10884-y).
+
+Therefore, the candidate must **not** claim novelty for "imputation affects downstream analysis" in general, or for virtual-marker preservation of cell phenotypes. The only remaining candidate distinction is the narrower downstream decision: whether reconstruction changes complete signed *counterfactual target recommendations* and their objective when evaluated on untouched, fully measured patients. This still requires a more systematic search for imputation-aware intervention/causal recommendation studies before being treated as a gap.

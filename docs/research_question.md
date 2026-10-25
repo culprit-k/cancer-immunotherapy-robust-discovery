@@ -23,7 +23,7 @@ The generic patient-resampling/Jaccard study is too incremental as a high-novelt
 - Spora benchmarks for virtual staining, cross-cohort and tissue-level evaluation.
 - TISSUE and other imputation studies for uncertainty-aware reconstruction and downstream consequences.
 
-The narrower candidate is the **decision-level consequence** of virtual marker reconstruction: whether the target set itself remains the same and whether its held-out model-predicted objective changes, not merely whether an imputed marker has high correlation with its measured values.
+VirTues already evaluates whether reconstructed marker channels preserve downstream cell phenotyping under marker masking. Therefore the narrower candidate is specifically the **counterfactual intervention-decision consequence** of virtual marker reconstruction: whether the signed target set changes and whether the target set's held-out model-predicted objective changes, not simply whether reconstructed markers or cell phenotypes are accurate.
 
 This distinction is plausible but not yet confirmed by an exhaustive prior-art review.
 
@@ -57,7 +57,7 @@ All uplift is model-predicted unless independently measured in an intervention e
 ## Data and implementation gates
 
 1. Read the full prior art on VirTues, Spatium, Spora, Celcomen, SPAD-CFR, Morpheus and counterfactual robustness.
-2. Select a cohort only after verifying patient IDs, marker channels, immune outcome, panel structure, access and exact reuse terms.
+2. Audit rigamonti2024integrating first as a potential held-out cohort (spora lists 108 patients / 158 IMC images and CD8 T-cell annotation), but verify panel target suitability, exact data terms and use of a VirTues checkpoint trained without the cohort. Audit hoch2022multiplexed as a biologically relevant development cohort, with explicit handling of possible VirTues exposure.
 3. Confirm whether any foundation model was trained on the selected cohort; use a documented holdout or leave-one-dataset-out setup to avoid data leakage.
 4. Reproduce a small baseline and one masked-marker reconstruction example before developing the full benchmark.
 5. Decide if a genuine contribution remains after testing the pipeline against prior methods.

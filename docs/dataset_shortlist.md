@@ -1,17 +1,20 @@
 # Dataset shortlist for the virtual-marker / counterfactual fidelity pilot
 
 **Last checked:** 25 October 2026  
-**Status:** paper and catalogue metadata review only. No dataset has been downloaded, checksummed, inspected locally or permission-cleared for this project.
+**Status:** evidence-based selection made; data archives and weights have not yet been downloaded or locally inspected.
 
 ## Decision summary
 
-**Important correction:** rigamonti2024integrating is useful for a reconstruction/cell-annotation pipeline smoke test, but its published 24-marker panel does not appear to include the chemokine/target channels needed for a Morpheus-style signed intervention-set test. It should not be the primary target-discovery cohort unless the target set is narrowed and justified in advance. The original study reports CD8+ T-cell labels and prognostic spatial analysis, not a Morpheus-compatible intervention endpoint.
+**Selected cohort pair:** Salié et al. HCC imaging mass cytometry (IMC) study.
 
-**Best biological-development candidate:** hoch2022multiplexed (melanoma, IMC, 35 patients / 50 images, chemokine and immune landscape, immunotherapy context). It has the clearest biological link to chemokines and immune infiltration, but VirTues directly evaluates cell typing on this cohort and some relevant tasks align their patient split with pretraining. Use for development only unless the reconstruction model is trained without this cohort.
+- **Development cohort:** 54-patient HCC discovery set, Zenodo [10793609](https://zenodo.org/records/10793609). The NLM Dataset Catalog identifies the dataset licence as **CC BY 4.0**. It contains normalized multichannel TIFF stacks, cell and stroma masks, and `DCCohort_panel.csv`.
+- **Independent test cohort:** 42-patient HCC immunotherapy cohort, Zenodo [10794904](https://zenodo.org/records/10794904), DOI 10.5281/zenodo.10794904. It contains normalized per-channel TIFF stacks, cell masks, stroma masks and `ICICohort_panel.csv`; patient metadata are in Supplementary Table 3 of the linked paper. OpenAIRE/Datacite-linked metadata lists **CC BY**, while the direct Zenodo page's rights field appears blank. Resolve this discrepancy with the data contact or institutional research office before redistribution and record the metadata evidence.
+- **Selected model variant to investigate:** official VirTues checkpoint `virtues-imc14/model.safetensors` from [Hugging Face](https://huggingface.co/bunnelab/virtues), paired with [official source code](https://github.com/bunnelab/virtues). The official repository lists this model as trained on 14 IMC datasets and gives the weights a **CC BY-NC 4.0** licence. This is the most appropriate candidate for non-commercial IMC reconstruction because Salié et al. appears among the seven extra IMC cohorts added to the extended 32-cohort model, not the core 14-IMC corpus. Exact checkpoint accession-level training exposure still needs confirmation and immutable revision/hash pinning.
+- **Scientific rationale:** the associated paper describes a 41-plex IMC panel, 54-patient discovery cohort and 42-patient ICI validation cohort. It analyses CD8 T-cell infiltration, PD-1-positive/exhausted CD8 T cells, TIM-3/LAG-3, PD-L1-positive myeloid/APC states and CD204 macrophages. This is a stronger spatial immuno-oncology match than the previously shortlisted cohorts.
 
-**Best convenient pipeline smoke-test candidate:** allam2022spatially (lung cancer IMC, 26 patients / 26 images, approximately 500 MB according to the spora project landing page). Use only to check data-loading and masking code; panel suitability must still be verified.
+**Important:** `virtues-sp32` and `virtues-sp31` are not appropriate independent checkpoints for this evaluation, because their extended multitechnology corpus includes the Salié study. Use `virtues-imc14` only after verifying the exact artefact's training history. Its non-commercial weight licence must be respected.
 
-**Other potential cohorts:** moldoveanu2022spatially (melanoma, 90 patients / 90 images) and xiao2022multiplexed (melanoma, 26 patients / 158 images). The VirTues paper's extended 32-cohort corpus includes Xiao et al. (2022), so the standard `virtues-sp32` checkpoint must not be treated as an independent imputer for Xiao. The Xiao panel includes CD8a, PD-1 and PD-L1 but not all Morpheus melanoma targets. Moldoveanu is also listed in the VirTues corpus. Both require an alternative independent imputer or leave-one-cohort-out retraining.
+Full decision record and a pre-inference checklist: [Cohort and checkpoint decision](cohort_checkpoint_decision.md).
 
 ## Candidate details
 

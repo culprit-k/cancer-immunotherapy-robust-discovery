@@ -312,6 +312,105 @@ def main() -> None:
 
             extension_counts = Counter(Path(name).suffix.lower() or "[no extension]" for name in names)
             top_dirs = sorted({name.split("/", 1)[0] for name in names if "/" in name})
+
+            # Inspect TIFF metadata and representative pixel planes without
+            # publishing raw pixels. This validates the archive's actual
+            # storage dtype/range and tests whether masks match the image grid.
+            sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+            from analysis.tiff_archive_qc import inspect_tiff_member
+
+            image_prefix = "DC_img_normalized/"
+            mask_prefixes = ("DC_cellmasks", "DC_stromamasks")
+            tiff_suffixes = {".tif", ".tiff"}
+            tiff_names_by_prefix = {
+                prefix: sorted(
+                    name for name in names
+                    if name.startswith(prefix + "/")
+                    and Path(name).suffix.lower() in tiff_suffixes
+                    and not name.endswith("/")
+                )
+                for prefix in (image_prefix[:-1], *mask_prefixes)
+            }
+            image_members = tiff_names_by_prefix[image_prefix[:-1]]
+
+            def choose_sample_indices(count: int) -> list[int]:
+                if count <= 0:
+                    return []
+                return sorted(set((0, count // 2, count - 1)))
+
+            image_samples = []
+            all_page_ranges = []
+            mask_shape_checks = {prefix: {"matched_files": 0, "spatial_shape_matches": 0, "spatial_shape_mismatches": 0, "missing_matching_mask": 0, "errors": []} for prefix in mask_prefixes}
+            for sample_number, member_index in enumerate(choose_sample_indices(len(image_members)), start=1):
+                member_name = image_members[member_index]
+                image_error = None
+                try:
+                    image_stats = inspect_tiff_member(zf, member_name, inspect_all_pages=True)
+                    for page in image_stats["page_summaries"]:
+                        all_page_ranges.append({
+                            "min": page["min"],
+                            "max": page["max"],
+                            "fraction_below_zero": page["fraction_below_zero"],
+                            "fraction_above_one": page["fraction_above_one"],
+                        })
+                except Exception as exc:
+                    image_stats = None
+                    image_error = f"{type(exc).__name__}: {exc}"
+
+                spatial_shape = None
+                if image_stats and len(image_stats.get("series_shape", [])) >= 2:
+                    spatial_shape = image_stats["series_shape"][-2:]
+                relative_name = member_name[len(image_prefix):]
+                sample_masks = {}
+                for prefix in mask_prefixes:
+                    mask_name = f"{prefix}/{relative_name}"
+                    if mask_name not in names:
+                        mask_shape_checks[prefix]["missing_matching_mask"] += 1
+                        sample_masks[prefix] = {"matching_filename_present": False}
+                        continue
+                    try:
+                        mask_stats = inspect_tiff_member(
+                            zf, mask_name, inspect_all_pages=False, include_unique_values=True
+                        )
+                        mask_shape = mask_stats["series_shape"][-2:]
+                        matches = spatial_shape is not None and mask_shape == spatial_shape
+                        mask_shape_checks[prefix]["matched_files"] += 1
+                        mask_shape_checks[prefix]["spatial_shape_matches" if matches else "spatial_shape_mismatches"] += 1
+                        sample_masks[prefix] = {
+                            "matching_filename_present": True,
+                            "series_shape": mask_stats["series_shape"],
+                            "series_dtype": mask_stats["series_dtype"],
+                            "spatial_shape_matches_image": matches,
+                            "first_page_summary": mask_stats["page_summaries"][0] if mask_stats["page_summaries"] else None,
+                        }
+                    except Exception as exc:
+                        mask_shape_checks[prefix]["errors"].append(f"{type(exc).__name__}: {exc}")
+                        sample_masks[prefix] = {
+                            "matching_filename_present": True,
+                            "error": f"{type(exc).__name__}: {exc}",
+                        }
+
+                image_samples.append({
+                    "sample_number": sample_number,
+                    "image_error": image_error,
+                    "image_metadata": image_stats,
+                    "matched_mask_metadata": sample_masks,
+                })
+
+            numeric_values = [value for page in all_page_ranges for value in (page["min"], page["max"])]
+            normalized_image_sample_qc = {
+                "sampled_image_stack_count": len(image_samples),
+                "sampled_page_or_plane_count": len(all_page_ranges),
+                "observed_min_across_sampled_planes": min(numeric_values) if numeric_values else None,
+                "observed_max_across_sampled_planes": max(numeric_values) if numeric_values else None,
+                "all_sampled_pixels_within_zero_one": (
+                    all(page["min"] >= 0 and page["max"] <= 1 for page in all_page_ranges)
+                    if all_page_ranges else None
+                ),
+                "planes_with_pixels_below_zero": sum(page["fraction_below_zero"] > 0 for page in all_page_ranges),
+                "planes_with_pixels_above_one": sum(page["fraction_above_one"] > 0 for page in all_page_ranges),
+                "scope_note": "Deterministic representative sample only (first, middle, last normalized image stacks), not a scan of every pixel in every image.",
+            }
             tiff_audit = inspect_tiff_structure(zf, infos, len(rows))
 
     report = {
@@ -359,6 +458,10 @@ def main() -> None:
         "panel_row_count": len(rows),
         "panel_rows": rows,
         "panel_structural_qc": panel_qc,
+        "tiff_inventory_counts": {prefix: len(members) for prefix, members in tiff_names_by_prefix.items()},
+        "normalized_image_sample_qc": normalized_image_sample_qc,
+        "sampled_image_and_mask_metadata": image_samples,
+        "sampled_mask_shape_checks": mask_shape_checks,
         "tiff_structure_audit": tiff_audit,
         "inspected_at_utc": datetime.now(timezone.utc).isoformat(),
         "privacy_guardrail": "Raw images and masks were not uploaded or committed; the report contains source metadata, panel metadata, TIFF metadata, and sparse sampled pixel summaries only.",

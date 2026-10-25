@@ -197,11 +197,11 @@ This pins the file for reproducible future loading. It does not verify exact coh
 
 ### Completed archive and panel audit
 
-- Successful structural audit: [GitHub Actions run 40210741291](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40210741291), commit `3442298ff94fcc7abe3544fa2e7435be4f65506e`.
+- Successful final structural audit: [GitHub Actions run 40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869), commit `15b3516f67b815b8f17a2d1d0ddc90d6e912f7e6`.
 - Archive size 1,541,132,381 bytes equals Zenodo metadata; published MD5 `a842fa253ac2f0eda3cbf4d41e1b0ec1` matched; downloaded SHA-256 `8d09d946659164bb2275468ca4ad3239819b2036af83e63ab7b586ddbfc47f72`.
 - ZIP inventory: 325 entries (324 TIFFs and one CSV). The actual panel is `DiscoveryCohort_panel.csv`, 42 rows, columns `Channel`, `MetalTag`, `Target`.
 - Structural QC passed: required columns present, no blank required cells, no duplicated channel/metal-tag/target values, and channel numbers 1–42 are numeric and contiguous.
-- Metadata-only artifact ID `12606146728`, SHA-256 digest `34d8f1b31c87d2ab734d26a2b57352b578094c294a63d2cbcdfce389ecc6f3e4`; raw TIFFs/masks were not published as workflow artifacts or committed.
+- Metadata-only artifact ID `12606106783`, SHA-256 digest `302d7a0bc55bbb32748185f97fa6e6b2110964dd56e7ec901371fc839bc452a3`; raw TIFFs/masks were not published as workflow artifacts or committed.
 - Direct Zenodo API metadata reported `cc-by-4.0` for both records. The 42-patient ICI image archive was not downloaded.
 
 ### Preprocessing decision — resolved as a NO-GO for direct inference

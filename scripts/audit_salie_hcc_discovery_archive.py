@@ -39,7 +39,7 @@ def find_file_url(record: dict) -> tuple[str, int, str | None]:
     for entry in record.get("files", []):
         if entry.get("key") == FILENAME or entry.get("filename") == FILENAME:
             links = entry.get("links", {})
-            url = links.get("self") or links.get("content") or links.get("download")
+            url = links.get("content") or links.get("download") or links.get("self")
             if not url:
                 raise RuntimeError("Zenodo API metadata had no direct file URL")
             checksum = entry.get("checksum")
@@ -65,10 +65,16 @@ def main() -> None:
         archive = Path(temp_dir) / FILENAME
         response = session.get(download_url, stream=True, timeout=(30, 180))
         response.raise_for_status()
+        downloaded = 0
+        next_progress = 256 * 1024 * 1024
         with archive.open("wb") as stream:
             for chunk in response.iter_content(chunk_size=8 * 1024 * 1024):
                 if chunk:
                     stream.write(chunk)
+                    downloaded += len(chunk)
+                    if downloaded >= next_progress:
+                        print(f"Downloaded {downloaded:,} bytes of the HCC discovery archive", flush=True)
+                        next_progress += 256 * 1024 * 1024
 
         actual_size = archive.stat().st_size
         file_sha256, file_md5 = sha256_and_md5(archive)
@@ -100,7 +106,13 @@ def main() -> None:
             with zf.open(panel_member, "r") as raw:
                 import io
                 text_stream = io.TextIOWrapper(raw, encoding="utf-8-sig", newline="")
-                reader = csv.DictReader(text_stream)
+                sample = text_stream.read(8192)
+                text_stream.seek(0)
+                try:
+                    dialect = csv.Sniffer().sniff(sample, delimiters=",;\\t")
+                except csv.Error:
+                    dialect = csv.excel
+                reader = csv.DictReader(text_stream, dialect=dialect)
                 fields = reader.fieldnames or []
                 rows = [dict(row) for row in reader]
 

@@ -2,13 +2,13 @@
 
 ## Decision
 
-**Selected study system:** Salié et al. hepatocellular carcinoma (HCC) imaging-mass-cytometry (IMC) dataset pair.
+**Selected study system:** Salié et al. hepatocellular carcinoma (HCC) imaging-mass-cytometry (IMC) dataset pair. The 54-patient discovery cohort is the rights-cleared development candidate; the 42-patient ICI cohort is a conditional external test because the direct Zenodo licence field is blank.
 
 - **Development cohort:** 54-patient HCC discovery cohort, Zenodo record [10793609](https://zenodo.org/records/10793609). The NLM Dataset Catalog reports CC BY 4.0 for this record. It includes preprocessed multichannel images and cell/stroma masks; channel annotations are in `DCCohort_panel.csv`.
 - **Independent clinical-context test cohort:** 42-patient HCC ICI-treatment cohort, Zenodo record [10794904](https://zenodo.org/records/10794904), DOI 10.5281/zenodo.10794904. The Zenodo landing page describes normalized channel-wise multi-stack TIFF images, cell masks, stromal masks and `ICICohort_panel.csv`; patient metadata are in Supplementary Table 3 of the associated paper. OpenAIRE/Datacite-linked metadata for this exact record reports **CC BY**, although the direct Zenodo “Rights / License” field is visually blank. This is a license-metadata discrepancy, so retain the OpenAIRE evidence and request clarification from the dataset contact before any redistribution or if institutional policy requires source-record confirmation.
 - **Published cohort paper:** Salié et al., *Gut* (2024/2025 issue), DOI [10.1136/gutjnl-2024-332837](https://doi.org/10.1136/gutjnl-2024-332837). It describes a 41-plex IMC panel and 54-person discovery plus 42-person ICI validation cohort; key immune phenotypes include CD8 T cells, PD-1-positive/exhausted CD8 T cells, TIM-3/LAG-3, PD-L1-positive myeloid/APC states, CD204 macrophages and HLA-DR-positive cells.
 
-**Selected frozen foundation-model candidate:** `bunnelab/virtues` — **`virtues-imc14/model.safetensors`** from the official [VirTues Hugging Face repository](https://huggingface.co/bunnelab/virtues), using the matching official code at [bunnelab/virtues](https://github.com/bunnelab/virtues).
+**Selected foundation-model variant (to be frozen by immutable revision at download):** `bunnelab/virtues` — **`virtues-imc14/model.safetensors`** from the official [VirTues Hugging Face repository](https://huggingface.co/bunnelab/virtues), using the matching official code at [bunnelab/virtues](https://github.com/bunnelab/virtues).
 
 Why this variant:
 - The official model table identifies `virtues-imc14` as pretrained on 14 IMC datasets and assigns the **CC BY-NC 4.0 model-weight licence**.

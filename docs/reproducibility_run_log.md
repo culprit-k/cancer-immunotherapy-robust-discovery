@@ -144,3 +144,17 @@
 
 - Added `scripts/resolve_virtues_imc14_checkpoint.py` and `.github/workflows/resolve_virtues_imc14_checkpoint.yml`. The workflow downloads the official `virtues-imc14/model.safetensors` at the resolved immutable Hugging Face repository revision, computes SHA-256 and file size, and uploads only a JSON provenance manifest; the weights are not committed to GitHub.
 - Workflow run was triggered on commit `d926c2d354ded6f95ba9b14d2b2115cf41115953`; final run outcome and actual hash are pending at the time of this note. Do not replace the revision/hash placeholder until the manifest is retrieved and checked.
+
+
+## 25 October 2026 — checkpoint hash resolved
+
+The checkpoint resolver workflow completed successfully: https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40196348184. The hosted runner downloaded the official weight file and printed the following manifest values:
+
+- File: `bunnelab/virtues/virtues-imc14/model.safetensors`
+- Immutable repository revision: `43fd00fce052c46f9e0cc1a87f42806620632319`
+- SHA-256: `714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f`
+- Size: `173543728` bytes
+- Retrieved at: `2026-10-25T13:10:07.676504+00:00` UTC
+- Uploaded output: JSON provenance manifest only, artifact ID `12600630655`; no weight file committed to GitHub.
+
+This pins the file for reproducible future loading. It does not verify exact cohort exposure from every training/fine-tuning source, does not resolve the 42-patient Zenodo licence display, and is not an inference run. The 54-patient development archive remains the only cohort with a directly supported CC BY 4.0 metadata record at this stage.

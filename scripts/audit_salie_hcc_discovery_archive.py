@@ -48,6 +48,26 @@ def find_file_url(record: dict) -> tuple[str, int, str | None]:
     raise RuntimeError(f"{FILENAME} not found in Zenodo API file list")
 
 
+def source_license_summary(record: dict) -> dict:
+    metadata = record.get("metadata", {})
+    license_value = metadata.get("license")
+    if isinstance(license_value, dict):
+        license_id = license_value.get("id")
+        license_title = license_value.get("title")
+    elif isinstance(license_value, str):
+        license_id = license_value
+        license_title = license_value
+    else:
+        license_id = None
+        license_title = None
+    return {
+        "metadata_license_raw": license_value,
+        "license_id": license_id,
+        "license_title": license_title,
+        "license_field_present": license_value is not None,
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
@@ -60,6 +80,19 @@ def main() -> None:
     if record.get("doi", "").lower() != "10.5281/zenodo.10793609":
         raise RuntimeError(f"Unexpected Zenodo DOI: {record.get('doi')!r}")
     download_url, advertised_size, advertised_checksum = find_file_url(record)
+
+    # The 42-patient ICI set is a proposed external cohort, but its direct
+    # Zenodo licence field has appeared blank. Query only its metadata here;
+    # do not download those image data until its source-level terms are clear.
+    external_meta_response = session.get(
+        "https://zenodo.org/api/records/10794904", timeout=60
+    )
+    external_meta_response.raise_for_status()
+    external_record = external_meta_response.json()
+    if external_record.get("doi", "").lower() != "10.5281/zenodo.10794904":
+        raise RuntimeError(
+            f"Unexpected external Zenodo DOI: {external_record.get('doi')!r}"
+        )
 
     with tempfile.TemporaryDirectory(prefix="salie_hcc_audit_") as temp_dir:
         archive = Path(temp_dir) / FILENAME
@@ -125,7 +158,20 @@ def main() -> None:
         "doi": "10.5281/zenodo.10793609",
         "source_url": RECORD_URL,
         "source_title": record.get("metadata", {}).get("title"),
-        "source_published_license": "CC BY 4.0 per NLM Dataset Catalog; verify source-page attribution terms",
+        "source_zenodo_api_license_metadata": source_license_summary(record),
+        "source_published_license_mirror": "NLM Dataset Catalog reports CC BY 4.0; compare this with the direct Zenodo API metadata.",
+        "external_ici_record_id": "10794904",
+        "external_ici_doi": "10.5281/zenodo.10794904",
+        "external_ici_zenodo_api_license_metadata": source_license_summary(external_record),
+        "external_ici_archive_metadata_only": [
+            {
+                "filename": entry.get("key"),
+                "size_bytes": entry.get("size"),
+                "checksum": entry.get("checksum"),
+            }
+            for entry in external_record.get("files", [])
+        ],
+        "external_ici_images_downloaded": False,
         "archive_filename": FILENAME,
         "archive_expected_md5": EXPECTED_MD5,
         "archive_actual_md5": file_md5,

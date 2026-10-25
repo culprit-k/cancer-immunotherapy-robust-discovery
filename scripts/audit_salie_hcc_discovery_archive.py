@@ -18,6 +18,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
+import numpy as np
+import tifffile
 
 RECORD_ID = "10793609"
 FILENAME = "HCC_DiscoveryCohort.zip"
@@ -68,6 +70,130 @@ def source_license_summary(record: dict) -> dict:
         "license_field_present": license_value is not None,
     }
 
+
+
+def inspect_tiff_member(zf: zipfile.ZipFile, filename: str, inspect_pixels: bool = False) -> dict:
+    """Read TIFF metadata and optional sparse page statistics without exporting pixels."""
+    result: dict = {"readable": False, "page_statistics": []}
+    try:
+        with zf.open(filename, "r") as stream:
+            with tifffile.TiffFile(stream) as tif:
+                if not tif.series:
+                    raise RuntimeError("TIFF contains no image series")
+                series = tif.series[0]
+                pages = list(tif.pages)
+                result.update({
+                    "readable": True,
+                    "series_count": len(tif.series),
+                    "series_shape": [int(v) for v in series.shape],
+                    "series_dtype": str(series.dtype),
+                    "page_count": len(pages),
+                    "page_shapes": sorted({
+                        tuple(int(v) for v in page.shape) for page in pages
+                    }),
+                })
+                if inspect_pixels and pages:
+                    page_indices = sorted(set([0, len(pages) // 2, len(pages) - 1]))
+                    for page_index in page_indices:
+                        arr = pages[page_index].asarray()
+                        if arr.size == 0:
+                            continue
+                        result["page_statistics"].append({
+                            "page_index": int(page_index),
+                            "shape": [int(v) for v in arr.shape],
+                            "dtype": str(arr.dtype),
+                            "min": float(np.min(arr)),
+                            "p50": float(np.percentile(arr, 50)),
+                            "p99": float(np.percentile(arr, 99)),
+                            "max": float(np.max(arr)),
+                            "fraction_zero": float(np.mean(arr == 0)),
+                        })
+    except Exception as exc:
+        result["error"] = f"{type(exc).__name__}: {exc}"
+    return result
+
+
+def inspect_tiff_structure(zf: zipfile.ZipFile, infos: list[zipfile.ZipInfo], panel_rows: int) -> dict:
+    """Deterministically sample image stacks and masks; report summaries only."""
+    tiff_infos = [
+        info for info in infos
+        if not info.is_dir() and Path(info.filename).suffix.lower() in {".tif", ".tiff"}
+    ]
+    directory_counts = Counter(
+        info.filename.split("/", 1)[0] for info in tiff_infos if "/" in info.filename
+    )
+    image_infos = sorted(
+        [info for info in tiff_infos if info.filename.startswith("DC_img_normalized/")],
+        key=lambda info: info.filename.casefold(),
+    )
+
+    def evenly_spaced(items: list[zipfile.ZipInfo], maximum: int) -> list[tuple[int, zipfile.ZipInfo]]:
+        if len(items) <= maximum:
+            return list(enumerate(items))
+        indices = sorted(set(round(i * (len(items) - 1) / (maximum - 1)) for i in range(maximum)))
+        return [(index, items[index]) for index in indices]
+
+    image_samples = []
+    for index, info in evenly_spaced(image_infos, 12):
+        meta = inspect_tiff_member(zf, info.filename, inspect_pixels=True)
+        image_samples.append({
+            "sample_index_in_sorted_image_list": index,
+            "compressed_member_size_bytes": int(info.file_size),
+            **meta,
+        })
+
+    mask_samples = {}
+    for directory in ("DC_cellmasks", "DC_stromamasks"):
+        items = sorted(
+            [info for info in tiff_infos if info.filename.startswith(directory + "/")],
+            key=lambda info: info.filename.casefold(),
+        )
+        mask_samples[directory] = [
+            {
+                "sample_index_in_sorted_directory_list": index,
+                "compressed_member_size_bytes": int(info.file_size),
+                **inspect_tiff_member(zf, info.filename, inspect_pixels=False),
+            }
+            for index, info in evenly_spaced(items, 3)
+        ]
+
+    readable_images = [item for item in image_samples if item.get("readable")]
+    all_readable = bool(image_samples) and len(readable_images) == len(image_samples)
+    page_counts = sorted({item.get("page_count") for item in readable_images})
+    dtypes = sorted({item.get("series_dtype") for item in readable_images})
+    shapes = sorted({tuple(item.get("series_shape", [])) for item in readable_images})
+    sampled_pages_match_panel = (
+        bool(readable_images)
+        and all(item.get("page_count") == panel_rows for item in readable_images)
+    )
+    sampled_pixel_values = [
+        stat
+        for item in readable_images
+        for stat in item.get("page_statistics", [])
+    ]
+
+    return {
+        "audit_scope": "TIFF metadata for all entries; pixel statistics from deterministic sparse page samples only",
+        "tiff_file_count_all_directories": len(tiff_infos),
+        "tiff_file_counts_by_top_level_directory": dict(sorted(directory_counts.items())),
+        "normalized_image_stack_count": len(image_infos),
+        "sampled_normalized_image_stack_count": len(image_samples),
+        "sampled_image_stacks_all_readable": all_readable,
+        "sampled_image_series_shapes": [list(shape) for shape in shapes],
+        "sampled_image_series_dtypes": dtypes,
+        "sampled_image_page_counts": page_counts,
+        "sampled_image_page_count_matches_panel_rows": sampled_pages_match_panel,
+        "sampled_image_stacks": image_samples,
+        "mask_tiff_samples_by_directory": mask_samples,
+        "sampled_pixel_numeric_range": {
+            "min": min((x["min"] for x in sampled_pixel_values), default=None),
+            "max": max((x["max"] for x in sampled_pixel_values), default=None),
+            "p99_min_across_sampled_pages": min((x["p99"] for x in sampled_pixel_values), default=None),
+            "p99_max_across_sampled_pages": max((x["p99"] for x in sampled_pixel_values), default=None),
+            "interpretation": "Stored pixel values only. Compare with the paper's semantic 0-1 normalization statement; integer TIFF storage may use an encoded integer scale, so do not rescale by assumption.",
+        },
+        "interpretation_guardrail": "Sparse TIFF sampling establishes storage shape/type/range but cannot restore original acquisition intensities or certify compatibility with VirTues preprocessing.",
+    }
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -186,9 +312,10 @@ def main() -> None:
 
             extension_counts = Counter(Path(name).suffix.lower() or "[no extension]" for name in names)
             top_dirs = sorted({name.split("/", 1)[0] for name in names if "/" in name})
+            tiff_audit = inspect_tiff_structure(zf, infos, len(rows))
 
     report = {
-        "audit_type": "metadata_only_archive_integrity_and_panel_audit",
+        "audit_type": "metadata_only_archive_integrity_panel_and_sparse_tiff_audit",
         "record_id": RECORD_ID,
         "doi": "10.5281/zenodo.10793609",
         "source_url": RECORD_URL,
@@ -232,9 +359,10 @@ def main() -> None:
         "panel_row_count": len(rows),
         "panel_rows": rows,
         "panel_structural_qc": panel_qc,
+        "tiff_structure_audit": tiff_audit,
         "inspected_at_utc": datetime.now(timezone.utc).isoformat(),
-        "privacy_guardrail": "Raw images and masks were not uploaded or committed; only the panel metadata and integrity summary are emitted.",
-        "interpretation_guardrail": "Panel structural QC checks only the table structure. It is not model inference, cell-label validation, marker-embedding compatibility, checkpoint exposure clearance, or proof that counterfactual target discovery is compatible.",
+        "privacy_guardrail": "Raw images and masks were not uploaded or committed; the report contains source metadata, panel metadata, TIFF metadata, and sparse sampled pixel summaries only.",
+        "interpretation_guardrail": "Panel and sparse TIFF QC do not establish cell-label validity, canonical marker-embedding compatibility, equivalent preprocessing domains, checkpoint exposure by themselves, or biological validity. No model inference is performed.",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

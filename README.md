@@ -75,6 +75,8 @@ The candidate question is whether good marker reconstruction scores can still ma
 - Untouched external evaluation: 42-patient ICI-treatment HCC cohort, [Zenodo 10794904](https://zenodo.org/records/10794904). OpenAIRE metadata reports CC BY, but the Zenodo Rights/License field is blank, so record this discrepancy and confirm with the data contact or institution where needed.
 - Reconstruction checkpoint candidate: official VirTues `virtues-imc14/model.safetensors` from [Hugging Face](https://huggingface.co/bunnelab/virtues), with source code at [bunnelab/virtues](https://github.com/bunnelab/virtues). The variant is trained on 14 IMC cohorts and its weights are CC BY-NC 4.0. It is the best candidate based on the published training-inventory grouping; exact exposure and file hash still need final pinning. Do not use `virtues-sp32` or `virtues-sp31` for a clean held-out claim.
 
+The checkpoint file is now hash-pinned: revision `43fd00fce052c46f9e0cc1a87f42806620632319`, SHA-256 `714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f`, size 173543728 bytes, retrieved by a successful hosted workflow run. Only the provenance manifest was retained; the weights were not committed to GitHub. The exact pretraining-exposure certificate and the 42-patient cohort's source-level licence discrepancy remain open.
+
 The 54-patient cohort is for development only; keep the 42-patient cohort untouched until target markers, preprocessing, thresholds and the analysis pipeline are frozen. The HCC marker panels must be inspected before locking the intervention set. Morpheus is not yet directly reproduced on HCC.
 
 Full decision record: [Cohort and checkpoint decision](docs/cohort_checkpoint_decision.md).

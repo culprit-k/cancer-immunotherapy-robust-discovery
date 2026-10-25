@@ -48,6 +48,7 @@ Our potential contribution must be compared directly with existing work on count
 - [Initial literature audit](docs/literature_review.md)
 - [Novelty assessment](docs/novelty_assessment.md)
 - [Dataset feasibility audit](docs/dataset_audit.md)
+- [Morpheus code and evaluation audit](docs/morpheus_code_audit.md)
 - [Preliminary analysis plan](docs/analysis_plan.md)
 - [Data handling policy](data/README.md)
 

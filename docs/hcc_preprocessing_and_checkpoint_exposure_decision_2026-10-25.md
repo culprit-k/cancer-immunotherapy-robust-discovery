@@ -6,7 +6,7 @@
 
 ## 1. Completed archive audit
 
-The successful structural audit is GitHub Actions run [40210741291](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40210741291), on commit `3442298ff94fcc7abe3544fa2e7435be4f65506e`.
+The successful structural audit is GitHub Actions run [40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869), on commit `15b3516f67b815b8f17a2d1d0ddc90d6e912f7e6`.
 
 - Discovery archive: `HCC_DiscoveryCohort.zip`, Zenodo DOI [10.5281/zenodo.10793609](https://zenodo.org/records/10793609).
 - Downloaded size: **1,541,132,381 bytes**, matching the size advertised by Zenodo.
@@ -16,7 +16,7 @@ The successful structural audit is GitHub Actions run [40210741291](https://gith
 - Panel CSV actually contained in the archive: `DiscoveryCohort_panel.csv`; the Zenodo descriptive text names `DCCohort_panel.csv`.
 - Parsed panel: 42 rows, with `Channel`, `MetalTag`, and `Target` columns.
 - Structural QC: required columns present; no blank required cells; no duplicate channel numbers, metal tags, or target names; channels are numeric and contiguous from 1 to 42. **`structural_qc_pass = true`.**
-- The workflow published the metadata-only artifact [12606146728](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40210741291/artifacts/12606146728), digest `sha256:34d8f1b31c87d2ab734d26a2b57352b578094c294a63d2cbcdfce389ecc6f3e4`, expiring 24 November 2026 UTC.
+- The workflow published the metadata-only artifact [12606106783](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869/artifacts/12606106783), digest `sha256:302d7a0bc55bbb32748185f97fa6e6b2110964dd56e7ec901371fc839bc452a3`, expiring 24 November 2026 UTC.
 - Raw images and masks were not committed or uploaded as artifacts.
 - The direct Zenodo API metadata retrieved during the same run reported `cc-by-4.0` for both Zenodo records 10793609 and 10794904. The ICI image archive was **not** downloaded in this audit; the API check was metadata-only.
 

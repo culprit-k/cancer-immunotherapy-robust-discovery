@@ -1,10 +1,7 @@
 name: Audit Salié HCC development cohort
+# This audit downloads a ~1.5 GB source archive. Run it manually when source or audit logic changes,
+# rather than on every code/documentation push.
 on:
-  push:
-    branches: [main]
-    paths:
-      - "scripts/audit_salie_hcc_discovery_archive.py"
-      - ".github/workflows/audit_salie_hcc_discovery.yml"
   workflow_dispatch:
 
 permissions:

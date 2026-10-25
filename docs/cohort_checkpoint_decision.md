@@ -21,8 +21,8 @@ Why this variant:
 | Requirement | Evidence / status | Decision |
 |---|---|---|
 | Cancer and immune-oncology relevance | HCC, spatial immune architecture and ICI-treatment outcomes in the linked 42-patient cohort. | Strong fit. |
-| Spatial protein channels | IMC, 41-plex panel; channel-wise normalized TIFF stacks. | Compatible modality for VirTues IMC reconstruction. |
-| Cell/tissue geometry | Cell masks and stroma masks included in the 42-patient upload; analogous masks in the 54-patient cohort. | Suitable starting inputs; inspect actual file structure and quality after download. |
+| Spatial protein channels | IMC, 41-plex panel; channel-wise normalized TIFF stacks. | Same modality; expected input structure is not yet compatible without conversion. |
+| Cell/tissue geometry | Cell masks and stroma masks included in the 42-patient upload; analogous masks in the 54-patient cohort. | Suitable starting inputs; inspect file structure and quality after download, then convert to VirTues/spora format. |
 | CD8 objective | The article analyzes CD8 T-cell infiltration and CD8/checkpoint-positive immune states. | Potential endpoint. Need a reproducible cell-label / threshold definition before analysis. |
 | Candidate intervention targets | Article reports PD-1, TIM-3/LAG-3, PD-L1-positive APC/myeloid states, CD204 macrophages and other immune markers. | Provisional biological shortlist only; final allowed target markers must be read from the actual panel CSV and fixed before test evaluation. Never manipulate the CD8 endpoint marker to predict CD8 density. |
 | Dataset rights | 54-cohort: NLM catalogue reports CC BY 4.0. 42-cohort: OpenAIRE/Datacite metadata reports CC BY; direct Zenodo rights field appears blank. | 54-cohort provisionally cleared for attribution-based reuse; retain evidence. 42-cohort provisionally CC BY but resolve discrepancy with data contact/institutional policy before redistribution. |
@@ -43,6 +43,8 @@ Why this variant:
 - [ ] Download the 54-patient and 42-patient archives from their official records; store outside the public GitHub repository.
 - [ ] Verify archive integrity against source checksums and record new SHA-256 values locally.
 - [ ] Inspect `DCCohort_panel.csv` and `ICICohort_panel.csv`; compare marker names, metal channels, image dimensions, masks and patient metadata.
+- [ ] Convert channel-wise TIFFs and masks to the input structure required by official VirTues/spora code; preserve a reversible channel map and ROI/patient identity.
+- [ ] Audit intensity ranges and existing normalization first. VirTues' published preprocessing includes clipping/log transform, tissue-aware channel normalization and Gaussian smoothing; do not double-transform data already normalized by the source study.
 - [ ] Save an evidence copy of the CC BY metadata for the 54-patient cohort; resolve the 42-patient cohort's blank Zenodo license field with the data contact or institutional research office.
 - [ ] Download only the official `virtues-imc14` weight artefact, read its licence, pin the exact immutable revision and record SHA-256. Do not use `virtues-sp32` or `virtues-sp31` for the primary held-out claim.
 - [ ] Confirm model-training cohort inclusion/exclusion against the exact checkpoint version. Ask the authors if the public supplement/model card does not resolve accession-level exposure.

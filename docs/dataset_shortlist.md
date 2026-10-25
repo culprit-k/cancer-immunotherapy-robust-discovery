@@ -5,13 +5,13 @@
 
 ## Decision summary
 
-**Best first candidate for a held-out recommendation-fidelity pilot:** rigamonti2024integrating (lung cancer, IMC + H&E, 108 patients / 158 images). The spora benchmark metadata includes CD4 T-cell and CD8 T-cell labels, and VirTues reports a leave-one-dataset-out zero-shot marker-reconstruction evaluation on Rigamonti et al. This makes it a promising test setting, provided we verify the exact checkpoint training composition, candidate marker panel, data-use terms and whether the released model is the leave-one-out checkpoint rather than a model that included this cohort.
+**Important correction:** rigamonti2024integrating is useful for a reconstruction/cell-annotation pipeline smoke test, but its published 24-marker panel does not appear to include the chemokine/target channels needed for a Morpheus-style signed intervention-set test. It should not be the primary target-discovery cohort unless the target set is narrowed and justified in advance. The original study reports CD8+ T-cell labels and prognostic spatial analysis, not a Morpheus-compatible intervention endpoint.
 
 **Best biological-development candidate:** hoch2022multiplexed (melanoma, IMC, 35 patients / 50 images, chemokine and immune landscape, immunotherapy context). It has the clearest biological link to chemokines and immune infiltration, but VirTues directly evaluates cell typing on this cohort and some relevant tasks align their patient split with pretraining. Use for development only unless the reconstruction model is trained without this cohort.
 
 **Best convenient pipeline smoke-test candidate:** allam2022spatially (lung cancer IMC, 26 patients / 26 images, approximately 500 MB according to the spora project landing page). Use only to check data-loading and masking code; panel suitability must still be verified.
 
-**Other potential cohorts:** moldoveanu2022spatially (melanoma, 90 patients / 90 images) and xiao2022multiplexed (melanoma, 26 patients / 158 images). Their exact panel overlap, patient outcome labels, data-use terms, and overlap with VirTues/other foundation-model training cohorts remain unverified; do not call either independent before the audit.
+**Other potential cohorts:** moldoveanu2022spatially (melanoma, 90 patients / 90 images) and xiao2022multiplexed (melanoma, 26 patients / 158 images). The VirTues paper's extended 32-cohort corpus includes Xiao et al. (2022), so the standard `virtues-sp32` checkpoint must not be treated as an independent imputer for Xiao. The Xiao panel includes CD8a, PD-1 and PD-L1 but not all Morpheus melanoma targets. Moldoveanu is also listed in the VirTues corpus. Both require an alternative independent imputer or leave-one-cohort-out retraining.
 
 ## Candidate details
 
@@ -64,3 +64,12 @@ The official VirTues repository lists `virtues-sp32` trained on 32 datasets with
 For `rigamonti2024integrating`, the published leave-one-dataset-out result is a reason to investigate—not evidence that the specific public checkpoint currently available to us excludes Rigamonti. Confirm the exact model artifact and training composition, candidate channel overlap, patient split, and dataset reuse terms before approval. Do not download or redistribute restricted artifacts, and do not commit raw patient-level data to GitHub.
 
 See [targeted prior-art and feasibility audit](targeted_prior_art_and_feasibility_audit_2026-10-25.md) for the complete gate checklist.
+
+
+## New post-VirTues-release exploratory cohort candidate
+
+**Godbole et al. 2026 melanoma IMC cohort** — Zenodo record 15124735, posted 17 September 2026; six patients with multiple regions of interest. The downloadable panel table lists CD8a, PD-1, PD-L1, CTLA-4, TIM-3, LAG-3, TIGIT, CCL2, CCL4, VEGF and macrophage markers. The panel is biologically relevant to immunotherapy resistance and has a CD8 endpoint. Because the record postdates the VirTues article/model release, it is a promising *candidate external exploratory test* for a frozen pre-existing checkpoint, but exact training exposure still needs documentation and the Zenodo page's licence field is blank. Contact the data custodian or verify applicable terms before use. Six patients are far too few to claim a definitive external validation; treat it as a feasibility/exploratory cohort only.
+
+**Panel-level findings from source metadata:** the Rigamonti 2024 panel is a 24-marker NSCLC panel focused on tumour, tissue architecture and immune lineages; it supports CD8 annotation but not an obvious Morpheus-style chemokine target set. Xiao 2022's 41-channel melanoma panel includes CD8a, PD-1 and PD-L1, but the VirTues 32-cohort training corpus includes Xiao. The recent Godbole 2026 panel includes multiple checkpoint and chemokine markers but only six patients and no displayed dataset licence.
+
+Source records: Godbole et al. dataset https://zenodo.org/records/15124735; Xiao panel https://zenodo.org/records/6836992; Rigamonti article DOI 10.1158/0008-5472.CAN-23-1698; VirTues article https://www.nature.com/articles/s41586-026-10884-y.

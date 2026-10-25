@@ -24,8 +24,8 @@ The candidate question is whether good marker reconstruction scores can still ma
 - Dataset shortlist ranking a melanoma chemokine cohort for development, a smaller lung IMC cohort for smoke testing, and two melanoma cohorts for possible external evaluation, with model-exposure and license caveats.
 - Method/dataset compatibility matrix and decision-gate protocol.
 - Generic target-stability metric code from the previous phase.
-- New panel-shift metrics for marker reconstruction error, signed intervention-set fidelity/direction changes and patient-level predicted-uplift fidelity.
-- Unit tests for both helper modules. A local synthetic suite run on copies of the current source/test files passed **13 tests** (6 stability + 7 panel-shift tests). No completed GitHub Actions run has been verified.
+- New panel-shift metrics for marker reconstruction error, signed intervention-set fidelity/direction changes, patient-level predicted-uplift fidelity, and paired patient-level model-based reference regret.
+- Unit tests for both helper modules. A local synthetic suite run on copies of the current source/test files passed **15 tests** (6 stability + 9 panel-shift tests). No completed GitHub Actions run has been verified.
 - A GitHub Actions test workflow. No raw data have been committed.
 
 ## Next steps, in order

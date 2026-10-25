@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-"""Verify the CC BY 4.0 HCC discovery archive and report marker-panel metadata only.
+"""Audit the HCC discovery archive and emit metadata-only QC.
 
-Raw images/masks are kept in the ephemeral runner temp directory. Only the
-checksum and the small panel metadata table are emitted to stdout/JSON.
+Raw images/masks remain in the ephemeral runner. The report contains archive
+checksums/inventory, panel rows, sampled TIFF metadata and scalar pixel summaries.
+No pixel arrays are written to stdout, JSON or workflow artifacts.
 """
 from __future__ import annotations
 
@@ -173,7 +174,7 @@ def inspect_tiff_structure(zf: zipfile.ZipFile, infos: list[zipfile.ZipInfo], pa
     ]
 
     return {
-        "audit_scope": "TIFF metadata for all entries; pixel statistics from deterministic sparse page samples only",
+        "audit_scope": "All TIFF members are counted from the ZIP inventory; series/page metadata is read for up to 12 evenly spaced normalized image stacks and 3 stacks per mask directory. Pixel summaries cover first/middle/last pages of sampled image stacks plus all 42 planes from the first/middle/last normalized image ROIs. Spatial image-mask shape matching is checked for those 3 ROIs only.",
         "tiff_file_count_all_directories": len(tiff_infos),
         "tiff_file_counts_by_top_level_directory": dict(sorted(directory_counts.items())),
         "normalized_image_stack_count": len(image_infos),

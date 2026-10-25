@@ -1,7 +1,7 @@
 # Dataset shortlist and locked cohort selection
 
 **Last checked:** 25 October 2026  
-**Status:** HCC is selected as the biological study system, but the released normalized TIFFs are **not compatible with direct pretrained VirTues inference**. The archive and panel have been downloaded/audited in CI; the model checkpoint has been immutably pinned. Use this cohort only with an author-supplied original-scale route or a separately prespecified normalization-domain adaptation.
+**Status:** HCC is selected as the biological study system, but released normalized TIFFs are **not compatible with direct pretrained VirTues inference**. The 54-patient discovery archive and panel have been audited in CI; the 42-patient ICI archive has only been checked through metadata. The checkpoint file is pinned and downloaded in CI; its weights were not committed or loaded for inference. Use HCC only with an author-supplied original-scale route or a separately prespecified normalization-domain adaptation.
 
 ## Selected study system
 

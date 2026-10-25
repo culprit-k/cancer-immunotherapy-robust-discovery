@@ -12,6 +12,7 @@ from huggingface_hub import HfApi, hf_hub_download
 
 REPO_ID = "bunnelab/virtues"
 FILENAME = "virtues-imc14/model.safetensors"
+PINNED_REVISION = "43fd00fce052c46f9e0cc1a87f42806620632319"
 
 
 def sha256_file(path: Path) -> str:
@@ -25,10 +26,15 @@ def sha256_file(path: Path) -> str:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--revision",
+        default=PINNED_REVISION,
+        help="Immutable Hugging Face revision to resolve (defaults to the audited revision).",
+    )
     args = parser.parse_args()
 
     api = HfApi()
-    info = api.model_info(REPO_ID, revision="main")
+    info = api.model_info(REPO_ID, revision=args.revision)
     revision = info.sha
     if not revision or len(revision) < 12:
         raise RuntimeError("Hugging Face did not return an immutable model revision")
@@ -47,9 +53,12 @@ def main() -> None:
         "training_scope_as_published": "virtues-imc14: 14 IMC datasets",
         "purpose": "reproducibility manifest only; weights are not copied into this repository",
         "exposure_note": (
-            "Published cohort grouping suggests the Salié HCC study is among the "
-            "extra IMC cohorts added to the extended corpus, but accession-level "
-            "exclusion for both Zenodo records still requires confirmation."
+            "Published VirTues Methods place Salié et al. (reference 95) among "
+            "the seven additional IMC cohorts in the extended 32-cohort corpus; "
+            "the virtues-imc14 variant is the core 14-IMC corpus. This supports "
+            "no direct Salié-study exposure for this checkpoint at the published "
+            "corpus/reference level. It is not a machine-readable accession-to-"
+            "training-run certificate."
         ),
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)

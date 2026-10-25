@@ -3,7 +3,7 @@
 **Audit date:** 25 October 2026  
 **Source:** [Zenodo record 10793609](https://zenodo.org/records/10793609)  
 **Metadata source:** GitHub Actions run [40198072585](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40198072585)  
-**Status:** Archive integrity and panel parsing verified; model compatibility and inference remain pending.
+**Status:** Archive integrity and panel structural QC verified PASS; direct VirTues inference on these normalized TIFFs is NO-GO. Checkpoint exposure is assessed in [the HCC preprocessing/exposure decision](hcc_preprocessing_and_checkpoint_exposure_decision_2026-10-25.md).
 
 ## Integrity and panel parsing
 
@@ -14,7 +14,8 @@
 - Top-level image/mask directories: `DC_img_normalized`, `DC_cellmasks`, `DC_stromamasks`; no raw-MCD/raw-intensity directory or per-tissue quantile/mean/std tables were present in this archive.
 - Actual panel member: `DiscoveryCohort_panel.csv` (not the `DCCohort_panel.csv` filename described in the record text)
 - Parsed panel: 42 rows; columns `Channel`, `MetalTag`, `Target`
-- Raw images and masks were not committed to the repository. The original run's artifact upload failed due to a workflow path expression defect; the workflow path has since been corrected, but successful publication must be confirmed by a new run.
+- Raw images and masks were not committed or uploaded. The completed audit is [GitHub Actions run 40210741291](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40210741291); metadata-only artifact ID `12606146728`, digest `sha256:34d8f1b31c87d2ab734d26a2b57352b578094c294a63d2cbcdfce389ecc6f3e4`, expires 24 November 2026 UTC.
+- SHA-256 of the downloaded archive: `8d09d946659164bb2275468ca4ad3239819b2036af83e63ab7b586ddbfc47f72`.
 
 ## Marker panel inventory
 
@@ -73,19 +74,19 @@ That does **not** establish compatibility with the selected foundation model or 
 2. The panel does not by itself define cell phenotypes or a validated CD8 infiltration endpoint. The existing masks are cell/stroma masks, not automatically immune-cell labels. The audit inventory confirms the archive contains normalized image stacks plus cell/stroma masks, with no raw-MCD directory or VirTues per-tissue preprocessing-statistics tables.
 3. A marker's presence does not mean that marker is a valid intervention target. Target eligibility, intervention direction and the counterfactual baseline must be pre-specified and biologically justified.
 4. A reconstructed-marker model's predictions are not observed treatment effects. A high-fidelity recommendation is not evidence that intervening on the recommended target will benefit a patient.
-5. Exact training/fine-tuning exposure of the HCC accession to the selected checkpoint remains a separate gate.
+5. The published VirTues corpus inventory places Salié et al. (ref. 95) among seven extra IMC cohorts in the extended multi-technology corpus, not the core-14 `virtues-imc14` corpus. See the checkpoint provenance caveat in the linked decision memo.
 
 ## Decision gates before inference
 
 - [x] Archive MD5 verified.
 - [x] Actual panel CSV located and parsed.
 - [x] Marker inventory recorded.
-- [ ] Run the corrected workflow and verify the metadata-only artifact uploads successfully.
-- [ ] Validate required columns, blank values, duplicate channels/tags/targets and channel numbering automatically.
-- [ ] Read the pinned VirTues preprocessing and marker embedding contract; check that pre-normalized HCC inputs will not be transformed twice.
-- [ ] Verify model training/fine-tuning exposure at accession/cohort level.
+- [x] Run the corrected workflow and verify the metadata-only artifact uploads successfully.
+- [x] Validate required columns, blank values, duplicate channels/tags/targets and channel numbering automatically; structural QC passes.
+- [x] Read the pinned VirTues preprocessing contract and compare it with the HCC publication: released PENGUIN-normalized 0–1 images are not compatible with the pretrained pipeline.
+- [x] Assess checkpoint exposure against the published training corpus: Salié et al. (ref. 95) is within the extended corpus, while the pinned core-14 model is documented as trained on the original 14 IMC datasets. Do not use `virtues-sp32` or `virtues-sp31` for a held-out HCC claim.
 - [ ] Define and lock patient-level split, endpoint/cell labels, eligible intervention targets and counterfactual baseline before evaluating held-out patients.
 - [ ] Run a one-image/one-channel reconstruction smoke test with quantitative sanity checks.
 - [ ] Only after the smoke test passes, run patient-level held-out reconstruction and signed recommendation-fidelity experiments.
 
-**Current decision: CONDITIONAL GO for compatibility work; NO-GO for biological claims or full counterfactual experiments until the gates above are resolved.**
+**Current decision:** Archive integrity and panel structural QC **PASS**. Direct inference on the public HCC normalized TIFFs using pretrained VirTues is **NO-GO**. Use original-scale inputs if supplied by the study team, or pivot to a verified VirTues/spora-compatible cohort. Cell labels, CD8 endpoint, counterfactual baseline, real-data inference and biological conclusions remain open.

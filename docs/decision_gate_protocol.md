@@ -1,75 +1,93 @@
-# Decision-gate protocol: spatial cancer immunotherapy target discovery
+# Decision-gate protocol: virtual-marker reconstruction and counterfactual target recommendations
 
-**Status (25 October 2026): NO-GO for the generic robustness-only paper as currently framed. Conditional GO for investigating a more specific comparative or cross-cohort-transfer question. A small Morpheus pilot may still be run for feasibility and familiarity, but not as evidence of novelty.**
+**Status (25 October 2026): conditional GO for a small feasibility pilot only. The generic robustness-only paper remains NO-GO as the main novelty claim.**
 
-## Original idea audited
+## Current candidate
 
-The initial candidate was a benchmark of complete spatial-proteomic target-set stability under patient-grouped resampling and model seeds, with held-out model-predicted CD8+ infiltration uplift. The idea is useful for reproducibility, but currently too incremental as a standalone novelty claim given:
-- Morpheus (2025): spatial-proteomic counterfactual target discovery, patient-level splits, median strategy aggregation, held-out patient testing, and in-vitro validation.
-- PHAROS (2026 preprint): target-directed single-cell drug-combination search with sampled batches, controls, and robustness-aware reranking.
-- Anzum et al. (MICCAI 2026): counterfactual spatial cell-interaction inference with held-out cores and core-level bootstrap.
-- Ding et al. (Biology 2026): spatial counterfactual tissue reprogramming, including melanoma immune-focused intervention hypotheses.
+**Question:** When one or more complete spatial-proteomics marker channels are absent and reconstructed by a foundation model, do the resulting signed counterfactual target recommendations and held-out-patient model-predicted CD8+ infiltration changes remain faithful to those obtained from fully measured channels?
 
-## Gate 0 — Prior-art audit
+The candidate is motivated by the intersection of:
+- Morpheus and other spatial counterfactual target-discovery approaches.
+- VirTues/Spatium and other virtual-staining or marker-reconstruction methods.
+- Existing work on imputation uncertainty and downstream spatial inference.
 
-1. Read the complete Morpheus supplementary PDF and inspect all notebook cells/outputs. Current audit: main article Methods and public source/notebook code were inspected; the separate supplementary PDF was listed but its signed download redirect could not be retrieved in this runtime.
-2. Search for intervention consensus, robust counterfactual sets, target-direction transferability, spatial perturbation models, and evaluation of combinations across independent cohorts.
-3. Compare candidate questions against Morpheus, PHAROS, the MICCAI 2026 spatial counterfactual interaction paper, SPAD-CFR and other applicable work.
-4. Record exact references, methods, endpoints and the distinction between model-predicted change and biological validation.
+This is not a verified research gap or a claim to invent virtual staining/counterfactual modeling.
 
-**Pass:** one narrow gap remains that cannot be described as a routine application of known stability/robustness metrics.  
-**Fail/pivot:** an equivalent problem is already addressed or the intended contribution is merely bootstrapping/Jaccard reporting.
+## Why alternatives A/B are insufficient as originally framed
 
-## Gate 1 — Dataset and method compatibility
+### Cross-method intervention decision utility
+Morpheus, SPAD-CFR and Celcomen have different input/output representations and endpoints; a direct comparison cannot be assumed valid without a common measurement and evaluation design. VirTues and SPORA already benchmark cross-cohort/technology spatial representations and biomarker tasks.
 
-Before choosing a new primary question, build a table with:
-- data source/version and reuse terms;
-- patient count and hierarchy (patient/core/section/patch/cell);
-- modality, markers and intervention directions;
-- model output and endpoint;
-- available train/validation/test splits;
-- ability to evaluate a candidate strategy on untouched patients;
-- data license, download requirements, and compute cost.
+### Broad cross-cohort/platform transfer
+This is already well established by VirTues and related foundation models. Transfer might still be important, but it is not sufficient novelty alone.
 
-Do not assume spatial protein, spatial transcriptomic and single-cell perturbation datasets can be pooled. Two methods only count as directly comparable if interventions and endpoints can be evaluated on a common, prespecified representation without post-hoc harmonization to favor one method.
+### Replacement candidate: decision fidelity under marker missingness
+The narrower question is whether virtual marker reconstruction changes the *intervention recommendation* even when marker reconstruction scores look good. This is more specific, but still requires a targeted prior-art audit.
 
-## Gate 2 — Candidate questions to evaluate
+## Gate 0 — targeted novelty audit
 
-### Candidate A: cross-method intervention decision utility
-Question: does a prespecified, target-budget-matched consensus across compatible methods have better held-out-patient model-predicted immune uplift than the strongest single-method baseline?
+1. Read the complete Morpheus supplementary material.
+2. Inspect VirTues/Spora, Spatium, Celcomen, SPAD-CFR, TISSUE and related spatial-proteomics imputation/counterfactual literature.
+3. Search specifically for recommendation-level or intervention-set fidelity after whole-channel masking, virtual staining, imputation uncertainty and marker-panel shift.
+4. Record overlap in input modality, missingness mechanism, target output and outcome.
+5. Do not claim novelty unless the exact downstream decision-fidelity test is meaningfully absent.
 
-Pass only if at least two methods produce comparable intervention representations and can be evaluated on the same held-out endpoint. Otherwise the comparison is invalid.
+**Pass:** no equivalent study appears after this targeted audit and dataset feasibility is established.  
+**Fail/pivot:** prior work already tests the same recommendation-level consequence, or only generic reconstruction accuracy is new.
 
-### Candidate B: cross-cohort/platform transfer of signed target direction
-Question: do signed target directions and predicted effects transfer to an independent cohort/platform with shared markers and a compatible endpoint?
+## Gate 1 — dataset, marker and license eligibility
 
-Pass only if target overlap, outcome definition and independent patient sampling are verified before examining results. Cross-cohort prediction in general is already well studied.
+Select candidate data only if they provide:
+- measured spatial protein channels that can be hidden to create an evaluation reference;
+- a measured CD8/T-cell endpoint or appropriate held-out cell-state label;
+- candidate perturbation markers with clear marker identities and directions;
+- patient/core/section identifiers;
+- data-use terms that permit analysis and publication of derived results;
+- a foundation-model checkpoint whose exposure to this cohort can be accounted for.
 
-### Candidate C: mechanistic admissibility
-Question: do prespecified molecular/signalling constraints identify more biologically plausible intervention hypotheses?
+The current spora docs report 35 cohorts and 5,477 patients across five imaging technologies, whereas the VirTues paper describes its own 32-cohort pretraining corpus. These counts have different scope. The Morpheus/Wang data were obtained by access request for VirTues and cannot be redistributed in the harmonized corpus; do not assume their availability or permission.
 
-Do not lead with this unless a distinct formal gap exists; Morpheus discusses knowledge-graph constraints and recent spatial counterfactual work is biologically informed.
+**Pass:** at least one eligible cohort has sufficient markers, patient metadata and explicit reuse terms.  
+**Fail/pivot:** no comparable data, missing patient IDs, unclear terms, or unavoidable foundation-model training leakage.
 
-## Gate 3 — Baseline feasibility
+## Gate 2 — compute and baseline reproducibility
 
-Only after prior-art, data-rights and compatibility checks:
-1. Obtain a permitted public tutorial/preprocessed artifact.
-2. Reproduce a known baseline result.
-3. Record environment, checksums, split, endpoint, hardware, runtime, and deviations.
-4. If possible, run a small cached-output pilot before full retraining.
-5. Label cached-output analysis separately from full pipeline retraining.
+1. Obtain one permitted dataset subset.
+2. Reproduce a small marker reconstruction example with VirTues or another approved model.
+3. Calculate marker reconstruction error against true measured values hidden from the model.
+4. Run the same counterfactual target-discovery pipeline under fully measured and reconstructed conditions.
+5. If Morpheus cannot be fairly adapted, define a clearly named surrogate and do not claim reproduction of Morpheus.
+6. Record hardware, model/data versions, checksums, runtime, failures and deviations.
 
-The current runtime could not retrieve the dataset archives because of network/name-resolution errors; no model or data run has occurred.
+**Current status:** no spatial dataset has been downloaded; no VirTues, SPAD-CFR, Celcomen or Morpheus checkpoint has been run in this project.
 
-## Statistical and scientific safeguards
+## Gate 3 — leakage-safe evaluation
 
-- Keep every core/patch from a patient in a single partition.
-- Fit normalization, feature filtering and tuning only inside training/validation groups.
-- Use untouched patients for final evaluation.
-- Weight patients equally after summarizing nested cores/patches.
-- Report target budget/size, signed directions, uncertainty and all failed/empty runs.
-- A stable prediction is not necessarily correct; model-predicted uplift is not a measured treatment effect, causal finding or clinical utility.
+- Split by patient and keep every core, section, tile and cell from one patient in one partition.
+- Fit all normalization, imputation, target selection, thresholds and hyperparameters only on training/inner-validation patients.
+- Reserve untouched outer patients for evaluation.
+- Mask whole channels to mimic real panel missingness; cell-wise random masking is a diagnostic, not the primary scenario.
+- Exclude CD8 label leakage from predictor inputs.
+- Use exactly matched target budgets across conditions.
+- Aggregate predicted uplift within patient before calculating patient-level statistics.
+- Do not select targets based on outer test results.
 
-## Decision
+## Gate 4 — outputs and interpretation
 
-**Current decision:** do not publish the robustness-only question as a novelty-led study. First compare Candidate A and Candidate B against recent literature and dataset compatibility. Select one primary question only if a concrete gap remains and a fair evaluation is feasible.
+Measure:
+1. Marker reconstruction error (MAE/RMSE/correlation).
+2. Signed target-set fidelity (Jaccard, precision/recall, direction flips, target-set size).
+3. Patient-level model-predicted uplift agreement and model-based reference regret on fully measured held-out patients.
+4. Optional coverage/error trade-off for a confidence-aware abstention rule, with threshold chosen on validation data.
+
+The full-measurement reference is itself a model output, not biological truth. "Reference regret" is disagreement in predicted objective, not clinical regret or a measured treatment effect. Do not claim a causal mechanism or therapeutic efficacy.
+
+## Go/no-go decision
+
+**Proceed to a full study** only if the exact gap survives prior-art review, the data/rights gate passes, the model is not leaking the evaluation cohort, and the pilot shows that marker imputation can change a target decision in a measurable way beyond standard reconstruction errors.
+
+**Stop or pivot** if the task is already benchmarked, no compatible cohort exists, the baseline does not run, or only generic marker reconstruction results can be reported.
+
+## Intellectual property and transparency
+
+The repository is public. No patentability or novelty claim is made. If a genuinely distinct invention emerges, consult institutional technology-transfer or qualified patent advice before disclosing enabling details.

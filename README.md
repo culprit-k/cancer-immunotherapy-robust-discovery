@@ -47,6 +47,8 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Related-work addendum](docs/related_work_addendum_2026.md)
 - [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
 - [Dataset shortlist and eligibility checklist](docs/dataset_shortlist.md)
+- [Cohort screening template](data/cohort_screening_template.csv)
+- [Pilot configuration template](configs/panel_shift_pilot.example.yaml)
 - [Pivot candidates](docs/pivot_candidates.md)
 - [Morpheus code audit](docs/morpheus_code_audit.md)
 - [Dataset feasibility audit](docs/dataset_audit.md)
@@ -66,7 +68,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 2. Audit hoch2022multiplexed for the biological development run; because VirTues evaluates this cohort, do not present the standard full VirTues model on it as independent generalization.
 3. Check moldoveanu2022spatially and xiao2022multiplexed for unseen-cohort evaluation only after verifying shared markers, measured immune labels, exact data terms and whether VirTues saw the cohort during training.
 
-No dataset is approved for the final analysis yet.
+No dataset is approved for the final analysis yet. The cohort screening CSV and YAML pilot config are templates with unresolved fields; they are not evidence that a cohort has passed the gates.
 
 ## Important data and interpretation limits
 

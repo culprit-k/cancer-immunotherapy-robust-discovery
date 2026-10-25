@@ -92,11 +92,11 @@ The project is now at **candidate selection, not data-ready execution**. No data
 
 1. Morpheus (2025): https://doi.org/10.1038/s41551-025-01357-0
 2. VirTues (Nature, 2026): https://doi.org/10.1038/s41586-026-10884-y
-3. Spatium preprint (2026): https://doi.org/10.64898/2026.07.23.740264
-4. CONCERT preprint (2025): https://doi.org/10.1101/2025.11.08.686890
-5. Godbole et al. 2026 melanoma IMC cohort: https://zenodo.org/records/15124735
-6. Xiao et al. 2022 melanoma IMC panel: https://zenodo.org/records/6836992
-4. Celcomen (Nature Communications, 2026): https://doi.org/10.1038/s41467-026-69856-5
-5. SPAD-CFR (Biology, 2026): https://doi.org/10.3390/biology15141097
-6. spora data documentation: https://spora.epfl.ch/docs/index.html
-7. Anti-PD-1 melanoma spatial-mIF data: https://doi.org/10.5281/zenodo.16898362
+3. VirTues model repository and weight licences: https://github.com/bunnelab/virtues and https://huggingface.co/bunnelab/virtues
+4. Salié et al. HCC paper: https://doi.org/10.1136/gutjnl-2024-332837
+5. HCC discovery cohort (54 patients; NLM catalogue reports CC BY 4.0): https://zenodo.org/records/10793609
+6. HCC ICI cohort (42 patients; OpenAIRE reports CC BY, source-page licence display to reconcile): https://zenodo.org/records/10794904
+7. Spatium preprint (2026): https://doi.org/10.64898/2026.07.23.740264
+8. CONCERT preprint (2025): https://doi.org/10.1101/2025.11.08.686890
+9. SPAD-CFR (Biology, 2026): https://doi.org/10.3390/biology15141097
+10. spora data documentation: https://spora.epfl.ch/docs/index.html

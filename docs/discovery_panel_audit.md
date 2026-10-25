@@ -14,7 +14,7 @@
 - Top-level image/mask directories: `DC_img_normalized`, `DC_cellmasks`, `DC_stromamasks`; no raw-MCD/raw-intensity directory or per-tissue quantile/mean/std tables were present in this archive.
 - Actual panel member: `DiscoveryCohort_panel.csv` (not the `DCCohort_panel.csv` filename described in the record text)
 - Parsed panel: 42 rows; columns `Channel`, `MetalTag`, `Target`
-- Raw images and masks were not committed or uploaded. The completed audit is [GitHub Actions run 40210741291](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40210741291); metadata-only artifact ID `12606146728`, digest `sha256:34d8f1b31c87d2ab734d26a2b57352b578094c294a63d2cbcdfce389ecc6f3e4`, expires 24 November 2026 UTC.
+- Raw images and masks were not committed or uploaded. The completed final audit is [GitHub Actions run 40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869); metadata-only artifact ID `12606106783`, digest `sha256:302d7a0bc55bbb32748185f97fa6e6b2110964dd56e7ec901371fc839bc452a3`, expires 24 November 2026 UTC.
 - SHA-256 of the downloaded archive: `8d09d946659164bb2275468ca4ad3239819b2036af83e63ab7b586ddbfc47f72`.
 
 ## Marker panel inventory

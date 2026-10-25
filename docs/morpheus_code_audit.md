@@ -1,60 +1,67 @@
 # Morpheus code and evaluation audit
 
-**Status:** First-pass public-paper and repository inspection. This is not yet a successful local reproduction.
+**Status (25 October 2026): main article Methods and relevant public code inspected; separate supplementary PDF not yet read; no local data/model reproduction.**
 
 ## Sources inspected
 
-- Paper: https://doi.org/10.1038/s41551-025-01357-0
-- Published code/reproduction repository: https://github.com/cellethology/morpheus-spatial
-- Model package repository named by the paper: https://github.com/neonine2/morpheus-spatial
-- Preprocessed data and model outputs cited by the paper: https://doi.org/10.22002/pr14s-wgk05
-- Melanoma dataset record cited by the paper: https://doi.org/10.5281/zenodo.5994135
-- Data-for-analysis deposit for the original melanoma IMC study: https://doi.org/10.5281/zenodo.5994136
+- Main article/PDF: https://doi.org/10.1038/s41551-025-01357-0
+- Public code/reproduction repository: https://github.com/cellethology/morpheus-spatial
+- Model package repository named by the article: https://github.com/neonine2/morpheus-spatial
+- Public tutorial notebook: https://github.com/cellethology/morpheus-spatial/blob/master/examples/tutorial.ipynb
+- Preprocessed data/model outputs cited by the article: https://doi.org/10.22002/pr14s-wgk05
+- Original melanoma IMC data-for-analysis: https://doi.org/10.5281/zenodo.5994136
+- Melanoma dataset DOI cited by the article: https://doi.org/10.5281/zenodo.5994135
+- Supplementary material landing page: https://authors.library.caltech.edu/records/6jd2w-a0388
+
+The main Methods PDF and selected source files were inspected directly. The supplementary PDF is listed at the landing page, but a signed download redirect was not retrievable in this execution environment. Do not treat the supplement as audited.
 
 ## What Morpheus already does
 
-1. Trains a U-Net classifier to predict CD8+ T-cell presence from spatial multiplexed tumour images, masking CD8+ cells to reduce direct label leakage.
-2. Splits patients into training, validation, and test groups (the article describes an approximate 65/15/20 ratio with class-balance constraints).
-3. Generates counterfactual perturbations per image patch using prediction, distance, and prototype-related objectives.
-4. Aggregates and clusters patient-level perturbation patterns and reports cohort-dependent target combinations.
-5. Takes median perturbations across samples to define whole-tumour strategies, then evaluates predicted T-cell distribution after applying those strategies in silico to a test patient cohort.
-6. Reports in-vitro validation of selected predicted combinations.
-7. Discusses variation between tissue samples, including samples from the same patient, and proposes future testing where perturbations derived from some samples are assessed on remaining samples.
+1. Trains a U-Net classifier to predict CD8+ T-cell presence from spatial multiplexed tumour images, masking CD8+ signals to reduce direct label leakage.
+2. Uses patient-level training, validation, and test splits.
+3. Generates per-patch counterfactual perturbations with prediction, distance/sparsity, and prototype-related objectives.
+4. Constrains each molecule's relative perturbation to apply uniformly across cells within an image.
+5. Aggregates patch-level perturbations by the median to make whole-tumour strategies; the paper also reports within-patient and across-patient aggregation.
+6. Evaluates predicted strategies in silico on test-patient samples.
+7. Reports in-vitro validation for selected combinations.
+8. Examines sensitivity to perturbation sparsity settings and discusses variation across tissue samples, including samples from the same patient.
 
-These points rule out claiming novelty for patient-level splitting, per-patch counterfactual discovery, patient-specific variation, or experimental testing of selected combinations.
+These facts rule out novelty claims for counterfactual discovery itself, patient-level splitting, aggregation into whole-tumour strategies, held-out-patient model evaluation, within-patient variation, or selected in-vitro validation.
 
-## What we checked in the public implementation
+## Code-level findings
 
-The repository contains a reproduction notebook, helper code for retrieving counterfactual perturbations and merging patch identifiers with patient/image metadata, and a counterfactual generation implementation. The inspected analysis helper calculates classifier prediction error aggregated by image and retrieves per-patch perturbations; it also supports analyses of perturbation patterns and patient metadata.
+- The entry script main.py begins with seed_everything(42). This is a fixed seeded run setup, not evidence of a multi-seed robustness study.
+- The tutorial notebook also sets seed 42, downloads crc_tutorial.zip from the Caltech Data Portal record ID pr14s-wgk05, and uses a saved unet.ckpt and patient_split.json.
+- The public code carries PatientID, ImageNumber, and patch_id metadata. The analysis helper maps counterfactual outputs back to patient/image information and aggregates perturbations.
+- The generation function chooses a decision threshold using the validation split before generating counterfactuals.
+- TrustScore estimates whether a classifier input resembles samples from the predicted class versus other classes using nearest-neighbour distances. It is not a stability score for complete molecular intervention sets across retrained models or patient resamples.
+- The inspected repository code has a reproduction notebook, counterfactual-generation machinery, patient/image metadata helpers, and analysis code for perturbation patterns. Repository searches did not find a dedicated bootstrap or repeated full-discovery benchmark. A search result is not proof that no such analysis exists in supplementary files or other literature.
 
-The package includes a TrustScore implementation for assessing whether classifier inputs resemble examples from predicted classes. This is not equivalent to measuring whether a complete therapeutic recommendation remains stable across patient resampling or model retraining.
+## The candidate distinction—and its limits
 
-In the main article and inspected public helper code, we found a fixed patient-level train/validation/test design, aggregation of per-patch perturbations into cohort strategies, and in-silico evaluation on test patients. We did not identify a dedicated benchmark that systematically repeats the *entire discovery pipeline* across many patient-level resamples and retrained models, then quantifies complete-combination stability alongside independent predictive/biological evaluation. This is a **provisional observation**: the full supplementary material and all notebook cells have not yet been exhaustively audited, and related literature remains to be searched.
+The main paper already forms strategies by taking medians of patch-level and patient-level perturbations and evaluates them in silico on held-out patients. The candidate question is narrower: if the entire discovery process is repeated with different patient-grouped training samples and independently retrained model seeds, do the same signed target sets reappear, and does a consensus chosen without accessing outer test patients perform better at a matched target budget?
 
-## Key methodological distinction
+This candidate is still high-risk and unverified. PHAROS (a 2026 preprint) already searches target-directed drug combinations and uses multiple sampled batches and robustness-aware re-ranking, albeit in a different single-cell perturbation setting. A generic resampling/Jaccard analysis or generic combination-ranking method is not enough.
 
-Morpheus has an independent patient test split for the T-cell classifier and reports therapeutic perturbation results across patients. This is not the same as repeatedly re-running the entire target-discovery procedure under alternative patient samples and measuring how the resulting *sets of targets* change.
+## Data and compute constraints
 
-Our possible gap, if confirmed, is therefore not “patient-level validation.” It is a carefully defined audit of the *reliability of the recommendation-generating process itself*.
+- Morpheus melanoma cohort: 159 tumour cores from 69 patients, 39 molecular channels including chemokines. Independent unit for resampling/inference is the patient, not the core/patch.
+- Morpheus CRC liver-metastasis cohort: 209 sections from 30 patients. The paper reports the source data as available from the authors on request; the public tutorial bundle is a separate example/reproduction route.
+- Morpheus breast cohort: 749 cores from 693 patients; the article states its panel is not suitable for the same therapeutic perturbation analysis.
+- The original melanoma data-for-analysis archive is about 7.1 GB, with an approximately 41 MB code archive. It is not the same as the preprocessed Morpheus data/model-output record or the CRC tutorial.
+- The public package specifies Python >=3.9 and <3.12 and uses PyTorch, Lightning, NumPy and other dependencies. Its README/tutorial warns that counterfactual generation can be expensive and may require GPU/parallel compute.
+- The original melanoma Zenodo record has no clear license value displayed in its Rights section. The article's CC BY-NC-ND license applies to the article and does not automatically grant license rights over separately deposited data. Confirm the exact data and code terms before redistribution or use that requires permission.
+- No full archive has been downloaded, no model checkpoint has been loaded, and no model training/counterfactual generation has been executed in this project. Direct network retrieval from this runtime failed due a network/name-resolution error; this does not show the dataset is unavailable online.
 
-## Constraints and feasibility
+## Reproduction gate
 
-- The melanoma cohort contains 159 image cores from 69 patients. Multiple cores per patient are not independent observations.
-- The CRC liver-metastasis cohort contains 209 cores from 30 patients; it is reported as available from the authors on request.
-- The breast tumour dataset is useful for validating classifier performance but the paper says its marker panel is not suitable for the same therapeutic-perturbation analysis.
-- The source dataset deposit for the original melanoma IMC analysis is about 7.1 GB, while the Morpheus paper also cites separate preprocessed data/model outputs. Verify exactly which files are needed before downloading.
-- The package documentation recommends Python 3.9–3.11 and lists PyTorch Lightning, PyTorch and other dependencies; CUDA is recommended for acceleration. A CPU-only feasibility run may be possible but must be tested.
-- No data have yet been downloaded and no reproduction has been run in this project.
-
-## Next reproducibility gate
-
-1. Inspect the full supplementary material and notebook for any existing robustness or resampling analyses.
-2. Verify the preprocessed data DOI resolves and list the available files and licence.
-3. Inspect the notebook's exact data paths, model checkpoints, and expected outputs.
-4. Determine whether the saved patient split and target perturbations are sufficient for an initial analysis.
-5. Download a manageable permitted subset or preprocessed artifact and attempt a smoke test; do not begin a full reproduction before this succeeds.
-6. Record missing files, environment conflicts, runtime, and any deviation from the paper.
+1. Retrieve and read the complete supplementary PDF.
+2. Resolve licence and access terms for the exact code/data artifacts.
+3. Run the small tutorial path or use authorized cached outputs and record checksums/version details.
+4. Reproduce one baseline result before changing the method.
+5. Measure compute requirements on a small subset.
+6. Distinguish any inexpensive cached-output resampling from full pipeline resampling plus retraining.
 
 ## Preliminary conclusion
 
-Morpheus is a suitable methodological baseline to inspect because it directly addresses spatial tumour perturbations and already provides patient-level splits and some sample-level analysis. The candidate robustness question remains plausible but unverified. A narrow audit of repeated discovery stability may be worth testing only after the supplementary methods, notebook, and related robust-counterfactual literature are checked more thoroughly.
+Morpheus remains the closest relevant spatial counterfactual baseline. The most defensible candidate study is a patient/core-hierarchical reproducibility benchmark, separating patient-sampling variability from model-seed variability and evaluating only on held-out patients. Proceed only to the feasibility pilot until the supplement, prior art and baseline reproduction gates pass.

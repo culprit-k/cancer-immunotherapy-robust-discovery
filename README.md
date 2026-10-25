@@ -25,6 +25,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 - Method/dataset compatibility matrix and decision-gate protocol.
 - Generic target-stability metric code from the previous phase.
 - New panel-shift metrics for marker reconstruction error, signed intervention-set fidelity/direction changes, patient-level predicted-uplift fidelity, and paired patient-level model-based reference regret.
+- A post-hoc report CLI that reads prepared reconstruction/prediction CSVs and signed target-set JSON to generate a strict JSON report; it does not run the underlying models.
 - Unit tests for both helper modules. A local synthetic suite run on copies of the current source/test files passed **15 tests** (6 stability + 9 panel-shift tests). No completed GitHub Actions run has been verified.
 - A GitHub Actions test workflow. No raw data have been committed.
 
@@ -54,8 +55,10 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Reproducibility run log](docs/reproducibility_run_log.md)
 - [Target stability metrics](analysis/target_stability.py)
 - [Panel-shift fidelity metrics](analysis/panel_shift_metrics.py)
+- [Panel-shift report generator](analysis/panel_shift_report.py)
 - [Target stability tests](tests/test_target_stability.py)
-- [Panel-shift tests](tests/test_panel_shift_metrics.py)
+- [Panel-shift metric tests](tests/test_panel_shift_metrics.py)
+- [Panel-shift report tests](tests/test_panel_shift_report.py)
 
 ## Current recommended dataset sequence
 

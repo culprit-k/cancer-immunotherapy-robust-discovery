@@ -24,10 +24,15 @@ dataset:
 foundation_model:
   name: "VirTues"
   repository_url: "https://github.com/bunnelab/virtues"
-  checkpoint_id_or_hash: "bunnelab/virtues:virtues-imc14/model.safetensors@PIN_REVISION_AND_SHA256_ON_DOWNLOAD"
+  checkpoint_id_or_hash: "bunnelab/virtues:virtues-imc14/model.safetensors@43fd00fce052c46f9e0cc1a87f42806620632319;sha256=714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f"
+  checkpoint_repository_revision: "43fd00fce052c46f9e0cc1a87f42806620632319"
+  checkpoint_file_sha256: "714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f"
+  checkpoint_file_size_bytes: 173543728
+  checkpoint_retrieved_at_utc: "2026-10-25T13:10:07.676504+00:00"
+  checkpoint_manifest_action_run: "https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40196348184"
   model_license: "CC BY-NC 4.0 weights; non-commercial only"
   training_cohort_manifest_url: "https://www.nature.com/articles/s41586-026-10884-y; published 14-IMC versus extended-32 cohort inventory; exact exposure still needs confirmation"
-  evaluation_cohort_exposure: "likely_excluded_from_imc14_but_unverified" # Resolve against exact artifact before independent-test claim.
+  evaluation_cohort_exposure: "published_inventory_suggests_excluded; accession-level exposure unconfirmed" # Resolve against exact artifact before independent-test claim.
 
 splits:
   grouping_unit: "patient"

@@ -37,3 +37,41 @@ Both are hypotheses to investigate, not novelty claims. They need a new literatu
 ## Current decision
 
 **NO-GO for the generic robustness-only paper as currently phrased. CONDITIONAL GO to pivot and investigate a more specific comparative/transfer question.** A feasibility pilot may still be useful to learn the Morpheus pipeline, but that pilot alone does not justify a novelty claim.
+
+
+## 4. VirTues changes the cross-panel novelty assessment (Nature, 2026)
+
+*The Virtual Tissues foundation model resolves spatial proteomics across scales.* https://doi.org/10.1038/s41586-026-10884-y. Code and weights: https://github.com/bunnelab/virtues.
+
+VirTues supports marker reconstruction/virtual staining, cell and niche representations, biomarker discovery, patient stratification and cross-panel/cross-technology transfer. The paper reports a 32-cohort, >5,100-patient multi-technology corpus and an independent-cohort anti-PD-L1 biomarker application in triple-negative breast cancer. The current spora data website reports 35 cohorts/5,477 patients across five technologies; these are not identical corpus counts.
+
+**Consequence:** generic cross-platform transfer and virtual staining are already heavily developed. A new study should focus on a downstream consequence not already covered by virtual-staining benchmarks—if a thorough search confirms one.
+
+## 5. Spatium and Celcomen close additional gaps in the original framing
+
+- **Spatium: A Protein Language Foundation Model for Spatial Proteomics** (2026): reconstructs missing spatial protein maps and evaluates preservation of tissue architecture. https://pmc.ncbi.nlm.nih.gov/articles/PMC13419744/
+- **Celcomen: spatial causal disentanglement for single-cell and tissue perturbation modeling** (Nature Communications, March 2026), DOI https://doi.org/10.1038/s41467-026-69856-5: uses a causal generative graph neural network to model post-perturbation spatial transcriptomic states.
+
+These works make generic missing-marker reconstruction and generic spatial counterfactual generation weak novelty claims.
+
+## 6. Candidate gap requiring further verification
+
+A narrower candidate is **counterfactual recommendation fidelity under whole-channel masking and virtual-marker reconstruction**: whether imputation metrics adequately indicate whether the signed intervention set and held-out-patient predicted objective remain consistent. This may connect the reconstruction and perturbation literatures in a useful way, but the current search is not exhaustive and does not establish priority.
+
+A good experiment would compare:
+1. fully measured marker-channel reference;
+2. a reduced-panel model without imputation;
+3. a simple imputation baseline;
+4. a foundation-model reconstruction such as VirTues;
+5. optional second imputer only if feasible.
+
+Evaluate signed target-set fidelity, direction changes, and held-out-patient model-predicted uplift, while preventing patient and foundation-model training leakage. An optional abstention rule must demonstrate value against standard alternatives at a transparent coverage cost.
+
+## 7. Potential independent clinical datasets—secondary only
+
+- Pybus et al. (npj Precision Oncology, January 2026), DOI https://doi.org/10.1038/s41698-025-01250-8, report 12 stage-IV melanoma patients with spatial mIF (4 responders, 8 non-responders) and >8 million cells; processed data DOI https://doi.org/10.5281/zenodo.16898362. Small n and limited marker overlap constrain use to exploratory secondary analysis.
+- GSE300793/GSE300445 describe 57 pretreatment bulk RNA-seq samples and four spatially profiled primary melanoma tumours. Bulk RNA is not a direct substitute for spatial protein measurement.
+
+## Updated decision
+
+**The old robustness-only study remains no-go as a novelty-led paper. Conditional go for a small feasibility pilot of counterfactual recommendation fidelity under marker reconstruction.** First identify a permitted spora cohort with CD8/T-cell labels, target markers, patient IDs and a measured reference. Stop if no fair cohort is available or if a direct version of this exact benchmark is found.

@@ -1,6 +1,6 @@
 # Cancer Immunotherapy AI: Robust Target Discovery
 
-**Project status (25 October 2026): HCC archive integrity and panel audit are verified, but the normalized HCC image format does not yet match VirTues' documented preprocessing contract. NO-GO for HCC/VirTues inference until original-scale input compatibility is resolved or a compatible dataset/model is selected. Research question remains a candidate; novelty is not established.**
+**Project status (25 October 2026): HCC archive integrity and marker-panel structural QC PASS. Direct inference on the released HCC normalized TIFFs with the pinned VirTues checkpoint is NO-GO because the input intensity representation is incompatible. The published corpus inventory supports using `virtues-imc14` as outside direct Salié HCC pretraining exposure; the extended `virtues-sp32`/`virtues-sp31` checkpoints are not acceptable for held-out HCC evaluation. No real-data inference has been run; novelty is not established. See [the HCC preprocessing/exposure decision](docs/hcc_preprocessing_and_checkpoint_exposure_decision_2026-10-25.md).
 
 ## Current research candidate
 
@@ -17,6 +17,10 @@ Morpheus already discovers spatial-proteomic counterfactual target combinations 
 The candidate question is whether good marker reconstruction scores can still mask changes in the *selected signed target set* or in its downstream model-predicted objective. Spatium and CONCERT are material adjacent prior art; the exact gap remains unverified. A validation-calibrated selective/abstention rule is only a possible contribution if it beats simple baselines at a fixed coverage/target budget.
 
 ## Work completed in the repository
+
+- Completed the HCC archive integrity and panel structural audit: MD5 and advertised size match, SHA-256 recorded, 42-row panel passes required-column, missing-value, duplicate and channel-sequence checks. Metadata-only result artifact is linked in [run 40210741291](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40210741291).
+- Resolved current HCC inference decision: public TIFFs are PENGUIN-normalized to 0–1 and are not interchangeable with VirTues' documented clipping/log/blur/standardization input path. Do not invert or guess preprocessing statistics.
+- Exposure decision: the pinned `virtues-imc14` checkpoint aligns with the core 14-IMC cohort set; the Salié HCC paper is ref. 95 among the seven added IMC cohorts in the extended multi-technology corpus. The extended `virtues-sp32` and `virtues-sp31` variants must not be used for held-out HCC evaluation. See the evidence and caveat in the decision memo.
 
 - Updated literature audit with VirTues, Spatium, Celcomen, spora, the 2026 anti-PD-1 melanoma spatial-mIF dataset and the GSE300793/GSE300445 melanoma cohort.
 - Updated novelty assessment and research question.

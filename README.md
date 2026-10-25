@@ -1,6 +1,6 @@
 # Cancer Immunotherapy AI: Robust Target Discovery
 
-**Project status (25 October 2026): the generic robustness-only paper is NO-GO as a novelty-led study. Conditional GO for a narrow feasibility pilot on counterfactual recommendation fidelity under virtual marker reconstruction. Novelty is not established.**
+**Project status (25 October 2026): cohort pair selected; reconstruction checkpoint variant selected; data/model execution not yet started. Conditional GO for a narrow feasibility pilot. Novelty is not established.**
 
 ## Current research candidate
 

@@ -1,6 +1,6 @@
 # Cancer Immunotherapy AI: Robust Target Discovery
 
-**Project status (25 October 2026): cohort pair selected; reconstruction checkpoint variant selected; data/model execution not yet started. Conditional GO for a narrow feasibility pilot. Novelty is not established.**
+**Project status (25 October 2026): cohort and checkpoint candidates selected; HCC discovery archive integrity verified and marker panel inspected; inference has not started. Conditional GO for a narrow feasibility pilot. Novelty is not established.**
 
 ## Current research candidate
 
@@ -81,7 +81,7 @@ The 54-patient cohort is for development only; keep the 42-patient cohort untouc
 
 Full decision record: [Cohort and checkpoint decision](docs/cohort_checkpoint_decision.md).
 
-The project is now at **candidate selection, not data-ready execution**. No dataset archive or model weights have been downloaded, checksummed or run yet.
+The project is at **pre-inference compatibility validation**. The 54-patient discovery archive has now been downloaded in an ephemeral CI runner and its published MD5 matched; its marker panel was parsed. The archive and raw images/masks were not committed to the repository. The checkpoint file identity is pinned, but weights have not been loaded for inference.
 
 ## Important data and interpretation limits
 
@@ -89,7 +89,7 @@ The project is now at **candidate selection, not data-ready execution**. No data
 - The current spora website describes 35 cohorts, 5,477 patients and five imaging technologies; the VirTues paper reports its own 32-cohort model corpus. Those inventories have different scopes.
 - A full-measurement reference is still a model output, not a biological ground truth.
 - Model-predicted CD8+ infiltration uplift is not observed therapeutic effect, causal evidence, clinical utility or patient-specific advice.
-- No spatial data archive has been downloaded, and no Morpheus/VirTues/SPAD-CFR/Celcomen model run has been executed in this project.
+- The 54-patient discovery archive has been integrity-checked and its panel metadata inspected; no raw images/masks were retained in the repository. No Morpheus/VirTues/SPAD-CFR/Celcomen inference run has been executed in this project.
 - This repository is public. No claim about novelty or patentability is made. Consult qualified institutional/IP advice before disclosing enabling details of any genuinely distinct invention.
 
 ## Key sources
@@ -104,3 +104,11 @@ The project is now at **candidate selection, not data-ready execution**. No data
 8. CONCERT preprint (2025): https://doi.org/10.1101/2025.11.08.686890
 9. SPAD-CFR (Biology, 2026): https://doi.org/10.3390/biology15141097
 10. spora data documentation: https://spora.epfl.ch/docs/index.html
+
+
+## Latest operational audit (25 October 2026)
+
+- GitHub Actions run [40198072585](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40198072585) downloaded the 1,541,132,381-byte discovery archive and matched the expected MD5 `a842fa253ac2f0eda3cbf4d41e1b0ec1`.
+- The actual panel filename is `DiscoveryCohort_panel.csv` (42 rows; columns `Channel`, `MetalTag`, `Target`). The original audit's exact-name assumption was wrong, and the subsequent artifact-upload step also had an escaped GitHub expression that produced an invalid path. The latter is being fixed in the workflow.
+- The 42-patient ICI cohort's current Zenodo API metadata returned `cc-by-4.0`; the landing-page display discrepancy should still be recorded and terms rechecked before any redistribution or external evaluation.
+- This is a metadata and panel audit, not a successful artifact publication, model inference, biological result, or proof of intervention compatibility. The HCC panel contains CD8a, PD1, PD-L1, TIGIT, Tim3 and Lag3, but a Morpheus-style target set and its objective must be mapped explicitly before claiming compatibility.

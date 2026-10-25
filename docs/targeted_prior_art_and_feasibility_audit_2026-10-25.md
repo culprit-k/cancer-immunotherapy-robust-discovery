@@ -114,3 +114,8 @@ A concrete best-fit pair is now selected:
 Official records: 54-patient cohort https://zenodo.org/records/10793609; 42-patient cohort https://zenodo.org/records/10794904; OpenAIRE metadata and CC BY indication https://explore.openaire.eu/search/result?pid=10.5281/zenodo.10794904; HCC paper https://doi.org/10.1136/gutjnl-2024-332837; VirTues code/model/weight licence table https://github.com/bunnelab/virtues and https://huggingface.co/bunnelab/virtues.
 
 The full operational decision, role split, permissions caveat and checklists are in [docs/cohort_checkpoint_decision.md](cohort_checkpoint_decision.md).
+
+
+### Checkpoint provenance retrieved
+
+The official `virtues-imc14/model.safetensors` file was successfully retrieved by a hosted GitHub Actions runner at repository revision `43fd00fce052c46f9e0cc1a87f42806620632319`; its file SHA-256 is `714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f`, size `173543728` bytes, retrieved at `2026-10-25T13:10:07.676504+00:00` UTC. Successful run: https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40196348184. The manifest—not the weight file—was saved as the Actions artifact. Pinning is complete for file identity, but training-exposure certification remains distinct and unresolved at accession level.

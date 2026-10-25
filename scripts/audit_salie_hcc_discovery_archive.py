@@ -125,29 +125,53 @@ def main() -> None:
                 raise RuntimeError("Downloaded MD5 disagrees with current Zenodo API metadata")
 
         with zipfile.ZipFile(archive) as zf:
-            names = zf.namelist()
-            panel_matches = [
-                name for name in names
-                if Path(name).name.lower() == "dccohort_panel.csv"
+            infos = zf.infolist()
+            names = [info.filename for info in infos]
+            csv_infos = [
+                info for info in infos
+                if not info.is_dir() and Path(info.filename).suffix.lower() == ".csv"
             ]
-            if len(panel_matches) != 1:
-                raise RuntimeError(
-                    "Expected exactly one DCCohort_panel.csv; found "
-                    + json.dumps(panel_matches)
-                )
-            panel_member = panel_matches[0]
-            with zf.open(panel_member, "r") as raw:
-                import io
-                text_stream = io.TextIOWrapper(raw, encoding="utf-8-sig", newline="")
-                sample = text_stream.read(8192)
-                text_stream.seek(0)
+            csv_inventory = [
+                {"filename": info.filename, "size_bytes": info.file_size}
+                for info in csv_infos
+            ]
+            # Prefer the known name, then a unique filename containing "panel".
+            # If neither is unique, preserve the inventory in the report rather
+            # than guessing or failing before a useful diagnostic artifact exists.
+            panel_matches = [
+                info.filename for info in csv_infos
+                if Path(info.filename).name.lower() == "dccohort_panel.csv"
+            ]
+            selection_method = "exact_filename"
+            if len(panel_matches) == 0:
+                panel_matches = [
+                    info.filename for info in csv_infos
+                    if "panel" in Path(info.filename).name.lower()
+                    and info.file_size <= 25 * 1024 * 1024
+                ]
+                selection_method = "unique_panel_name_fallback"
+            panel_member = panel_matches[0] if len(panel_matches) == 1 else None
+            fields = []
+            rows = []
+            panel_parse_error = None
+            if panel_member:
                 try:
-                    dialect = csv.Sniffer().sniff(sample, delimiters=",;\\t")
-                except csv.Error:
-                    dialect = csv.excel
-                reader = csv.DictReader(text_stream, dialect=dialect)
-                fields = reader.fieldnames or []
-                rows = [dict(row) for row in reader]
+                    with zf.open(panel_member, "r") as raw:
+                        import io
+                        text_stream = io.TextIOWrapper(raw, encoding="utf-8-sig", newline="")
+                        sample = text_stream.read(8192)
+                        text_stream.seek(0)
+                        try:
+                            dialect = csv.Sniffer().sniff(sample, delimiters=",;\\t")
+                        except csv.Error:
+                            dialect = csv.excel
+                        reader = csv.DictReader(text_stream, dialect=dialect)
+                        fields = reader.fieldnames or []
+                        rows = [dict(row) for row in reader]
+                except (UnicodeDecodeError, csv.Error, OSError) as exc:
+                    panel_parse_error = f"{type(exc).__name__}: {exc}"
+                    fields = []
+                    rows = []
 
             extension_counts = Counter(Path(name).suffix.lower() or "[no extension]" for name in names)
             top_dirs = sorted({name.split("/", 1)[0] for name in names if "/" in name})
@@ -183,13 +207,22 @@ def main() -> None:
         "zip_entries_count": len(names),
         "top_level_directories": top_dirs,
         "extension_counts": dict(sorted(extension_counts.items())),
+        "csv_inventory": csv_inventory,
         "panel_file": panel_member,
+        "panel_selection_method": selection_method,
+        "panel_identification_status": (
+            "identified_and_parsed" if panel_member and not panel_parse_error
+            else "identified_but_parse_failed" if panel_member
+            else "ambiguous_or_not_found"
+        ),
+        "panel_parse_error": panel_parse_error,
+        "panel_candidate_filenames": panel_matches,
         "panel_columns": fields,
         "panel_row_count": len(rows),
         "panel_rows": rows,
         "inspected_at_utc": datetime.now(timezone.utc).isoformat(),
         "privacy_guardrail": "Raw images and masks were not uploaded or committed; only the panel metadata and integrity summary are emitted.",
-        "interpretation_guardrail": "Panel inspection is not model inference, cell-label validation, or proof that counterfactual target discovery is compatible.",
+        "interpretation_guardrail": "Panel inspection is not model inference, cell-label validation, or proof that counterfactual target discovery is compatible. If panel_identification_status is ambiguous_or_not_found, use csv_inventory to choose the panel manually; do not treat the cohort as compatible yet.",
     }
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

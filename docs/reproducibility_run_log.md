@@ -74,3 +74,10 @@
 - No masked-channel reconstruction on actual images/cells.
 - No counterfactual target discovery or held-out-patient objective evaluated.
 - No full Morpheus supplementary PDF audit; its downloadable artifact could not be retrieved in this runtime.
+
+
+### Updated metric implementation and tests
+- Added a paired patient-level reference-regret helper: compares the candidate and reference target strategies with the same evaluator on the same fully measured held-out patients; positive candidate-minus-reference values mean higher model-predicted uplift.
+- Added two more unit tests for patient-level reference regret and mismatched patient IDs.
+- Local test run of materialized copies of the committed helper/test source: **15 passed** (6 target-stability + 9 panel-shift tests) using synthetic data.
+- The GitHub Actions workflow was corrected to install pandas as well as NumPy/pytest. Its actual hosted run status remains unverified.

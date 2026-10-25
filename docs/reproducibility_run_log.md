@@ -192,3 +192,32 @@ This pins the file for reproducible future loading. It does not verify exact coh
 - Added `docs/data_clarification_request_salie_hcc.md` with a draft author inquiry for original intensities, normalization provenance, channel mapping and cell phenotype labels; it has not been sent.
 - Added `docs/next_execution_plan.md` with staged gates, an explicit alternative if raw data are unavailable, patient-level evaluation rules and go/no-go criteria.
 - The research hypothesis remains plausible but unproven; no inference or biological result has been generated. The next meaningful action is resolving the input contract, not forcing a model run.
+
+## 25 October 2026 — HCC archive audit and preprocessing/exposure decisions
+
+### Completed archive and panel audit
+
+- Successful structural audit: [GitHub Actions run 40210741291](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40210741291), commit `3442298ff94fcc7abe3544fa2e7435be4f65506e`.
+- Archive size 1,541,132,381 bytes equals Zenodo metadata; published MD5 `a842fa253ac2f0eda3cbf4d41e1b0ec1` matched; downloaded SHA-256 `8d09d946659164bb2275468ca4ad3239819b2036af83e63ab7b586ddbfc47f72`.
+- ZIP inventory: 325 entries (324 TIFFs and one CSV). The actual panel is `DiscoveryCohort_panel.csv`, 42 rows, columns `Channel`, `MetalTag`, `Target`.
+- Structural QC passed: required columns present, no blank required cells, no duplicated channel/metal-tag/target values, and channel numbers 1–42 are numeric and contiguous.
+- Metadata-only artifact ID `12606146728`, SHA-256 digest `34d8f1b31c87d2ab734d26a2b57352b578094c294a63d2cbcdfce389ecc6f3e4`; raw TIFFs/masks were not published as workflow artifacts or committed.
+- Direct Zenodo API metadata reported `cc-by-4.0` for both records. The 42-patient ICI image archive was not downloaded.
+
+### Preprocessing decision — resolved as a NO-GO for direct inference
+
+The public HCC image stacks are PENGUIN-normalized to 0–1 with background removal and marker-specific percentile denoising per ROI. VirTues' official loader expects source-format intensity images and uses tissue-specific 99th-percentile clipping, `log1p`, Gaussian blur, and tissue-specific mean/SD standardization. No original acquisition files or matching VirTues quantile/mean/SD tables are in the discovery archive. Recomputing statistics from normalized TIFFs would produce a different representation; inversion is not justified. Do not send these TIFFs through the pretrained VirTues input path.
+
+### Checkpoint exposure decision
+
+The selected official checkpoint is `virtues-imc14/model.safetensors`, pinned at revision `43fd00fce052c46f9e0cc1a87f42806620632319`, SHA-256 `714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f`, 173,543,728 bytes. The VirTues Methods list the Salié HCC study as ref. 95 among seven IMC cohorts added to the extended corpus, while the checkpoint is the published core 14-IMC model. Therefore direct Salié-study exposure is not indicated by the published corpus inventory; this remains reference-level evidence rather than a separate accession-to-training-job certificate. Do not use `virtues-sp32` or `virtues-sp31` for held-out HCC testing because they include the extended corpus.
+
+### Scientific status and next gate
+
+- HCC archive/panel structure: PASS.
+- HCC public TIFFs + pretrained VirTues preprocessing: NO-GO.
+- Core-14 checkpoint as outside direct Salié-study training corpus: supported by published corpus inventory, with provenance caveat.
+- Cell labels, CD8 endpoint, marker embedding IDs, valid counterfactual baseline: unresolved.
+- No real-data inference, target recommendations, clinical claims or biological validation have been produced.
+
+Next actions: request the original compensated data, full image-normalization metadata, canonical panel/embedding mapping and cell phenotype annotations from the authors (draft only; not sent); otherwise select a verified compatible spora cohort with a checkpoint proven to exclude it.

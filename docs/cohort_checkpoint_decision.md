@@ -48,14 +48,17 @@ Why this variant:
 - [x] Save the metadata-only Zenodo API audit evidence for both HCC accessions; it reports `cc-by-4.0` for each. The ICI image archive remains undownloaded; confirm landing-page display with the data contact/institution if needed.
 - [x] Pin the official `virtues-imc14` weight artefact, revision, SHA-256, size and licence (provenance manifest generated and verified).
 - [x] Compare the published core-versus-extended training inventory; Salié ref. 95 appears in added IMC cohorts beyond the core-14 model.
-- [ ] Obtain original-scale HCC image data or select a compatible spora dataset before inference. `virtues-sp32` is unsuitable for held-out HCC; `virtues-sp31` requires verification of its omitted cohort.
+- [ ] Complete the sparse TIFF metadata/pixel-range audit.
+- [ ] Request original-scale HCC data and preprocessing metadata; draft request is prepared but not sent.
+- [ ] If original-scale data are unavailable, execute the normalized-domain adaptation pilot and compare transforms on patient-held-out measured-marker reconstruction. Do not call this official VirTues preprocessing reproduction.
+- [ ] `virtues-sp32` is unsuitable for held-out HCC; `virtues-sp31` requires verification of its omitted cohort.
 - [x] Compare the exact pinned checkpoint's published training-corpus description with the source paper: Salié et al. (ref. 95) is among extended-corpus IMC additions, outside core-14 `virtues-imc14`. This is publication-level evidence, not an accession-to-training-job certificate.
 - [ ] Define an endpoint from cell labels/marker thresholds without using the withheld test data; pre-register eligible intervention markers from the panel CSV.
 - [ ] Reproduce or justify the counterfactual baseline before interpreting output as target discovery.
 
 ## Scope and honest status
 
-This establishes a scientifically relevant cohort pair, a completed discovery archive audit, a pinned model file, and a documented preprocessing NO-GO. It does not mean the public HCC TIFFs can be run directly through pretrained VirTues, that formal legal clearance has been issued, or that biological results exist. The next data milestone is author-supplied original-scale input plus a one-image smoke test, or a pivot to a compatible spora cohort.
+This establishes a scientifically relevant cohort pair, a completed discovery archive audit, a pinned model file, and a documented preprocessing NO-GO. It does not mean the public HCC TIFFs can be run directly through pretrained VirTues, that formal legal clearance has been issued, or that biological results exist. The next milestone is either (A) author-supplied original-scale input plus an official-pipeline smoke test, or (B) a separately labeled PENGUIN-normalized-domain pilot under `docs/hcc_normalized_input_adaptation_protocol.md`. Route B is not claimed to reproduce official VirTues preprocessing; it must pass patient-held-out reconstruction tests against simple baselines before counterfactual analysis.
 
 
 ## Checkpoint pinning implementation

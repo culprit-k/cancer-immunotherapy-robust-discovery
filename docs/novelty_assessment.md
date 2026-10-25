@@ -30,6 +30,10 @@ These papers make a generic robustness framework or generic feature-stability sc
 
 **REFINE / INVESTIGATE FURTHER — do not proceed to algorithm invention yet.** Morpheus already uses patient-level train/validation/test splits, aggregates counterfactual perturbations into whole-tumour strategies, and evaluates strategies in silico on test patients. The remaining candidate distinction is repeated discovery under patient-level resampling/retraining and a quantitative analysis of how the complete recommended target set changes. We have not yet established that this is absent from the full supplement or broader literature, and no local reproduction has been run.
 
+## Additional adjacent work identified
+
+**PHAROS (bioRxiv, September 2026)** uses pretrained single-cell perturbation models to search and rank drug combinations. It reinforces that combination discovery itself is not a novel contribution. See https://www.biorxiv.org/content/10.64898/2026.09.08.749477v1.full.
+
 ## Evidence required to support a contribution
 
 1. A targeted, documented literature search including terminology for robust counterfactuals, intervention-set stability, stability selection, and spatial immuno-oncology.

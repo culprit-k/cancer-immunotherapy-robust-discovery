@@ -21,22 +21,22 @@ The candidate question is whether good marker reconstruction scores can still ma
 - Updated literature audit with VirTues, Spatium, Celcomen, spora, the 2026 anti-PD-1 melanoma spatial-mIF dataset and the GSE300793/GSE300445 melanoma cohort.
 - Updated novelty assessment and research question.
 - Candidate study protocol with hypotheses, leakage-safe design, outcomes and go/no-go criteria.
-- Dataset shortlist ranking a melanoma chemokine cohort for development, a smaller lung IMC cohort for smoke testing, and two melanoma cohorts for possible external evaluation, with model-exposure and license caveats.
+- Selected the 54-patient Salié HCC discovery IMC cohort (CC BY 4.0 per the NLM Dataset Catalog) for development/calibration and the 42-patient ICI-treated HCC cohort as conditional external evaluation (OpenAIRE metadata says CC BY, while Zenodo's direct rights field appears blank).
 - Method/dataset compatibility matrix and decision-gate protocol.
 - Generic target-stability metric code from the previous phase.
 - New panel-shift metrics for marker reconstruction error, signed intervention-set fidelity/direction changes, patient-level predicted-uplift fidelity, and paired patient-level model-based reference regret.
 - A post-hoc report CLI that reads prepared reconstruction/prediction CSVs and signed target-set JSON to generate a strict JSON report; it does not run the underlying models.
-- Unit tests for both helper modules. A local synthetic suite run on copies of the current source/test files passed **19 tests** (6 target-stability + 9 panel-shift metric + 4 report-builder tests). No completed GitHub Actions run has been verified.
+- Unit tests for both helper modules. A local synthetic run on isolated copies reached **20 passing tests**, but the report-generator/test copies differed byte-for-byte from the latest remote blobs, so this is not a verified full test of the exact current repository. GitHub Actions success is unverified.
 - A GitHub Actions test workflow. No raw data have been committed.
 
 ## Next steps, in order
 
-1. Finish full supplementary/prior-art review for Morpheus and the newer virtual-tissue methods.
-2. Audit SPORA/spora candidate datasets for patient IDs, CD8/T-cell labels, measured candidate target markers, foundation-model training exposure, and precise data-use terms.
-3. Pick one permitted cohort and run a small masked-channel reconstruction smoke test.
-4. Reproduce the target-discovery baseline or explicitly define a surrogate if the published implementation is not compatible.
-5. Compare measured-channel reference, no-imputation, simple imputation and foundation-model reconstruction on the same held-out patients, using signed target-set fidelity and model-predicted uplift fidelity.
-6. Proceed to a full paper only if the exact gap survives prior art and the pilot confirms that the analysis changes a meaningful decision beyond marker-level reconstruction metrics.
+1. Download the 54-patient HCC discovery archive and 42-patient HCC ICI validation archive outside public GitHub; checksum them and inspect their panel CSVs and patient metadata.
+2. Resolve the 42-patient cohort's blank Zenodo licence display (OpenAIRE reports CC BY) and preserve the rights evidence for both cohorts.
+3. Download the official VirTues `virtues-imc14/model.safetensors` weights under the CC BY-NC 4.0 terms; pin the immutable revision and SHA-256, then verify exact training exposure.
+4. Run one-channel masked reconstruction on development data, compare against held-out measured values, and check panel-to-marker mapping.
+5. Reproduce or clearly adapt the counterfactual target baseline for HCC; freeze the CD8 endpoint, eligible target markers, thresholds and target budget before evaluating the 42-patient cohort.
+6. Continue to a full paper only if the novelty gate and pilot outcome support a meaningful recommendation-level contribution.
 
 ## Repository map
 

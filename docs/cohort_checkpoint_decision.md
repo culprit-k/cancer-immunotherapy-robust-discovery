@@ -51,7 +51,7 @@ Why this variant:
 - [x] Complete sparse TIFF structure and pixel-range audit: 12 evenly spaced image stacks readable, sample image pages float32 and within [0,1], 42 pages match the panel, and image/mask spatial shapes matched in the three checked ROIs. This is representative sampling, not a full pixel-by-pixel scan.
 - [ ] Request original-scale HCC data and preprocessing metadata; draft request is prepared but not sent.
 - [ ] If original-scale data are unavailable, execute the normalized-domain adaptation pilot and compare transforms on patient-held-out measured-marker reconstruction. Do not call this official VirTues preprocessing reproduction.
-- [ ] `virtues-sp32` is unsuitable for held-out HCC; `virtues-sp31` requires verification of its omitted cohort.
+- [x] Checkpoint choice guarded: `virtues-sp32` is unsuitable for held-out HCC; `virtues-sp31` remains unapproved until its omitted cohort is verified. Use the pinned `virtues-imc14` only for a future compatible-input evaluation.
 - [x] Compare the exact pinned checkpoint's published training-corpus description with the source paper: Salié et al. (ref. 95) is among extended-corpus IMC additions, outside core-14 `virtues-imc14`. This is publication-level evidence, not an accession-to-training-job certificate.
 - [ ] Define an endpoint from cell labels/marker thresholds without using the withheld test data; pre-register eligible intervention markers from the panel CSV.
 - [ ] Reproduce or justify the counterfactual baseline before interpreting output as target discovery.

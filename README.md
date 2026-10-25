@@ -52,6 +52,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Related-work addendum](docs/related_work_addendum_2026.md)
 - [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
 - [Verified HCC discovery marker-panel audit and inference gates](docs/discovery_panel_audit.md)
+- [Draft data clarification request for original intensities and cell labels](docs/data_clarification_request_salie_hcc.md)
 - [Dataset shortlist and eligibility checklist](docs/dataset_shortlist.md)
 - [Cohort screening template](data/cohort_screening_template.csv)
 - [Pilot configuration template](configs/panel_shift_pilot.example.yaml)

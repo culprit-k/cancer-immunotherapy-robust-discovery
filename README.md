@@ -82,7 +82,7 @@ The 54-patient cohort is for development only; keep the 42-patient cohort untouc
 
 Full decision record: [Cohort and checkpoint decision](docs/cohort_checkpoint_decision.md).
 
-The project is at **pre-inference compatibility validation**. The 54-patient discovery archive has now been downloaded in an ephemeral CI runner and its published MD5 matched; its 42-row marker panel was parsed and documented in `docs/discovery_panel_audit.md`. The archive and raw images/masks were not committed to the repository. The checkpoint file identity is pinned, but weights have not been loaded for inference.
+The project is at **pre-inference compatibility validation**. The 54-patient discovery archive has now been downloaded in an ephemeral CI runner, its published MD5 matched, its 42-row marker panel parsed, and the metadata-only audit artifact uploaded and independently inspected (run 40198884781). See `docs/discovery_panel_audit.md`. The archive and raw images/masks were not committed to the repository. The checkpoint file identity is pinned, but weights have not been loaded for inference.
 
 ## Important data and interpretation limits
 

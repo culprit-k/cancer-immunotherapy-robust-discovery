@@ -125,7 +125,7 @@
 
 ## 25 October 2026 — cohort/checkpoint selection
 
-- Selected the Salié et al. HCC IMC cohort pair: **54-patient discovery** cohort (Zenodo 10793609) for development/calibration, and **42-patient ICI-treated** cohort (Zenodo 10794904) as untouched external evaluation.
+- Selected the Salié et al. HCC IMC cohort pair: **54-patient discovery** cohort (Zenodo 10793609; CC BY 4.0 per the NLM Dataset Catalog) for development/calibration, and **42-patient ICI-treated** cohort (Zenodo 10794904) as a proposed untouched external evaluation.
 - The 54-patient dataset is listed by the NLM Dataset Catalog as CC BY 4.0. For the 42-patient accession, the Zenodo landing page has a blank rights field, while OpenAIRE/Datacite-linked metadata for the exact DOI reports CC BY. The discrepancy is now a formal rights gate; preserve metadata evidence and confirm terms with the data contact/institutional office before redistribution if required.
 - Selected official VirTues `virtues-imc14/model.safetensors` as the best *candidate* checkpoint. The official model table states it was trained on 14 IMC datasets and labels the weights CC BY-NC 4.0. VirTues' extended 32-cohort corpus adds seven extra IMC datasets, and the Salié study is reference 95 in that added group, so use `virtues-imc14` instead of `virtues-sp32`/`virtues-sp31` for the held-out design.
 - Exposure confidence is **strong but not final**: model variant and published cohort grouping support exclusion, but the downloaded file's immutable revision/hash and accession-level exposure have not been checked. Pin the exact model revision, SHA-256, size, date and licence when downloaded; contact authors if exposure cannot be resolved from model metadata.

@@ -1,10 +1,10 @@
 # Selected HCC cohort-pair candidate, but not yet runnable.
 # Rights metadata discrepancy and exact checkpoint exposure must be resolved; pin a model revision and SHA-256 after download.
 # Template only — do not run until dataset rights, marker names, model exposure,
-# and baseline compatibility are verified. Replace every CHANGE_ME field.
+# and baseline compatibility are verified. Replace remaining CHANGE_ME fields.
 study:
   title: "Counterfactual recommendation fidelity under virtual marker reconstruction"
-  status: "pilot_template_not_yet_data_ready"
+  status: "selected_cohort_pair_but_not_data_ready"
   random_seed: 20261025
 
 dataset:

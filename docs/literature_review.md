@@ -177,3 +177,15 @@ The gap is not confirmed. A targeted search must still check if VirTues, SPORA, 
 ## Updated decision status
 
 **CONDITIONAL GO for a narrow feasibility pilot, NOT a confirmed novelty claim.** First confirm an openly usable cohort with CD8/T-cell labels, candidate intervention channels, patient identifiers and explicit terms. Then run a small masked-channel reconstruction and downstream target-discovery test. Stop or pivot if no cohort permits a fair test or if an equivalent benchmark already exists.
+
+
+## 15. Candidate datasets identified in the spora catalogue
+
+The public spora dataset browser lists a small set of particularly relevant cohorts:
+- **hoch2022multiplexed**: melanoma, IMC, 35 patients / 50 images; associated with the chemokine-milieu study of immunotherapy response (Hoch et al., *Science Immunology*, 2022; raw-data record https://zenodo.org/records/6004986). This is the best biological development candidate based on disease and chemokine relevance. However, the VirTues paper directly uses Hoch et al. for cell-typing evaluations, and some of its phenotyping analyses use splits defined for pretraining. Do not use the published full VirTues model as an independent unseen-cohort evaluation for this data.
+- **allam2022spatially**: lung cancer, IMC, 26 patients / 26 images, a small ~500 MB cohort advertised as a quick download by spora. Potentially useful for checking data loaders and masking code, but target-marker suitability is unknown.
+- **moldoveanu2022spatially**: melanoma, IMC, 90 patients / 90 images; potential external cohort, with pretraining exposure and marker overlap still to be checked.
+- **xiao2022multiplexed**: melanoma, IMC, 26 patients / 158 images; anti-PD-1 response context, but channel overlap and pretraining exposure are unresolved.
+- **schurch2020coordinated**: colorectal cancer, CODEX/H&E, 35 patients / 251 images; a potential secondary tissue-architecture cohort but not a drop-in match for an IMC panel.
+
+Source catalogue: https://spora.bioimagearchive.org/projects/spora/dataset. Dataset-level terms vary, and a cohort should not be treated as reusable simply because it appears in the catalogue. See docs/dataset_shortlist.md for the exact eligibility checklist. These counts and annotations come from the public catalogue and do not yet represent locally inspected files.

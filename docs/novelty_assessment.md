@@ -56,6 +56,27 @@ The public spora collection documents multiple spatial-proteomics cohorts/techno
 - An independent anti-PD-1 melanoma spatial mIF dataset is available (12 patients, 14 markers, data DOI 10.5281/zenodo.16898362) but has only four responders and limited marker overlap; use only for exploratory secondary analyses if justified.
 - A separate public melanoma dataset has 57 pretreatment stage-III bulk RNA-seq samples and four Visium tumors; bulk RNA cannot validate spatial protein intervention effects directly.
 
+
+## Material new prior-art risks (25 October 2026)
+
+The targeted audit now includes **Spatium** and **CONCERT**, which make the original gap more crowded:
+
+- **Spatium (2026)** already addresses spatial-protein imputation with held-out tissue sections. Generic protein reconstruction and section-level generalization are therefore not differentiators.
+- **CONCERT** combines spatial-transcriptomics imputation with counterfactual perturbation-response simulation. It is a different modality, but it is a close conceptual neighbor and must be examined before claiming that imputation-aware counterfactuals are new.
+- The 2026 spatial-metabolomics benchmark explicitly assesses both imputation error and preservation of downstream spatial clustering. Merely adding a downstream metric is not a novelty claim.
+
+Official/public sources: VirTues paper and model repo (https://www.nature.com/articles/s41586-026-10884-y; https://github.com/bunnelab/virtues), Spatium (https://pmc.ncbi.nlm.nih.gov/articles/PMC13419744/), CONCERT (https://pmc.ncbi.nlm.nih.gov/articles/PMC12642540/), spatial-metabolomics benchmark (https://doi.org/10.1016/j.isci.2026.115203), and spora docs (https://spora.epfl.ch/docs/).
+
+### Sharpened candidate—not a proven gap
+
+If the candidate survives full methods/supplement review, the potentially useful question is whether complete-channel virtual staining changes **signed intervention decisions** and their patient-level model-predicted CD8 objective, and whether a **validation-calibrated selective/abstention rule** can reduce decision error at a stated coverage/target budget. This must beat simple observed-marker-only and simple-imputation baselines. A new score alone is insufficient.
+
+### Model licence and exposure gate
+
+The official VirTues repository lists `virtues-sp32` (32 datasets, CC BY-NC 4.0 weights), `virtues-sp31` (31 datasets, MIT weights) and `virtues-imc14` (14 IMC datasets, CC BY-NC 4.0 weights). Code, model weights and each dataset have separate terms. A held-out cohort claim requires the exact checkpoint and training cohort list; a standard all-dataset checkpoint is not independent on a cohort included in its training data. Review non-commercial restrictions before any commercial or patent-oriented use.
+
+Full targeted audit: [targeted prior-art and feasibility audit](targeted_prior_art_and_feasibility_audit_2026-10-25.md).
+
 ## Decision
 
 **Conditional GO for the feasibility pilot only.** Proceed to a full protocol only if:

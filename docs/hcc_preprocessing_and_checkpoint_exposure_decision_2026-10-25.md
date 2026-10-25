@@ -6,7 +6,7 @@
 
 ## 1. Completed archive audit
 
-The successful structural audit is GitHub Actions run [40211055869](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869), on commit `15b3516f67b815b8f17a2d1d0ddc90d6e912f7e6`.
+The successful enhanced archive/TIFF audit is GitHub Actions run [40214428382](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382), on commit `a13476ac1d7ddf4d663d8ce9d3afcdaf55049bbc`. The follow-up run [40215732626](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40215732626) re-runs the same audit with more precise sample-scope wording.
 
 - Discovery archive: `HCC_DiscoveryCohort.zip`, Zenodo DOI [10.5281/zenodo.10793609](https://zenodo.org/records/10793609).
 - Downloaded size: **1,541,132,381 bytes**, matching the size advertised by Zenodo.
@@ -16,13 +16,24 @@ The successful structural audit is GitHub Actions run [40211055869](https://gith
 - Panel CSV actually contained in the archive: `DiscoveryCohort_panel.csv`; the Zenodo descriptive text names `DCCohort_panel.csv`.
 - Parsed panel: 42 rows, with `Channel`, `MetalTag`, and `Target` columns.
 - Structural QC: required columns present; no blank required cells; no duplicate channel numbers, metal tags, or target names; channels are numeric and contiguous from 1 to 42. **`structural_qc_pass = true`.**
-- The workflow published the metadata-only artifact [12606106783](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40211055869/artifacts/12606106783), digest `sha256:302d7a0bc55bbb32748185f97fa6e6b2110964dd56e7ec901371fc839bc452a3`, expiring 24 November 2026 UTC.
+- The workflow published metadata-only artifact [12607480794](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40214428382/artifacts/12607480794), digest `sha256:40cbe02a0e40939354bd1acacba177303321cee934b146f23de23fbc6502d282`, expiring 24 November 2026 UTC. No pixel arrays or full image data are in this artifact.
 - Raw images and masks were not committed or uploaded as artifacts.
 - The direct Zenodo API metadata retrieved during the same run reported `cc-by-4.0` for both Zenodo records 10793609 and 10794904. The ICI image archive was **not** downloaded in this audit; the API check was metadata-only.
 
-This is a completed archive-integrity and panel-structure audit. It does not prove preprocessing compatibility, cell-label validity, biological validity, or checkpoint exposure.
+This is a completed archive-integrity, panel-structure, and sampled TIFF-storage audit. It establishes actual stored pixel ranges and sampled image/mask grid compatibility, but does not recover raw acquisition intensities, prove VirTues input compatibility, validate cell labels/biology, or certify checkpoint exposure from internal training logs.
 
-## 2. Preprocessing contract: incompatible as released
+## 2. Sampled TIFF storage QC: PASS
+
+The enhanced workflow inventories 108 TIFFs in each of `DC_img_normalized`, `DC_cellmasks`, and `DC_stromamasks` (324 total). It audits panel structure and uses deterministic sparse samples for image/mask inspection:
+
+- Twelve evenly spaced normalized image stacks were readable; the sampled image series use `float32` storage and 42 pages/channels, matching the 42-row marker panel.
+- Sampled image-stack dimensions included `(42, 1300, 1300)` and `(42, 1500, 1500)`. The varying ROI sizes should be preserved in the ROI crosswalk; it is not evidence of a mismatch by itself.
+- Pixel statistics were collected from first/middle/last pages across the sampled image stacks, and all 42 pages were read for three representative ROIs (126 planes total). Across these sampled planes, all stored pixel values were finite and within `[0, 1]` (observed minimum `0.0`, maximum `1.0`; no out-of-range pixels in those samples).
+- For the first/middle/last representative ROIs, corresponding cell-mask and stroma-mask files were present and spatial dimensions matched the normalized image grid (3/3 each, no mismatch or read error). Sampled mask stacks were stored as `uint16`.
+
+**Scope limitation:** inventory counts cover all TIFF members, but detailed series/page metadata and numeric pixel summaries are sampled, not a full pixel-by-pixel scan of all 108 image stacks. These results confirm that the sampled TIFFs are stored as normalized float images, consistent with the published PENGUIN normalization; they do not reveal or permit inversion to the original intensity scale.
+
+## 3. Preprocessing contract: incompatible as released
 
 ### What the HCC public files are
 
@@ -61,7 +72,7 @@ There are only two scientifically defensible routes:
 
 A new model trained explicitly on normalized HCC images is a different study design, not a fix that makes the published pretrained VirTues checkpoint compatible.
 
-## 3. Checkpoint identity and cohort-exposure finding
+## 4. Checkpoint identity and cohort-exposure finding
 
 Pinned artifact:
 - Repository: `bunnelab/virtues`
@@ -88,7 +99,7 @@ Caveat: the public paper/model card provides corpus-level, reference-level prove
 
 Source: [VirTues Nature paper, datasets and model instances](https://www.nature.com/articles/s41586-026-10884-y), Methods sections “Dataset curation” and “VirTues model instances”; [official source repository](https://github.com/bunnelab/virtues).
 
-## 4. Final gate table
+## 5. Final gate table
 
 | Gate | Result | Meaning |
 |---|---|---|
@@ -102,6 +113,6 @@ Source: [VirTues Nature paper, datasets and model instances](https://www.nature.
 | Cell labels / CD8 endpoint | **OPEN** | Cell/stroma masks do not by themselves establish cell-type labels or a validated endpoint. |
 | Real model inference / biological conclusions | **NOT RUN** | No reconstruction or counterfactual results can be reported. |
 
-## 5. Next action
+## 6. Next action
 
 Use the unsent draft in `docs/data_clarification_request_salie_hcc.md` to request original compensated intensities, the exact PENGUIN parameters, authoritative panel/channel ordering and cell phenotype labels. If original inputs cannot be obtained, pivot to a verified spora-compatible cohort while keeping the study question and decision-level evaluation metrics. No external email has been sent.

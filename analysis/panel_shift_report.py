@@ -29,6 +29,13 @@ def _require_columns(frame: pd.DataFrame, columns: set[str], label: str) -> None
         raise ValueError(f"{label} is missing required columns: {missing}")
 
 
+def _finite_mean(values: list[float]) -> float:
+    """Mean over finite patient-level metrics; return NaN when none are defined."""
+    array = np.asarray(values, dtype=float)
+    array = array[np.isfinite(array)]
+    return float(np.mean(array)) if array.size else float("nan")
+
+
 def _json_safe(value: Any) -> Any:
     """Replace NaN/inf with null so the report is strict JSON."""
     if isinstance(value, Mapping):
@@ -52,8 +59,10 @@ def build_panel_shift_report(
     """Build a fidelity report from prepared held-out tables.
 
     reconstruction columns:
-        marker, measured, reconstructed
-    Each row should represent one held-out cell/location and one marker.
+        patient_id, marker, measured, reconstructed
+    Each row should represent one held-out cell/location and one marker. Each
+    marker's error metrics are computed within patient first, then macro-averaged
+    across patients so patients with more cells do not dominate the primary error.
 
     predictions columns:
         patient_id, strategy, predicted_before, predicted_after
@@ -64,7 +73,7 @@ def build_panel_shift_report(
     target_sets maps strategy names to {marker: +1/-1} signed targets.
     """
     _require_columns(
-        reconstruction, {"marker", "measured", "reconstructed"}, "reconstruction table"
+        reconstruction, {"patient_id", "marker", "measured", "reconstructed"}, "reconstruction table"
     )
     _require_columns(
         predictions,
@@ -81,7 +90,7 @@ def build_panel_shift_report(
         raise ValueError("reconstruction table must not be empty")
     if predictions.empty:
         raise ValueError("predictions table must not be empty")
-    if reconstruction[["marker", "measured", "reconstructed"]].isna().any().any():
+    if reconstruction[["patient_id", "marker", "measured", "reconstructed"]].isna().any().any():
         raise ValueError("reconstruction table contains missing values")
     if predictions[["patient_id", "strategy", "predicted_before", "predicted_after"]].isna().any().any():
         raise ValueError("predictions table contains missing values")
@@ -123,12 +132,32 @@ def build_panel_shift_report(
             "do not silently compare different patient sets"
         )
 
-    per_marker: dict[str, dict[str, float | int]] = {}
+    per_marker: dict[str, Any] = {}
+    metric_names = ("mae", "rmse", "bias", "pearson_r", "spearman_r")
     for marker, subset in reconstruction.groupby("marker", sort=True):
-        per_marker[str(marker)] = marker_reconstruction_metrics(
+        patient_metrics = []
+        for _, patient_subset in subset.groupby("patient_id", sort=False):
+            patient_metrics.append(marker_reconstruction_metrics(
+                pd.to_numeric(patient_subset["measured"], errors="raise").to_numpy(dtype=float),
+                pd.to_numeric(patient_subset["reconstructed"], errors="raise").to_numpy(dtype=float),
+            ))
+        pooled_metrics = marker_reconstruction_metrics(
             pd.to_numeric(subset["measured"], errors="raise").to_numpy(dtype=float),
             pd.to_numeric(subset["reconstructed"], errors="raise").to_numpy(dtype=float),
         )
+        per_marker[str(marker)] = {
+            "n_patients": int(len(patient_metrics)),
+            "n_values": int(len(subset)),
+            "patient_macro": {
+                name: _finite_mean([float(metrics[name]) for metrics in patient_metrics])
+                for name in metric_names
+            },
+            "patients_with_defined_correlation": {
+                name: int(sum(np.isfinite(float(metrics[name])) for metrics in patient_metrics))
+                for name in ("pearson_r", "spearman_r")
+            },
+            "pooled_cells_secondary": pooled_metrics,
+        }
 
     ref_uplift = {
         patient: float(value)

@@ -33,29 +33,55 @@ Generalization across cohorts, response prediction, interpretable immune concept
 
 ### Resources
 - Article: https://www.nature.com/articles/s41591-026-04502-7
-- Publicly listed code repository in the article/resources: verify repository identity, licence, data access, and computational requirements during the audit.
+- Verify the official code repository, licence, data access, and computational requirements during the audit.
 
-## 3. Candidate methodological gap to verify
+## 3. Robust counterfactual explanations (2024 survey)
 
-Investigate whether existing methods adequately measure the stability of *complete counterfactual therapeutic combinations* under patient-level resampling and modelling choices, while separately evaluating external generalization and uncertainty.
+Jiang J, Leofante F, Rago A, Toni F. *Robust Counterfactual Explanations in Machine Learning: A Survey.* Proceedings of IJCAI 2024. DOI: https://doi.org/10.24963/ijcai.2024/894
 
-This is only a candidate gap. The audit must include prior work on:
-- Counterfactual explanation robustness and validity.
-- Stability selection and feature-selection stability.
-- Set-valued or combination-level recommendation stability.
-- Uncertainty estimation and calibration in biomedical ML.
-- Spatial sampling, patient-level dependence, and data leakage.
-- Independent validation of perturbation-based therapeutic hypotheses.
+### Relevance
+This survey reviews robustness of counterfactual explanations, including robustness to model changes, model multiplicity, noisy execution, and input changes. It discusses established metrics such as validity after retraining.
 
-## 4. Questions for the next review pass
+### Implication
+Counterfactual robustness is already a well-developed general ML topic. A contribution must be more specific than “make counterfactuals robust.” We must test whether cancer-immunotherapy target combinations introduce a distinct problem that existing methods do not adequately cover.
 
-1. Does Morpheus already report relevant target- and combination-level stability analyses?
-2. Do related counterfactual methods quantify uncertainty or stability of recommended interventions?
-3. Are there published methods that directly evaluate the robustness of sets of perturbations across resamples?
-4. Does COMPASS address any analogous reliability question that makes our planned contribution redundant?
-5. Are at least two compatible independent datasets available, or should the study be framed as within-cohort robustness rather than cross-cohort validation?
+## 4. Stability of feature attribution in oncology (2026 issue; online 2025)
+
+Takefuji Y. *Stability of feature attribution: Contrasting supervised and unsupervised selection for radiopathomics and TCGA outcomes.* Cancer Letters. DOI: https://doi.org/10.1016/j.canlet.2025.218133
+
+### Relevance
+This paper studies stability of feature-selection/attribution results in oncology and highlights that prediction accuracy and stability of selected features are different properties.
+
+### Implication
+We cannot claim novelty merely by measuring stability of individual molecular features in cancer models. The audit must determine whether whole predicted intervention sets, intervention feasibility, and their out-of-sample biological objectives are treated differently in existing research.
+
+## 5. Causal interpretation warning
+
+Schölkopf et al. and related work on causal inference and counterfactual prediction in healthcare emphasize that predictive associations do not automatically identify causal intervention effects. One relevant overview is: https://www.nature.com/articles/s42256-020-0197-y
+
+For this project, model-generated perturbations must be described as hypotheses unless supported by an appropriate causal design or experimental evidence.
+
+## 6. Candidate methodological gap to verify
+
+Investigate whether existing methods adequately assess **the joint reliability of complete predicted target combinations** in spatial tumour-immune data, across patient-level resampling and model perturbations, while also measuring biological plausibility and independent predictive validity.
+
+This remains a candidate gap, not a verified one. The audit must compare:
+- General robust-counterfactual methods.
+- Stability-selection and feature-attribution methods.
+- Methods for selecting sets or combinations of interventions.
+- Uncertainty estimation and calibration.
+- Patient-level dependence, spatial sampling, and data leakage.
+- Experimental validation of predicted perturbations.
+
+## 7. Questions for the next review pass
+
+1. Does Morpheus already report target- and combination-level stability across resampled patients or retrained models?
+2. Can general robust-counterfactual methods be applied to intervention sets, and what would remain missing in this cancer setting?
+3. Are there published methods that directly evaluate the robustness of sets of molecular perturbations across resamples?
+4. Does COMPASS or related immunotherapy work address analogous reliability questions?
+5. Are at least two compatible independent datasets available, or should the study be framed as within-cohort robustness?
 6. Can the baseline be reproduced with the available hardware and accessible data?
 
-## 5. Preliminary conclusion
+## 8. Preliminary conclusion
 
-The broad idea is relevant, but novelty is **not established**. The next step is a targeted review of the specific stability/robustness methods and a dataset feasibility audit before committing to an algorithm.
+The broad idea is relevant, but novelty is **not established**. The literature already includes general counterfactual robustness and cancer feature-selection stability. We need a more precise comparison and dataset audit before deciding whether to proceed, refine, or pivot.

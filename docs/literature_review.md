@@ -1,98 +1,110 @@
-# Initial literature audit
+# Literature review and prior-art audit
 
-**Status:** Preliminary. This is a starting point, not a systematic review or exhaustive prior-art search.
+**Last updated:** 25 October 2026  
+**Status:** Targeted, non-systematic review. Novelty is unverified. The generic robustness-only proposal is currently a no-go as the main paper contribution.
 
-## 1. Morpheus (2025)
+## Executive assessment
+
+The research area is important, but the original proposition—repeat Morpheus target discovery over patient/core resamples and model seeds, then report target selection frequency, Jaccard similarity and held-out predicted uplift—looks too incremental by itself. Recent work already includes spatial counterfactual target discovery and aggregation (Morpheus), single-cell combination search with robust re-ranking (PHAROS), spatial transcriptomic counterfactual inference with core-level bootstrap (Anzum et al., MICCAI 2026), and generative spatial counterfactual tissue reprogramming that includes immune-focused hypotheses (SPAD-CFR, Biology 2026).
+
+The next step is not to invent a score. It is to check whether a specific comparative decision-utility or cross-cohort/platform-transfer question has a real prior-art gap and compatible data.
+
+## 1. Morpheus (2025): closest baseline
 
 Wang ZJ et al. *Identifying perturbations that boost T-cell infiltration into tumours via counterfactual learning of their spatial proteomic profiles.* Nature Biomedical Engineering. DOI: https://doi.org/10.1038/s41551-025-01357-0
 
-### Relevance
-Morpheus predicts CD8+ T-cell presence from spatial multiplexed tumour images and uses counterfactual optimization to propose molecular perturbations associated with increased predicted T-cell infiltration. It applies the method to 159 image cores from 69 metastatic melanoma patients and 209 cores from 30 colorectal cancer liver-metastasis patients. Selected predictions were tested in vitro.
+Morpheus predicts CD8+ T-cell presence from spatial multiplexed tumour images and uses counterfactual optimization to propose molecular perturbations associated with increased predicted T-cell infiltration. The paper reports 159 melanoma cores from 69 patients and 209 CRC liver-metastasis sections from 30 patients. Selected predictions were tested in vitro.
 
-### Existing analyses relevant to our idea
-- Patients are divided into training, validation, and test groups.
-- Perturbations are generated per image patch and analyzed across patients.
-- The authors describe variability across tissue samples, including different samples from the same patient.
-- The discussion proposes deriving perturbations from a subset of a patient's samples and testing on remaining samples as future work.
+Existing features directly relevant to our project:
+- Patient-level train/validation/test splits.
+- Counterfactual perturbations generated per image patch.
+- Median aggregation from patchwise perturbations into whole-tumour strategies, with patient-level aggregation discussed.
+- In-silico evaluation of strategies on held-out patient samples.
+- Sensitivity to perturbation sparsity.
+- Discussion of variation across tissue samples, including cores from the same patient.
+- Suggested future testing of a strategy learned from a subset of a patient's samples on remaining samples.
 
-### Implication
-We cannot claim novelty for patient-level splits, counterfactual molecular perturbation, patient variation, or in-vitro validation. A possible narrower question is whether repeated full target-discovery runs under patient-level resampling and model changes can be evaluated systematically for complete-combination stability, beyond the analyses already reported. This needs further verification against the full supplement and code.
+**Implication:** patient-level splits, target combinations, sample heterogeneity and held-out evaluation cannot be claimed as novel. Main article Methods and public code were inspected; the separate supplementary PDF has not been read because the download redirect could not be retrieved in this runtime.
 
-### Resources
+Resources:
 - Paper: https://doi.org/10.1038/s41551-025-01357-0
-- Reproduction repository: https://github.com/cellethology/morpheus-spatial
-- Model/package code: https://github.com/neonine2/morpheus-spatial
-- Melanoma dataset cited by paper: https://doi.org/10.5281/zenodo.5994135
-- Original melanoma data-for-analysis deposit: https://doi.org/10.5281/zenodo.5994136
-- Preprocessed data and model outputs cited by paper: https://doi.org/10.22002/pr14s-wgk05
+- Code/reproduction: https://github.com/cellethology/morpheus-spatial
+- Original melanoma data-for-analysis: https://doi.org/10.5281/zenodo.5994136
+- Morpheus preprocessed data/model outputs: https://doi.org/10.22002/pr14s-wgk05
 
-## 2. COMPASS (2026)
+## 2. PHAROS (2026 preprint): target-directed combination search
 
-Shen W et al. *Generalizable AI predicts immunotherapy outcomes across cancers and treatments.* Nature Medicine. DOI: https://doi.org/10.1038/s41591-026-04502-7
+*PHAROS: turning single-cell perturbation models into target-directed drug-combination screens.* bioRxiv preprint, September 2026. https://www.biorxiv.org/content/10.64898/2026.09.08.749477v1.full. Code: https://github.com/jbezney61/PHAROS
 
-COMPASS predicts immune-checkpoint-inhibitor response from bulk tumour transcriptomes using biologically grounded immune concepts. The paper reports evaluation on 1,133 patients from 16 clinical cohorts and comparison with 22 methods.
+PHAROS uses a pretrained single-cell perturbation model to search drug combinations that move a starting cell state toward a specified target state. Its reported workflow includes controls, independent combinatorial perturbation-data evaluation, sampled batches and robustness-aware reranking.
 
-### Implication
-Generalization across cohorts, response prediction, interpretable immune concepts, and transfer evaluation are already active areas. A proposal limited to “make the model generalize across cohorts” would be inadequate. COMPASS is a complementary benchmark, not a directly interchangeable dataset for spatial-proteomic counterfactual perturbation discovery.
+**Implication:** a broad claim to drug-combination search, sampling-based reliability, or robust reranking would overlap substantially. PHAROS is a preprint, and its single-cell drug-state task is not identical to spatial-proteomic CD8+ infiltration counterfactuals.
 
-## 3. Robust counterfactual explanations (IJCAI 2024)
+## 3. Counterfactual spatial cell-cell influence (MICCAI 2026)
+
+Anzum et al. *A Counterfactual Framework for Directional Cell-Cell Interaction Analysis in Spatial Transcriptomics.* MICCAI 2026. https://papers.miccai.org/miccai-2026/0006-Paper6105.html
+
+The study uses a neighborhood-conditioned model and counterfactual neighbor replacement to estimate directional cell-cell influence. It describes a 38-core Xenium cholangiocarcinoma evaluation with held-out cores, permutation/spatial-shuffle controls and core-level bootstrap confidence intervals.
+
+**Implication:** generic spatial counterfactual analysis and core-level bootstrap uncertainty already appear in closely related tumour-microenvironment work. Its output is a directional cell-cell influence score, not a full therapeutic target set intended to increase CD8+ infiltration. That difference may matter, but it must be justified scientifically rather than simply asserted.
+
+## 4. SPAD-CFR (Biology, 2026): spatial counterfactual tissue reprogramming
+
+Ding W, Luo Z, Xiong Y. *Counterfactual Diffusion Modeling Enables Spatially Targeted Reprogramming of Tissue Microenvironments.* Biology. DOI: https://doi.org/10.3390/biology15141097. Full text: https://pmc.ncbi.nlm.nih.gov/articles/PMC13406000/
+
+SPAD-CFR uses a spatial point-cloud attention/diffusion framework to generate counterfactual tissue states in which molecular profiles and coordinates can change together. The article includes melanoma interventions involving PD-1+ CD8+ T cells and predicted localized bystander cytotoxic effects.
+
+**Implication:** broad spatial counterfactual tissue reprogramming and immune-focused intervention hypotheses are now directly adjacent published work. SPAD-CFR has a different model and output from Morpheus, but “spatial counterfactual AI for cancer immunotherapy” is not a strong novelty claim.
+
+## 5. COMPASS (Nature Medicine, 2026): cross-cohort response prediction
+
+Shen W et al. *Generalizable AI predicts immunotherapy outcomes across cancers and treatments.* DOI: https://doi.org/10.1038/s41591-026-04502-7
+
+COMPASS predicts immune-checkpoint-inhibitor response from bulk tumour transcriptomes, using biologically grounded immune concepts. The article reports evaluation across 16 clinical cohorts and 1,133 patients, following training on 10,184 tumours.
+
+**Implication:** cross-cohort response prediction and generalization are already active areas. COMPASS is complementary prior art, not a direct spatial-proteomic perturbation benchmark: bulk RNA-seq outcome prediction cannot be pooled with spatial protein data without an explicit mapping.
+
+## 6. Robust counterfactual explanations (IJCAI 2024)
 
 Jiang J, Leofante F, Rago A, Toni F. *Robust Counterfactual Explanations in Machine Learning: A Survey.* IJCAI 2024. DOI: https://doi.org/10.24963/ijcai.2024/894
 
-This survey documents established approaches to counterfactual robustness under model changes, model multiplicity, noisy execution, and input changes. It describes measures such as validity after retraining.
+This survey covers robustness to model changes, model multiplicity, noisy execution and input changes.
 
-### Implication
-Counterfactual robustness is an established general ML topic. Any proposed method must be compared with existing robust-counterfactual approaches, not just a standard baseline.
+**Implication:** counterfactual robustness is an established general machine-learning topic. An application-specific benchmark needs to show what standard metrics fail to capture and what scientific decision changes as a result.
 
-## 4. Stability of feature attribution in oncology (2026 issue; online 2025)
+## 7. Feature stability in oncology
 
-Takefuji Y. *Stability of feature attribution: Contrasting supervised and unsupervised selection for radiopathomics and TCGA outcomes.* Cancer Letters. DOI: https://doi.org/10.1016/j.canlet.2025.218133
+Takefuji Y. *Stability of feature attribution: Contrasting supervised and unsupervised selection for radiopathomics and TCGA outcomes.* Cancer Letters, 2026 issue (online 2025). DOI: https://doi.org/10.1016/j.canlet.2025.218133
 
-This paper investigates feature-selection/attribution stability in oncology and demonstrates that prediction accuracy and stability of selected features are different properties.
+This work studies stability of feature attribution/selection in oncology.
 
-### Implication
-A generic cancer-feature-stability score would not establish novelty. We need to identify a specific unmet need in the reliability of full therapeutic intervention sets.
+**Implication:** a generic cancer-feature-stability score is insufficiently novel.
 
-## 5. Counterfactual uncertainty (2026)
+## 8. Uncertainty and counterfactual robustness (2026)
 
 Christodoulou L, Sun C. *The impact of machine learning uncertainty on the robustness of counterfactual explanations.* Expert Systems with Applications (2026). DOI: https://doi.org/10.1016/j.eswa.2026.131198
 
-This work studies how aleatoric and epistemic uncertainty affect counterfactual explanations, reporting that accuracy alone does not ensure stable explanations. It is not cancer-specific but is directly relevant methodological prior art.
+This paper studies the influence of machine-learning uncertainty on counterfactual stability.
 
-## 6. Candidate methodological gap to verify
+**Implication:** uncertainty-aware counterfactual stability is also established methodological prior art; adding uncertainty to a cancer application alone is unlikely to suffice.
 
-Investigate whether existing methods adequately assess **the joint reliability of complete predicted molecular target combinations** in spatial tumour-immune data across patient-level resampling and model retraining, with separate assessment of:
-- selection stability of individual targets and complete sets;
-- predicted objective and uncertainty;
-- generalization to held-out patients or compatible independent cohorts;
-- biological plausibility and independent experimental evidence, where available.
+## Revised decision and candidate pivots
 
-This remains a candidate gap, not a verified one. Morpheus already has patient-level splits and discusses within-patient tissue variability, so we must establish exactly what its supplement and implementation do before proceeding.
+**NO-GO for the generic robustness-only paper as currently framed.** The initial stability metrics and code are still useful for a reproducibility audit, but a high-novelty paper needs a more substantive question.
 
+Candidates to evaluate next:
+1. **Cross-method intervention decision utility:** whether a prespecified consensus across genuinely comparable spatial methods selects intervention sets with better held-out-patient model-predicted uplift than the strongest single method at a matched target budget.
+2. **Cross-cohort/platform transfer of signed target direction:** whether target directions and predicted effects transfer to independent patients with genuinely shared markers and a compatible endpoint.
+3. **Mechanistic admissibility of interventions:** whether prespecified molecular/signalling constraints improve independent plausibility, recognizing that knowledge-graph constraints and biologically informed spatial counterfactuals already exist.
 
-## 7. PHAROS (2026 preprint) — important adjacent work
+These are hypotheses, not confirmed gaps. A method/dataset compatibility matrix is available at docs/method_dataset_compatibility.md. Do not compare methods whose intervention objects or endpoints are incompatible, and do not pool modalities just because they involve the same cancer.
 
-*PHAROS: turning single-cell perturbation models into target-directed drug-combination screens.* bioRxiv preprint, posted September 2026. https://www.biorxiv.org/content/10.64898/2026.09.08.749477v1.full
+## Reproducibility and data caveats
 
-PHAROS uses a pretrained single-cell perturbation model to simulate effects of drugs one at a time, chains these predictions to search combinations, and ranks combinations by their predicted movement toward a target state. It reports evaluation on two independent combinatorial perturbation datasets and exploratory patient-derived tumour analyses.
+- No data archive has been downloaded or checked locally in this runtime.
+- No Morpheus checkpoint has been loaded, and no original training/counterfactual-generation pipeline has been executed.
+- The separate Morpheus supplementary PDF was located but not retrieved through its signed download redirect; the full supplement is not audited.
+- The original melanoma data-for-analysis archive is about 7.1 GB, and its rights/license field was not clear in the audit; check exact use terms before substantive reuse or redistribution.
+- Six synthetic unit tests for generic analysis helpers passed locally; these tests do not establish model performance or biological validity.
 
-**Implication:** The broad idea of using perturbation models to search for cancer drug combinations is also being pursued. PHAROS is not the same as Morpheus: it focuses on single-cell perturbation models and drug-combination search rather than spatial-proteomic counterfactual changes. However, our proposed work must now distinguish itself from both target-generation systems and robust-counterfactual evaluation. We must explicitly assess whether the intended contribution is merely a reliability wrapper around existing methods, which may be too incremental.
-
-## 8. Updated candidate gap and decision
-
-The only candidate worth further investigation at this stage is a prespecified, leakage-safe **reliability evaluation of full spatially derived target combinations under repeated patient/core resampling and model retraining**, with an assessment of whether the rankings and predicted objectives remain stable on untouched patients. This would be an evaluation study unless a genuinely new method is justified by the evidence.
-
-This is not yet a confirmed gap. Morpheus already has fixed patient-level splits, derives cohort strategies from per-sample perturbations, and evaluates median strategies in silico on a test cohort. PHAROS already searches combinations in perturbation models. Robust counterfactuals and feature stability are also established. We should not proceed to invent an algorithm unless the supplementary methods and targeted prior-art search establish a specific unmet need.
-
-## 9. Next review questions
-
-1. Does Morpheus's full supplement quantify target/combination stability under patient resampling or model retraining?
-2. Does the public reproduction notebook expose the full discovery pipeline and saved split metadata?
-3. Can the proposed analysis be implemented with available preprocessed files, and what compute is required?
-4. Do robust-counterfactual methods generalize to structured multi-target molecular interventions, or would adapting them be the contribution?
-5. Is there an appropriate independent dataset with compatible spatial-proteomic markers and endpoints?
-6. Is the proposed gap distinct enough to justify a paper, or should we pivot to a more defensible cancer question?
-
-## Preliminary conclusion
-
-The direction is scientifically relevant, but novelty is **not established**. The current best next step is a reproducibility and dataset feasibility check plus a focused comparison of complete-intervention-set robustness methods. We should proceed only if this produces a distinct, testable contribution.
+See also the [novelty assessment](novelty_assessment.md), [method/dataset compatibility matrix](method_dataset_compatibility.md), [related-work addendum](related_work_addendum_2026.md), and [reproducibility run log](reproducibility_run_log.md).

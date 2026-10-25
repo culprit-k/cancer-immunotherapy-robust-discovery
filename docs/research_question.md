@@ -1,40 +1,74 @@
 # Research question and scope
 
-## Project direction
+## Current research candidate
 
-Cancer immunotherapy target discovery using computational models is the broad research area. The initially proposed robustness-only study now appears too incremental to carry a strong novelty claim, given Morpheus (2025), PHAROS (2026 preprint), spatial counterfactual core-bootstrap work at MICCAI 2026, and SPAD-CFR (Biology, 2026).
+**What Happens When a Marker Is Missing? Counterfactual Target Discovery Under Virtual Staining in Spatial Immuno-oncology**
 
-## Current recommendation
+This is a provisional candidate for a focused benchmark study. It is not a confirmed literature gap or a claim that a new algorithm has been invented.
 
-**Do not proceed with the original study as a novelty-led paper yet.** Investigate a more specific decision-level question instead:
+## Primary question
 
-> When spatial counterfactual methods propose molecular interventions for cancer immune activity, does a prespecified, target-budget-matched consensus across methods/cohorts identify intervention directions that replicate better in untouched patients and retain model-predicted immune uplift than the strongest single-method baseline?
+When one or more complete protein-marker channels are missing from spatial-proteomics panels and reconstructed by a foundation model, do the resulting signed counterfactual target recommendations and held-out-patient model-predicted CD8+ infiltration changes remain faithful to those obtained from fully measured channels?
 
-This candidate may need to be narrowed further after checking compatible datasets, endpoints and intervention definitions. It is not a confirmed literature gap or an algorithm claim.
+## Secondary question
 
-## Candidate alternatives
+Can a prespecified reliability/abstention rule, calibrated using held-out measured markers, flag recommendations whose signed direction or model-predicted uplift changes materially under plausible marker reconstructions?
 
-1. **Cross-method intervention decision utility.** Compare two or more methods only when they can be evaluated on a common data representation and same held-out patient endpoint. Test whether consensus changes decisions compared with best single method at equal target budget. Main risks: methods may predict different objects, and adapting them could itself introduce bias.
-2. **Cross-cohort/platform transfer of signed target directions.** Test whether target directions discovered in one patient cohort/platform transfer to another using only preregistered shared markers and compatible outcomes. Main risks: small patient counts, incomplete overlap of channels, and cross-cohort prediction already being a mature field.
-3. **Mechanistic admissibility of counterfactual interventions.** Test whether predicted target sets are consistent with prespecified molecular/signalling constraints and whether such constraints improve independent plausibility. Main risk: existing work already proposes biologically informed spatial counterfactuals and knowledge-graph constraints; adding a graph term is not enough.
+## Why this replaces the previous proposal
 
-## What was already established in the first audit
+The generic patient-resampling/Jaccard study is too incremental as a high-novelty contribution. Existing work includes:
+- Morpheus for spatial-proteomic counterfactual target discovery and held-out-patient evaluation.
+- SPAD-CFR and Celcomen for spatial generative/counterfactual perturbation modeling.
+- VirTues and Spatium for spatial-protein foundation modeling and reconstruction of missing channels.
+- Spora benchmarks for virtual staining, cross-cohort and tissue-level evaluation.
+- TISSUE and other imputation studies for uncertainty-aware reconstruction and downstream consequences.
 
-Morpheus applies counterfactual optimization to spatial proteomic tissue images, creates perturbations per patch, aggregates these into whole-tumour strategies, evaluates them in silico on held-out patients, and validates selected predictions in vitro. PHAROS searches target-directed combinations in single-cell perturbation space and uses controls/sample-based reranking. A MICCAI 2026 spatial transcriptomics method uses counterfactual neighbour replacement and core-level bootstrap evaluation. SPAD-CFR (Biology, 2026) generates spatial counterfactual tissue states and includes melanoma immune-focused interventions.
+The narrower candidate is the **decision-level consequence** of virtual marker reconstruction: whether the target set itself remains the same and whether its held-out model-predicted objective changes, not merely whether an imputed marker has high correlation with its measured values.
 
-These methods make broad “AI for cancer immunotherapy”, generic combinations, spatial counterfactual generation, core-level bootstrap, or generic stability scoring insufficient as novelty claims.
+This distinction is plausible but not yet confirmed by an exhaustive prior-art review.
 
-## Required next gate
+## Hypotheses to test
 
-- Complete the Morpheus supplement audit.
-- Compare the three alternatives against recent papers and preprints.
-- Verify data licenses/terms and whether an endpoint is shared across methods.
-- Create a feasibility matrix before choosing a new primary question.
-- Reproduce a baseline only after rights and data access are clear.
+1. Marker reconstruction accuracy and counterfactual recommendation fidelity may diverge: similar marker-level errors may lead to different signed target sets.
+2. Whole-channel masking, which mimics real assay-panel differences, may distort recommendations more than cell-wise random masking at comparable missing fractions.
+3. A validation-calibrated reliability/abstention rule may identify recommendations with lower disagreement or lower model-based reference regret, at the cost of reduced recommendation coverage.
 
-## Definitions and guardrails
+No result is assumed in advance.
 
-- Model-predicted uplift is a model output, not an observed treatment effect.
-- Biological validity requires independent experiments or a well-justified orthogonal benchmark.
-- Patient is the inferential unit; all cores/patches from one patient must remain together.
-- Do not claim novelty, causal efficacy, clinical utility, or patentability before supporting evidence is available.
+## Study scope
+
+- Spatial-proteomics panel missingness and virtual staining.
+- A published and reproducible counterfactual target-discovery baseline (Morpheus-style if compatible, or a clearly labelled surrogate if the original implementation cannot be fairly reproduced).
+- Candidate data from the public spora collection or another cohort with explicit terms and required markers.
+- Patient/core-grouped split and evaluation; cells/tiles are nested measurements, not independent patients.
+- Full measured-channel reference, no-imputation baseline, simple imputation baseline, and foundation-model reconstruction condition.
+- Secondary clinical response datasets only if marker overlap and endpoint interpretation support a fair exploratory analysis.
+
+## Primary measures
+
+- Signed target-set Jaccard similarity between the full-measurement reference and reconstructed-panel strategy.
+- Signed precision/recall and direction-flip rate.
+- Difference in held-out patient-level model-predicted CD8+ infiltration uplift.
+- Marker-level MAE/RMSE/correlation as secondary measures.
+- Optional coverage-versus-error/regret curve for an abstention rule.
+
+All uplift is model-predicted unless independently measured in an intervention experiment. Agreement with a full-measurement model is not a known biological ground truth.
+
+## Data and implementation gates
+
+1. Read the full prior art on VirTues, Spatium, Spora, Celcomen, SPAD-CFR, Morpheus and counterfactual robustness.
+2. Select a cohort only after verifying patient IDs, marker channels, immune outcome, panel structure, access and exact reuse terms.
+3. Confirm whether any foundation model was trained on the selected cohort; use a documented holdout or leave-one-dataset-out setup to avoid data leakage.
+4. Reproduce a small baseline and one masked-marker reconstruction example before developing the full benchmark.
+5. Decide if a genuine contribution remains after testing the pipeline against prior methods.
+
+## Out of scope
+
+- Claims of clinical treatment efficacy or causal target validation from observed marker associations.
+- Direct pooling of spatial protein profiles and bulk RNA-seq.
+- Reuse or redistribution of data without verified permission.
+- Claims of novelty, patentability, or clinical utility before evidence.
+
+## Decision
+
+**Conditional GO for a feasibility pilot. No-go for claiming novelty until exact downstream intervention-recommendation fidelity is searched and a permitted dataset can support the test.**

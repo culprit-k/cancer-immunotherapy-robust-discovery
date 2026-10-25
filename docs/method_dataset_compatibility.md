@@ -1,6 +1,6 @@
 # Method and dataset compatibility matrix
 
-**Status (25 October 2026): scoping only. This table is not evidence that cohorts can be pooled or models compared directly.**
+**Status (25 October 2026): HCC cohort pair and reconstruction-checkpoint variant selected from public evidence; archives, exact marker crosswalk, target-baseline compatibility and immutable checkpoint exposure remain unverified. This table is not evidence that cohorts can be pooled or models compared directly.**
 
 | Study/resource | Modality and cohort information | Model output / endpoint | Access and rights status | Directly comparable to Morpheus CD8-infiltration intervention evaluation? |
 |---|---|---|---|---|

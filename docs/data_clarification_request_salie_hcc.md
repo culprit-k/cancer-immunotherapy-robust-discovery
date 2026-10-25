@@ -10,7 +10,9 @@
 4. Can you confirm the exact TIFF channel ordering and whether the published panel table is authoritative for every ROI? The ZIP currently contains `DiscoveryCohort_panel.csv`, while the Zenodo description mentions `DCCohort_panel.csv`.
 5. Are cell-level phenotype labels, gates, cluster assignments or the original analysis objects available for the image ROIs? The public archive description identifies cell/stroma masks but does not explicitly promise cell-type labels.
 6. Are patient identifiers and ROI metadata sufficient to reconstruct the patient-to-ROI mapping without exposing direct identifiers? Are the supplementary clinical tables permitted to be linked to image-derived summaries for this research question?
-7. Is the proposed use—benchmarking missing-marker reconstruction and evaluating stability of *model-predicted* immune-target recommendations—covered by the current CC BY 4.0 dataset terms and article citation requirements? We will not redistribute raw images or make clinical treatment claims.
+7. The paper's Methods describe PENGUIN channel normalization to 0–1, background removal and percentile denoising, with channel-specific thresholds selected by manual inspection and applied consistently to every ROI. Can you confirm whether this is the complete export recipe for `DC_img_normalized`, or whether any additional transformation or integer encoding is applied when writing the TIFF files?
+8. Are the PENGUIN thresholds / background settings retained anywhere for the discovery cohort? If the normalization is not invertible, is the original compensated intensity data available under suitable academic terms?
+9. Is the proposed use—benchmarking missing-marker reconstruction and evaluating stability of *model-predicted* immune-target recommendations—covered by the current CC BY 4.0 dataset terms and article citation requirements? We will not redistribute raw images or make clinical treatment claims.
 
 ## Draft email
 
@@ -20,9 +22,9 @@ Dear Professor Salié / dataset team,
 
 I am an MBBS student developing a reproducible academic study on how missing-marker reconstruction affects downstream computational analyses of spatial immuno-oncology data. I have verified the checksum and marker-panel metadata of the public 54-patient HCC discovery archive and am checking data compatibility before running any model.
 
-The public archive appears to contain normalized TIFF stacks and cell/stroma masks, but not the original MCD acquisitions or the per-channel statistics required by the foundation-model preprocessing pipeline I am evaluating. I do not want to apply an incompatible transformation or infer cell phenotypes from masks alone.
+The public archive appears to contain PENGUIN-normalized TIFF stacks and cell/stroma masks, but not the original MCD acquisitions or the quantile/mean/standard-deviation metadata expected by the VirTues input pipeline. I do not want to treat a conversion of normalized TIFFs as though it recreated original intensities, nor infer cell phenotypes from masks alone.
 
-Could you please clarify the exact normalization steps used for the released TIFFs, whether original-scale or spillover-compensated raw images and per-channel metadata can be made available for academic research, and whether cell-type labels or the analysis objects used for the published immune-phenotyping results are available? I would also appreciate confirmation of the authoritative panel file/channel order and any terms relevant to this proposed use.
+Could you please confirm the exact TIFF storage encoding and complete PENGUIN normalization recipe, and whether original-scale/spillover-compensated images plus channel/ROI metadata can be made available for academic research? I would also appreciate cell-type labels or the analysis objects used for the published immune-phenotyping results, the authoritative panel filename/channel order, and any terms relevant to this proposed use.
 
 I will cite the dataset and paper, respect the applicable license and any additional conditions, and will not redistribute raw data. No model inference or biological conclusions have been produced yet; I am trying to establish a valid and reproducible input contract first.
 

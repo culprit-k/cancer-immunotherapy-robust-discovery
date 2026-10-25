@@ -26,7 +26,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 - Generic target-stability metric code from the previous phase.
 - New panel-shift metrics for marker reconstruction error, signed intervention-set fidelity/direction changes, patient-level predicted-uplift fidelity, and paired patient-level model-based reference regret.
 - A post-hoc report CLI that reads prepared reconstruction/prediction CSVs and signed target-set JSON to generate a strict JSON report; it does not run the underlying models.
-- Unit tests for both helper modules. A local synthetic run on isolated copies reached **20 passing tests**, but the report-generator/test copies differed byte-for-byte from the latest remote blobs, so this is not a verified full test of the exact current repository. GitHub Actions success is unverified.
+- Unit tests for both helper modules. A local synthetic run on isolated copies reached **20 passing tests**, but report-generator/test copies differed byte-for-byte from the latest remote blobs. The hosted GitHub Actions suite passed **19 tests** after adding the missing SciPy dependency (commit `a04fcc0`); a follow-up run is triggered for the latest documentation/template commits. Latest workflow status: https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions.
 - A GitHub Actions test workflow. No raw data have been committed.
 
 ## Next steps, in order

@@ -1,0 +1,79 @@
+# Template only — do not run until dataset rights, marker names, model exposure,
+# and baseline compatibility are verified. Replace every CHANGE_ME field.
+study:
+  title: "Counterfactual recommendation fidelity under virtual marker reconstruction"
+  status: "pilot_template_not_yet_data_ready"
+  random_seed: 20261025
+
+dataset:
+  cohort_id: "CHANGE_ME"
+  version_or_accession: "CHANGE_ME"
+  license_or_terms_url: "CHANGE_ME"
+  source_paper_doi: "CHANGE_ME"
+  patient_id_column: "CHANGE_ME"
+  image_or_core_id_column: "CHANGE_ME"
+  measured_marker_channels:
+    - "CHANGE_ME"
+  immune_outcome_column: "CHANGE_ME"
+  outcome_definition: "CHANGE_ME"
+  rights_reviewed_by: "CHANGE_ME"
+  rights_review_date: "CHANGE_ME"
+
+foundation_model:
+  name: "CHANGE_ME"
+  repository_url: "CHANGE_ME"
+  checkpoint_id_or_hash: "CHANGE_ME"
+  model_license: "CHANGE_ME"
+  training_cohort_manifest_url: "CHANGE_ME"
+  evaluation_cohort_exposure: "unknown" # Must be resolved before independent evaluation.
+
+splits:
+  grouping_unit: "patient"
+  outer_test_fraction: 0.20
+  validation_fraction_of_development_patients: 0.20
+  nested_cells_cores_tiles_stay_with_patient: true
+  split_manifest_path: "data/derived/patient_split.csv"
+
+marker_masking:
+  primary: "whole_channel"
+  scenarios:
+    - name: "single_channel"
+      channels: ["CHANGE_ME"]
+    - name: "panel_shift"
+      channels: ["CHANGE_ME", "CHANGE_ME"]
+  cellwise_random_masking_is_secondary_only: true
+
+conditions:
+  - "fully_measured_reference"
+  - "reduced_panel_without_imputation"
+  - "simple_imputation"
+  - "foundation_model_reconstruction"
+
+counterfactual_discovery:
+  baseline_method: "CHANGE_ME"
+  baseline_version_or_commit: "CHANGE_ME"
+  objective: "predicted_CD8_infiltration"
+  target_budget: 3
+  allowed_target_markers: ["CHANGE_ME"]
+  direction_encoding:
+    increase: 1
+    decrease: -1
+  selection_uses_outer_test_data: false
+
+evaluation:
+  primary_unit: "patient"
+  report_patient_macro_marker_error: true
+  report_pooled_cell_error_as_secondary: true
+  report_signed_target_set_fidelity: true
+  report_direction_flip_rate: true
+  report_patient_level_model_predicted_uplift_fidelity: true
+  report_model_based_reference_regret: true
+  confidence_intervals: "patient_level_bootstrap"
+  bootstrap_replicates: 2000
+  compare_all_conditions_on_same_outer_test_patients: true
+
+guardrails:
+  full_measurement_is_model_reference_not_biological_truth: true
+  predicted_uplift_is_not_observed_treatment_effect: true
+  no_raw_data_committed_to_public_repository: true
+  no_novelty_or_patentability_claim_before_prior_art_gate: true

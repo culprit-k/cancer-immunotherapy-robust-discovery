@@ -55,3 +55,12 @@ Sources:
 ## Immediate gate
 
 Start by downloading only allam2022spatially or an equally small permitted cohort to validate data loading, while separately auditing Hoch's channels and rights for the biological study. Do not use a smoke-test cohort as the primary endpoint unless it passes the biological and marker criteria. Do not commit raw data to GitHub.
+
+
+## Updated checkpoint and rights gate (25 October 2026)
+
+The official VirTues repository lists `virtues-sp32` trained on 32 datasets with CC BY-NC 4.0 model weights, `virtues-sp31` trained on 31 datasets with MIT-licensed weights, and `virtues-imc14` trained on 14 IMC datasets with CC BY-NC 4.0 weights. These weight licences are distinct from both the code licence and the underlying cohort's terms. Before describing any cohort as held out, record the exact checkpoint name/version and its full training cohort list. The default `virtues-sp32` model cannot be treated as independent on any cohort included in its 32-dataset training mixture.
+
+For `rigamonti2024integrating`, the published leave-one-dataset-out result is a reason to investigate—not evidence that the specific public checkpoint currently available to us excludes Rigamonti. Confirm the exact model artifact and training composition, candidate channel overlap, patient split, and dataset reuse terms before approval. Do not download or redistribute restricted artifacts, and do not commit raw patient-level data to GitHub.
+
+See [targeted prior-art and feasibility audit](targeted_prior_art_and_feasibility_audit_2026-10-25.md) for the complete gate checklist.

@@ -14,7 +14,7 @@ This is a candidate research question—not a confirmed gap or a claim of a new 
 
 Morpheus already discovers spatial-proteomic counterfactual target combinations and evaluates them on held-out patients. SPAD-CFR and Celcomen cover spatial counterfactual/generative perturbation modeling. VirTues and Spatium cover foundation-model representations and virtual reconstruction of spatial protein markers; spora has standardized virtual-staining and cross-cohort benchmarks. Therefore, broad combinations, virtual staining, spatial counterfactuals or cross-platform transfer are not enough as novelty claims.
 
-The candidate question is whether good marker reconstruction scores can still mask changes in the *selected signed target set* or in its downstream model-predicted objective. This may be a useful gap, but it requires more prior-art review and a dataset feasibility gate.
+The candidate question is whether good marker reconstruction scores can still mask changes in the *selected signed target set* or in its downstream model-predicted objective. Spatium and CONCERT are material adjacent prior art; the exact gap remains unverified. A validation-calibrated selective/abstention rule is only a possible contribution if it beats simple baselines at a fixed coverage/target budget.
 
 ## Work completed in the repository
 
@@ -45,6 +45,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Manuscript outline](docs/manuscript_outline.md)
 - [Literature review](docs/literature_review.md)
 - [Novelty assessment](docs/novelty_assessment.md)
+- [Targeted prior-art and feasibility audit (25 Oct 2026)](docs/targeted_prior_art_and_feasibility_audit_2026-10-25.md)
 - [Related-work addendum](docs/related_work_addendum_2026.md)
 - [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
 - [Dataset shortlist and eligibility checklist](docs/dataset_shortlist.md)

@@ -120,3 +120,5 @@
 - Dataset shortlist and README have been corrected. No cohort is yet rights-cleared or approved for the primary experiment.
 
 - Ran an end-to-end **synthetic CLI smoke test** on the isolated local helper copies: generated a strict JSON report from tiny synthetic CSV/JSON inputs and asserted patient count, a signed direction flip and negative model-based reference regret. Result: passed. This remains synthetic software validation, not a real-data experiment.
+
+- Follow-up validation: added the latest 100-extra-cells patient-macro stress scenario to the isolated local report tests and reran the suite: **20 passed** in 1.19 seconds. The local `panel_shift_metrics.py` and metric tests match the repository blob hashes, but the local `panel_shift_report.py` and report-test copies do not match the latest repository blobs byte-for-byte; therefore this is not a claim that the exact current remote checkout was tested. A hosted GitHub Actions pass is still unverified.

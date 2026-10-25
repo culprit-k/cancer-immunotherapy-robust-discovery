@@ -1,47 +1,68 @@
 # Novelty assessment
 
-**Status (25 October 2026): NO-GO for the generic robustness-only paper as currently phrased. Conditional GO to investigate a more specific comparative or cross-cohort-transfer question.**
+**Status (25 October 2026): the old robustness-only paper is NO-GO as the primary novelty claim. A more specific virtual-marker / counterfactual recommendation-fidelity question is CONDITIONALLY worth a feasibility pilot; novelty remains unverified.**
 
-## Previous candidate now considered too incremental
+## Rejected primary candidate
 
-The initial candidate was to repeat Morpheus discovery over patient-grouped resamples and model seeds, then report signed-target selection frequency, full-set Jaccard similarity, and held-out model-predicted CD8+ infiltration uplift. This remains useful as a reproducibility audit, but by itself it is not strong enough to support a high-novelty paper. Generic bootstrapping and target-set stability are established ideas, and several adjacent studies now overlap strongly.
+Repeating Morpheus across patient resamples and seeds, then reporting generic selection frequency and Jaccard scores, is useful for reproducibility but too incremental on its own. Morpheus already performs patient-level splits, whole-tumour aggregation and held-out-patient evaluation. PHAROS, SPAD-CFR and Celcomen further demonstrate that combination search and spatial counterfactual modeling are active and crowded areas.
 
-## Relevant prior art already checked
+## New candidate
 
-### Morpheus (2025)
-Spatial-proteomic counterfactual target discovery; patient-level train/validation/test splits; per-patch counterfactuals; median aggregation to whole-tumour strategies; in-silico evaluation on held-out patient samples; variation across samples including those from the same patient; sparsity sensitivity and selected in-vitro validation.
+**Working title:** *What Happens When a Marker Is Missing? Counterfactual Target Discovery Under Virtual Staining in Spatial Immuno-oncology.*
 
-### PHAROS (bioRxiv preprint, September 2026)
-Single-cell perturbation-model search for target-directed drug combinations. It uses sampled source/target batches, control comparisons, independent combinatorial perturbation evaluation and robustness-aware re-ranking. Combination search, sampling and reranking in general are therefore not distinctive contributions.
+**Question:** When one or more complete protein-marker channels are absent and reconstructed by a spatial-proteomics foundation model, do the resulting signed counterfactual target recommendations and held-out-patient model-predicted CD8+ infiltration changes remain faithful to those obtained from fully measured channels?
 
-### Counterfactual directional cell-cell influence (MICCAI 2026)
-Anzum et al., *A Counterfactual Framework for Directional Cell-Cell Interaction Analysis in Spatial Transcriptomics*. https://papers.miccai.org/miccai-2026/0006-Paper6105.html. Uses counterfactual neighbor replacement on spatial transcriptomics and reports held-out core evaluation plus core-level bootstrap uncertainty. This makes generic core-level resampling/uncertainty quantification particularly hard to claim as novel.
+Possible secondary question: can a prespecified, validation-calibrated reliability/abstention rule flag recommendations that change under plausible marker reconstruction?
 
-### SPAD-CFR (Biology, 2026)
-Ding, Luo and Xiong, *Counterfactual Diffusion Modeling Enables Spatially Targeted Reprogramming of Tissue Microenvironments*. https://doi.org/10.3390/biology15141097. Proposes spatial point-cloud/diffusion counterfactual generation that jointly changes molecular profiles and coordinates, and includes melanoma immune-focused intervention hypotheses involving PD-1+ CD8+ T cells. A broad “counterfactual AI for spatial cancer immunotherapy” framing is now crowded.
+This candidate connects two mature areas:
+- Spatial counterfactual target discovery (Morpheus; SPAD-CFR) and spatial causal perturbation modeling (Celcomen).
+- Virtual marker reconstruction, cross-panel transfer and spatial-proteomics foundation models (VirTues; Spatium; spora benchmarks), plus uncertainty-aware imputation (TISSUE and related methods).
 
-### Other adjacent methods
-- COMPASS (Nature Medicine, 2026): large multi-cohort immunotherapy response prediction/generalization.
-- Jiang et al. (IJCAI 2024): robust-counterfactual methods and robustness dimensions.
-- Takefuji (Cancer Letters, 2026 issue / online 2025): oncology feature-attribution/selection stability.
-- Christodoulou and Sun (Expert Systems with Applications, 2026): uncertainty and counterfactual robustness.
+The potential gap is narrower: **downstream intervention-decision fidelity under whole-channel reconstruction**, rather than another method for spatial counterfactual generation, marker imputation or generic stability scoring.
 
-See the expanded [existing-method comparison matrix](existing_methods_matrix.md) and [October 2026 addendum](related_work_addendum_2026.md).
+## Why this may be more specific—but is not yet confirmed
 
-## More defensible next questions to investigate (not yet validated)
+VirTues supports marker reconstruction and virtual staining and has already been evaluated on cross-panel/cross-technology settings and clinical biomarker tasks. Spora also has explicit virtual-staining and tissue-level benchmark pipelines. Spatial imputation research already evaluates reconstruction quality and downstream tasks. The new work can only be distinguished if it shows that marker-level reconstruction metrics miss or misestimate changes in the *signed target set* or its held-out model-predicted objective, and if a reliability evaluation/abstention rule adds value over established baselines.
 
-1. **Intervention-level decision utility across methods:** For a common evaluation cohort and compatible intervention definitions, does a prespecified cross-method consensus select target sets that are more reproducible and have better held-out-patient model-predicted immune uplift than the strongest single-method baseline at a fixed target budget? Key risk: Morpheus and SPAD-CFR have different model structures/outcomes; do not compare unlike outputs as if they were the same intervention.
-2. **Cross-cohort/platform transfer of intervention direction:** For genuinely shared molecular targets and a compatible endpoint, do signed target directions and predicted effect transfer across independent patient cohorts/platforms better than chance and better than within-cohort baselines? Key risk: data and outcomes may not be compatible, and cross-cohort prediction alone is already well studied.
-3. **Mechanistic feasibility constraints:** Evaluate whether interventions that violate prespecified molecular/signalling constraints fail independent plausibility checks. Key risk: Morpheus itself points toward knowledge-graph constraints as a future extension, and other recent models are biologically informed; “add a graph regularizer” alone is not novel.
+A focused web/literature search did not identify a direct paper explicitly benchmarking spatial-proteomic counterfactual intervention-set fidelity under virtual-marker reconstruction. This is **not proof of absence**; the search is not systematic and broader terms, supplementary materials and newer preprints may reveal overlap.
 
-The right next step is a targeted literature and dataset feasibility comparison for these alternatives—not immediate algorithm invention.
+## What would not be novel on its own
 
-## Decision rules
+- Virtual staining or marker reconstruction.
+- Spatial counterfactual generation.
+- Cross-panel/cross-technology transfer.
+- Counterfactual robustness or feature stability in general.
+- Marker-level MAE/RMSE or correlation alone.
+- A new named score without showing that it changes a decision or improves reliability.
+- Claiming causal truth or therapeutic efficacy from a model-predicted CD8+ infiltration change.
 
-- **Proceed to a paper protocol** only after a specific gap survives the full supplement and prior-art audit, data rights are clear, and a reproducible benchmark exists.
-- **Refine** if the topic is valuable but the main advance is an evaluation protocol rather than a new algorithm; state this accurately.
-- **Pivot** if equivalent cross-method or transfer work exists, or available data cannot test the question.
+## Testable experimental contribution
 
-## Intellectual-property caution
+A strong paper would compare, at equal target budgets and on the same untouched patients:
+1. Fully measured-channel reference.
+2. Observed-marker-only model without imputation.
+3. Simple reconstruction baseline.
+4. Foundation-model reconstruction (e.g., VirTues) with whole-channel masking.
+5. Optional additional imputer only if feasible.
 
-This repository is public. Public disclosure can affect patent options depending on jurisdiction and facts. No patentability conclusion is made; seek institutional technology-transfer or qualified patent-professional advice before disclosing enabling details of any genuinely distinct invention.
+It would measure both marker reconstruction and decision-level outcomes: signed target-set Jaccard, direction flips, target-set size/empty recommendation rate, patient-level predicted-uplift fidelity and model-based reference regret. It would evaluate an abstention/reliability rule only if the pilot demonstrates meaningful recommendation errors and the rule can be calibrated on training/validation data. "Regret" here means disagreement with the full-measurement model reference—not observed therapeutic regret or clinical treatment effect.
+
+## Data and feasibility risk
+
+The public spora collection documents multiple spatial-proteomics cohorts/technologies; VirTues provides public code and pretrained weights. However:
+- We have not audited all dataset-level licenses or panel/channel mappings.
+- The Morpheus/Wang dataset was obtained by access request for VirTues and is not redistributable in the harmonized VirTues corpus because of licensing restrictions.
+- We have not downloaded a dataset or run VirTues, Morpheus, SPAD-CFR or Celcomen locally.
+- An independent anti-PD-1 melanoma spatial mIF dataset is available (12 patients, 14 markers, data DOI 10.5281/zenodo.16898362) but has only four responders and limited marker overlap; use only for exploratory secondary analyses if justified.
+- A separate public melanoma dataset has 57 pretreatment stage-III bulk RNA-seq samples and four Visium tumors; bulk RNA cannot validate spatial protein intervention effects directly.
+
+## Decision
+
+**Conditional GO for the feasibility pilot only.** Proceed to a full protocol only if:
+1. The complete prior-art review leaves a specific gap.
+2. An eligible cohort has measured marker channels, patient IDs, a usable CD8/T-cell endpoint and clear reuse terms.
+3. The foundation-model training exposure to that cohort is known and leakage is prevented.
+4. A published/surrogate counterfactual baseline is reproducible.
+5. The study measures decision-level fidelity beyond ordinary marker reconstruction metrics.
+
+If any of these fail, pivot rather than claim novelty. No patentability, clinical utility or biological efficacy claim is made.

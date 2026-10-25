@@ -43,7 +43,7 @@ Why this variant:
 - [ ] Download the 54-patient and 42-patient archives from their official records; store outside the public GitHub repository.
 - [ ] Verify archive integrity against source checksums and record new SHA-256 values locally.
 - [ ] Inspect `DCCohort_panel.csv` and `ICICohort_panel.csv`; compare marker names, metal channels, image dimensions, masks and patient metadata.
-- [ ] Convert channel-wise TIFFs and masks to the input structure required by official VirTues/spora code; preserve a reversible channel map and ROI/patient identity.
+- [ ] Obtain or recover an input representation and the required per-tissue preprocessing statistics compatible with VirTues; directory/layout conversion alone is insufficient. If those inputs cannot be obtained, select a compatible cohort/model or pre-specify a separate HCC-specific adaptation. Preserve channel order and ROI/patient identities.
 - [ ] Audit intensity ranges and existing normalization first. VirTues' published preprocessing includes clipping/log transform, tissue-aware channel normalization and Gaussian smoothing; do not double-transform data already normalized by the source study.
 - [x] Save the metadata-only Zenodo API audit evidence for both HCC accessions; it reports `cc-by-4.0` for each. The ICI image archive remains undownloaded; confirm landing-page display with the data contact/institution if needed.
 - [x] Pin the official `virtues-imc14` weight artefact, revision, SHA-256, size and licence (provenance manifest generated and verified).

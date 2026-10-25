@@ -75,3 +75,12 @@ The official checkpoint was downloaded on an ephemeral GitHub Actions runner fro
 - Hashing procedure: `scripts/resolve_virtues_imc14_checkpoint.py`
 
 This resolves version pinning and file integrity for that retrieved copy. It does **not** by itself prove that the HCC accessions were absent from all pretraining/fine-tuning, does not clear the 42-patient dataset's source-level licence discrepancy, and does not mean inference has been run. Preserve the checksum/revision in all future runs; if the file is re-downloaded from a different revision, treat it as a different model.
+
+
+## Actual discovery archive/panel audit — 25 October 2026
+
+The first complete archive-inspection step has now run on a hosted GitHub Actions runner. Run [40198072585](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40198072585) reports the archive's actual MD5 matching the expected value and identifies `DiscoveryCohort_panel.csv` (42 rows; columns `Channel`, `MetalTag`, `Target`). The raw archive remained in an ephemeral runner directory; only JSON diagnostics were printed to the job log. Artifact upload failed because the workflow path accidentally escaped the `${{ runner.temp }}` expression; the workflow has been corrected, and the rerun must verify successful artifact publication.
+
+The 42-patient ICI cohort's current Zenodo API metadata reports `cc-by-4.0` and a present license field, though the previously observed blank landing-page display should be reconciled in the rights log before redistribution or external evaluation.
+
+The development panel includes CD8a, PD1, PD-L1, TIGIT, Tim3 and Lag3. This is relevant immune/checkpoint coverage, but not yet proof that the Morpheus intervention targets and objective are available or compatible. The cohort remains **pre-inference**, pending a marker crosswalk, input/preprocessing contract, cell-label/endpoint audit, and exposure/rights documentation.

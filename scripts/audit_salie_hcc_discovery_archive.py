@@ -11,6 +11,7 @@ import csv
 import hashlib
 import json
 import tempfile
+import sys
 import zipfile
 from collections import Counter
 from datetime import datetime, timezone
@@ -174,6 +175,7 @@ def main() -> None:
                     rows = []
 
             # Structural metadata QC; deliberately does not imply model compatibility.
+            sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
             from analysis.panel_metadata_qc import audit_panel_structure
 
             panel_qc = (

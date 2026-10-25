@@ -1,67 +1,75 @@
 # Cancer Immunotherapy AI: Robust Target Discovery
 
-**Project status (25 October 2026): NO-GO for the generic robustness-only paper as currently phrased; conditional GO to investigate a more specific comparative or transfer question. No novel method or therapeutic effect has been established.**
+**Project status (25 October 2026): the generic robustness-only paper is NO-GO as a novelty-led study. Conditional GO for a narrow feasibility pilot on counterfactual recommendation fidelity under virtual marker reconstruction. Novelty is not established.**
 
-## Current research area
+## Current research candidate
 
-Cancer immunotherapy target discovery using computational models.
+**What Happens When a Marker Is Missing? Counterfactual Target Discovery Under Virtual Staining in Spatial Immuno-oncology**
 
-The first proposed paper was to measure how spatial-proteomic counterfactual target sets vary across patient-grouped resamples and model seeds. That is still a useful reproducibility audit, but it no longer looks strong enough by itself as a high-novelty paper: Morpheus (2025) already does spatial counterfactual target discovery and held-out-patient evaluation; PHAROS (a September 2026 preprint) searches target-directed combinations with sample-based robustness-aware reranking; a MICCAI 2026 method evaluates counterfactual spatial-cell influence with core-level bootstrap; and SPAD-CFR (Biology, 2026) proposes spatial counterfactual tissue reprogramming including melanoma immune-focused interventions.
+Primary question: when one or more complete spatial-proteomics marker channels are missing and reconstructed by a foundation model, do the signed counterfactual target recommendations and held-out-patient model-predicted CD8+ infiltration changes remain faithful to results from fully measured channels?
 
-## Current decision
+This is a candidate research question—not a confirmed gap or a claim of a new algorithm. The proposed contribution is downstream **intervention-decision fidelity**, not generic virtual staining, spatial counterfactual generation, cross-panel transfer or Jaccard stability.
 
-- **No-go:** presenting bootstrap, Jaccard similarity, or repeated Morpheus runs alone as a novel algorithm.
-- **Conditional next step:** investigate whether a more substantive question about cross-method intervention decision utility or cross-cohort/platform transfer is feasible with compatible data and endpoints.
-- **Pilot may proceed for feasibility/familiarization:** use a small permitted tutorial/preprocessed artifact to reproduce a baseline, but the pilot is not evidence of novelty.
-- **Scientific boundary:** model-predicted uplift is not observed therapeutic effect, causal evidence, clinical utility, or patient-specific treatment advice.
+## Why the project changed
 
-## Work completed in this repository
+Morpheus already discovers spatial-proteomic counterfactual target combinations and evaluates them on held-out patients. SPAD-CFR and Celcomen cover spatial counterfactual/generative perturbation modeling. VirTues and Spatium cover foundation-model representations and virtual reconstruction of spatial protein markers; spora has standardized virtual-staining and cross-cohort benchmarks. Therefore, broad combinations, virtual staining, spatial counterfactuals or cross-platform transfer are not enough as novelty claims.
 
-- First-pass literature, paper Methods, public-code, notebook, dataset and prior-method audits.
-- Updated prior-art addendum for recent spatial counterfactual methods.
-- Novelty assessment explicitly records a no-go decision for the current generic robustness-only framing.
-- Pivot candidates and a method/dataset compatibility matrix.
-- Written decision-gate protocol and reproducibility run log.
-- Generic analysis helpers: target selection frequency, pairwise/full-set Jaccard, signed-direction consistency, patient-equal-weight predicted uplift, and patient-level bootstrap confidence intervals.
-- Six synthetic unit tests for those helpers; recorded local result: **6 passed**. These tests validate generic metric code only—not Morpheus, its data, or a biological hypothesis.
-- No raw data have been committed.
+The candidate question is whether good marker reconstruction scores can still mask changes in the *selected signed target set* or in its downstream model-predicted objective. This may be a useful gap, but it requires more prior-art review and a dataset feasibility gate.
+
+## Work completed in the repository
+
+- Updated literature audit with VirTues, Spatium, Celcomen, spora, the 2026 anti-PD-1 melanoma spatial-mIF dataset and the GSE300793/GSE300445 melanoma cohort.
+- Updated novelty assessment and research question.
+- Candidate study protocol with hypotheses, leakage-safe design, outcomes and go/no-go criteria.
+- Method/dataset compatibility matrix and decision-gate protocol.
+- Generic target-stability metric code from the previous phase.
+- New panel-shift metrics for marker reconstruction error, signed intervention-set fidelity/direction changes and patient-level predicted-uplift fidelity.
+- Unit tests for both helper modules. Synthetic tests from the previous phase recorded **6 passed**; the new panel-shift tests have been added but a completed CI run has not been verified.
+- A GitHub Actions test workflow. No raw data have been committed.
 
 ## Next steps, in order
 
-1. Finish reading the full Morpheus supplementary PDF. Its download redirect could not be retrieved in the current execution environment.
-2. Verify reuse terms for the exact code/data artifacts and map marker/endpoint compatibility across candidate methods.
-3. Compare Candidate A (cross-method intervention decision utility) and Candidate B (cross-cohort/platform transfer) against current prior art.
-4. If a small permitted tutorial bundle is obtainable in a network-enabled environment, reproduce a published baseline and record compute needs.
-5. Select one primary question only after the compatibility/prior-art gate passes.
+1. Finish full supplementary/prior-art review for Morpheus and the newer virtual-tissue methods.
+2. Audit SPORA/spora candidate datasets for patient IDs, CD8/T-cell labels, measured candidate target markers, foundation-model training exposure, and precise data-use terms.
+3. Pick one permitted cohort and run a small masked-channel reconstruction smoke test.
+4. Reproduce the target-discovery baseline or explicitly define a surrogate if the published implementation is not compatible.
+5. Compare measured-channel reference, no-imputation, simple imputation and foundation-model reconstruction on the same held-out patients, using signed target-set fidelity and model-predicted uplift fidelity.
+6. Proceed to a full paper only if the exact gap survives prior art and the pilot confirms that the analysis changes a meaningful decision beyond marker-level reconstruction metrics.
 
 ## Repository map
 
-- [Research question and revised scope](docs/research_question.md)
-- [Initial literature review](docs/literature_review.md)
+- [Research question](docs/research_question.md)
+- [Full candidate study protocol](docs/virtual_marker_counterfactual_study.md)
+- [Literature review](docs/literature_review.md)
 - [Novelty assessment](docs/novelty_assessment.md)
-- [Existing-method comparison matrix](docs/existing_methods_matrix.md)
-- [October 2026 related-work addendum](docs/related_work_addendum_2026.md)
-- [Pivot candidates](docs/pivot_candidates.md)
+- [Related-work addendum](docs/related_work_addendum_2026.md)
 - [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
+- [Pivot candidates](docs/pivot_candidates.md)
 - [Morpheus code audit](docs/morpheus_code_audit.md)
-- [Dataset feasibility and permissions](docs/dataset_audit.md)
-- [Prespecified analysis plan](docs/analysis_plan.md)
+- [Dataset feasibility audit](docs/dataset_audit.md)
+- [Analysis plan](docs/analysis_plan.md)
 - [Decision-gate protocol](docs/decision_gate_protocol.md)
 - [Reproducibility run log](docs/reproducibility_run_log.md)
-- [Analysis helper functions](analysis/target_stability.py)
-- [Unit tests](tests/test_target_stability.py)
-- [Data handling policy](data/README.md)
+- [Target stability metrics](analysis/target_stability.py)
+- [Panel-shift fidelity metrics](analysis/panel_shift_metrics.py)
+- [Target stability tests](tests/test_target_stability.py)
+- [Panel-shift tests](tests/test_panel_shift_metrics.py)
 
-## Key prior-art links
+## Important data and interpretation limits
 
-1. Morpheus (2025), *Identifying perturbations that boost T-cell infiltration into tumours via counterfactual learning of their spatial proteomic profiles*: https://doi.org/10.1038/s41551-025-01357-0
-2. PHAROS (bioRxiv preprint, September 2026): https://www.biorxiv.org/content/10.64898/2026.09.08.749477v1.full
-3. Anzum et al., MICCAI 2026, *A Counterfactual Framework for Directional Cell-Cell Interaction Analysis in Spatial Transcriptomics*: https://papers.miccai.org/miccai-2026/0006-Paper6105.html
-4. Ding et al., Biology 2026, *Counterfactual Diffusion Modeling Enables Spatially Targeted Reprogramming of Tissue Microenvironments*: https://doi.org/10.3390/biology15141097
-5. Original melanoma IMC data-for-analysis record: https://doi.org/10.5281/zenodo.5994136
+- The VirTues paper reports that the Morpheus/Wang dataset cannot be redistributed in the harmonized corpus because of licensing restrictions. Do not assume the original Morpheus data are freely reusable just because article or code links are public.
+- The current spora website describes 35 cohorts, 5,477 patients and five imaging technologies; the VirTues paper reports its own 32-cohort model corpus. Those inventories have different scopes.
+- A full-measurement reference is still a model output, not a biological ground truth.
+- Model-predicted CD8+ infiltration uplift is not observed therapeutic effect, causal evidence, clinical utility or patient-specific advice.
+- No spatial data archive has been downloaded, and no Morpheus/VirTues/SPAD-CFR/Celcomen model run has been executed in this project.
+- This repository is public. No claim about novelty or patentability is made. Consult qualified institutional/IP advice before disclosing enabling details of any genuinely distinct invention.
 
-## Data and intellectual property
+## Key sources
 
-Do not upload raw or restricted data to GitHub. The original melanoma data record's license field was not clear in this audit; verify reuse rights for the exact artifact. The article's CC BY-NC-ND license does not automatically license separate dataset or code assets.
-
-This repository is public. If later work appears genuinely inventive, get qualified institutional/IP advice before disclosing enabling details. No patentability claim is made.
+1. Morpheus (2025): https://doi.org/10.1038/s41551-025-01357-0
+2. VirTues (Nature, 2026): https://doi.org/10.1038/s41586-026-10884-y
+3. Spatium (2026): https://pmc.ncbi.nlm.nih.gov/articles/PMC13419744/
+4. Celcomen (Nature Communications, 2026): https://doi.org/10.1038/s41467-026-69856-5
+5. SPAD-CFR (Biology, 2026): https://doi.org/10.3390/biology15141097
+6. spora data documentation: https://spora.epfl.ch/docs/index.html
+7. Anti-PD-1 melanoma spatial-mIF data: https://doi.org/10.5281/zenodo.16898362

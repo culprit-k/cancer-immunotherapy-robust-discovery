@@ -1,10 +1,10 @@
 # HCC discovery panel parsed; config remains a non-runnable template.
 # Archive MD5 and marker inventory are verified in docs/discovery_panel_audit.md.
-# Model input compatibility, preprocessing, cohort exposure, endpoint and baseline remain unresolved.
+# Confirmed blocker: HCC TIFFs are already normalized, while VirTues applies clipping/log1p/blur/standardization. Do not run this pairing unless compatible original-scale inputs and required statistics are recovered. Model exposure, endpoint and baseline also remain unresolved.
 # Do not execute as a study until every CHANGE_ME and each pre-inference gate is resolved.
 study:
   title: "Counterfactual recommendation fidelity under virtual marker reconstruction"
-  status: "discovery_archive_and_panel_verified_pre_inference"
+  status: "panel_verified_but_input_contract_blocked_no_go_for_inference"
   random_seed: 20261025
 
 dataset:

@@ -1,15 +1,15 @@
 # Preliminary analysis plan
 
-**Status (25 October 2026): prespecified feasibility plan; conditional GO for a pilot only. Full study depends on prior-art, license, and baseline reproduction gates.**
+**Status (25 October 2026): exploratory feasibility plan only. The generic robustness-only paper has a NO-GO novelty decision; this plan documents a possible reproducibility pilot, not a validated primary study question.**
 
 ## Objective
 
-Evaluate whether variation in patient/core sampling and variation in model seeds/retraining change the complete signed molecular target sets proposed by spatial-proteomic counterfactual discovery, and whether a stability-aware consensus has better held-out-patient model-predicted CD8+ infiltration uplift than the reproduced published strategy at a matched target budget.
+For a preliminary reproducibility audit, estimate whether variation in patient/core sampling and model seeds/retraining changes the complete signed molecular target sets proposed by spatial-proteomic counterfactual discovery, and whether a stability-aware consensus has different held-out-patient model-predicted CD8+ infiltration uplift than the reproduced published strategy at a matched target budget.
 
-This is not a clinical treatment study. Predicted counterfactual change is not observed therapeutic effect or causal evidence.
+This is not currently the primary novelty claim. After prior-art review, the project's preferred next step is to assess cross-method intervention decision utility or cross-cohort/platform transfer first. Do not use this plan to imply the robustness-only idea is novel. This is not a clinical treatment study. Predicted counterfactual change is not observed therapeutic effect or causal evidence.
 
 ## Stage 0 — Literature, permissions and reproduction
-- Read the complete Morpheus supplement and expand the prior-art search (robust counterfactual sets, stability selection, intervention set stability, patient/core resampling, model-seed variability).
+- Read the complete Morpheus supplement and expand the prior-art search (robust counterfactual sets, stability selection, intervention-set stability, patient/core resampling, model-seed variability, spatial counterfactual models).
 - Verify license/terms for the exact data and source-code artifacts.
 - Reproduce at least one published Morpheus baseline result from an authorized public tutorial/preprocessed artifact.
 - Record version, checksum, environment, patient split, preprocessing, thresholding and compute time.
@@ -22,7 +22,7 @@ This is not a clinical treatment study. Predicted counterfactual change is not o
 - Measure per-patch counterfactual cost before attempting repeated full discovery.
 - Continue only when the endpoint, data terms and evaluation path are reproducible.
 
-## Stage 2 — Leakage-safe study design
+## Stage 2 — Leakage-safe study design, if justified after Gate 0
 - Establish outer held-out patient folds before discovery. Keep all sections/cores/patches of a patient together.
 - Use only inner grouped validation to select thresholds, preprocessing choices and other hyperparameters.
 - Repeat patient-grouped training resamples and independently vary model initialization/seeds within each outer training fold.
@@ -61,6 +61,6 @@ Finalize the exact strategy-generation and target-budget rules before inspecting
 - Report negative or null findings. Do not label a computational prediction as causal, experimentally validated, therapeutically effective or clinically useful without independent evidence.
 
 ## Decision gates
-- Proceed: full supplement/prior-art audit leaves a specific gap; rights are clear; baseline is reproduced; pilot validates data and patient-level endpoint; compute supports the protocol.
-- Refine: stability metrics are useful but add little beyond existing methods, or full retraining is too costly while cached outputs remain suitable for an explicitly exploratory reanalysis.
-- Pivot: equivalent methods already exist, data rights/metadata are inadequate, or the scientific endpoint cannot be evaluated without leakage.
+- Proceed only if the broader prior-art/compatibility gate identifies a distinct gap, rights are clear, a baseline is reproduced, the pilot validates data and patient-level endpoint, and compute supports the protocol.
+- Refine if stability metrics are useful but add little beyond existing methods, or full retraining is too costly while cached outputs remain suitable for an explicitly exploratory reanalysis.
+- Pivot if equivalent methods already exist, data rights/metadata are inadequate, or the scientific endpoint cannot be evaluated without leakage.

@@ -94,3 +94,10 @@
 - Hardened the report harness to require patient_id in the reconstruction table, calculate marker reconstruction metrics within each patient, and report patient-macro-averaged error as the primary metric. Pooled-cell metrics are retained only as a secondary diagnostic.
 - Added a synthetic test showing how a patient with many more cells would otherwise dominate the pooled error.
 - Updated local synthetic suite: **19 passed** (6 target stability + 9 panel-shift metric + 4 panel-shift report tests). The locally materialized copies reflect the updated source and tests from GitHub.
+
+
+### Patient-macro reconstruction error safeguard
+- Updated the report schema to require `patient_id` for every reconstruction row.
+- Per-marker MAE/RMSE/bias/correlation are now computed within each patient first and then macro-averaged across patients; pooled-cell metrics are explicitly secondary. This prevents patients with many more cells from dominating the primary reconstruction summary.
+- Added a synthetic test that adds many rows to one patient and checks equal patient weighting.
+- The previous local test run was **18 passed** before this latest test was added. The current committed suite should contain 19 tests, but a completed hosted CI run for the latest commit has not been verified; do not state 19 passed until CI or a local run confirms it.

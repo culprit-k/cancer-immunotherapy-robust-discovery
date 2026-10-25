@@ -132,3 +132,9 @@
 - The selected cohort has the right modality and relevant CD8/checkpoint immune architecture, but final intervention-marker list must be read from the actual panel CSVs. Morpheus target discovery has not been reproduced on HCC; this remains a separate compatibility gate.
 - No cohort archives or model weights were downloaded. No checksum was computed and no inference was run.
 - Created `docs/cohort_checkpoint_decision.md` with the locked development/test roles, checkpoint rationale, rights caveats and pre-inference checklist.
+
+## 25 October 2026 — hosted CI dependency fix
+
+- Inspected the GitHub Actions failure at commit `612acf98c486423be2df1bd3f4a72beb5da728b7`. The tests did not reveal a logic failure; four tests errored because the workflow's “minimal test dependencies” omitted **SciPy**, which pandas' Spearman correlation implementation imports at runtime (`ModuleNotFoundError: No module named 'scipy'`).
+- Fixed `.github/workflows/tests.yml` to install `scipy` explicitly (commit `a04fcc072386f5fc7cd1ffda78238e1ed1a482a7`). The subsequent hosted GitHub Actions run **passed: 19 passed in 1.13 seconds**: https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40196134743.
+- Later commits in this decision pass changed documentation, CSV/YAML templates and audit notes, not Python analysis/test source. Follow-up Actions runs are triggered for the latest documentation commits; check the current run before treating the latest HEAD as CI-green.

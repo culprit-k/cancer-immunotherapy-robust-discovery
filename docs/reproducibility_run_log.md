@@ -88,3 +88,9 @@
 - Added three synthetic tests for the report builder, including matched-patient validation and required-column checks.
 - Updated local synthetic test run after adding the report harness: **18 passed** (6 target-stability + 9 panel-shift metric + 3 report-builder tests).
 - This harness only evaluates prepared outputs. It does not download data, run VirTues/Morpheus, reconstruct channels or generate counterfactual target sets.
+
+
+### Patient-level reconstruction error correction
+- Hardened the report harness to require patient_id in the reconstruction table, calculate marker reconstruction metrics within each patient, and report patient-macro-averaged error as the primary metric. Pooled-cell metrics are retained only as a secondary diagnostic.
+- Added a synthetic test showing how a patient with many more cells would otherwise dominate the pooled error.
+- Updated local synthetic suite: **19 passed** (6 target stability + 9 panel-shift metric + 4 panel-shift report tests). The locally materialized copies reflect the updated source and tests from GitHub.

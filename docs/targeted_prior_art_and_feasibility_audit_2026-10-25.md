@@ -13,7 +13,7 @@ No real-data experiment, model inference, checkpoint audit, or biological valida
 | Morpheus, Nature Biomedical Engineering (2025), DOI 10.1038/s41551-025-01357-0 | Spatial-proteomic counterfactual perturbations intended to improve predicted CD8+ infiltration; held-out patient evaluation and selected in-vitro validation. | Do not claim spatial counterfactual target discovery, CD8 objective, target combinations, or patient-level testing as new. |
 | VirTues, Nature (2026), DOI 10.1038/s41586-026-10884-y | Foundation model for spatial-proteomic marker reconstruction, virtual staining, cross-panel/technology transfer, biomarkers and cell phenotyping. The paper describes marker-masking experiments followed by downstream B-/T-cell phenotyping. | Generic virtual staining and preservation of downstream cell typing are not novel. |
 | Spatium: A Protein Language Foundation Model for Spatial Proteomics (2026) | Protein imputation on held-out tissue sections and spatial-proteomics representations. | Generic spatial protein imputation or section-level validation is not novel. Check full methods and code before a final novelty claim. |
-| CONCERT, Nature (2025/2026 online record), DOI and exact release metadata to verify | Spatial-transcriptomics method combines missing-data imputation with counterfactual perturbation-response simulation, including boundary-focused missingness experiments. Different modality, but conceptually close to imputation-aware counterfactual prediction. | This is a material adjacent prior-art risk. The project must distinguish *intervention-set decision fidelity under complete protein-channel reconstruction* from generic imputation-plus-counterfactual prediction. |
+| CONCERT (bioRxiv preprint, 20 November 2025; DOI 10.1101/2025.11.08.686890) | Spatial-transcriptomics method combines spatial counterfactual perturbation-response prediction, missing-region imputation and calibrated predictive uncertainty. Different modality and task, but conceptually close to imputation-aware counterfactual prediction. | This is a material adjacent prior-art risk. The project must distinguish *intervention-set decision fidelity under complete protein-channel reconstruction* from generic imputation-plus-counterfactual prediction. |
 | iScience spatial-metabolomics missing-data benchmark (2026), DOI 10.1016/j.isci.2026.115203 | Benchmarks reconstruction accuracy and preservation of downstream spatial clustering. | Downstream evaluation beyond reconstruction error is established; the novelty must be intervention decisions, not just adding a downstream metric. |
 | Robust counterfactual explanation surveys and recent uncertainty-aware counterfactual work | Generic counterfactual robustness, uncertainty and stability. | A new stability score or uncertainty plot alone is not sufficient. |
 
@@ -22,10 +22,12 @@ No real-data experiment, model inference, checkpoint audit, or biological valida
 - Morpheus: https://www.nature.com/articles/s41551-025-01357-0
 - VirTues article: https://www.nature.com/articles/s41586-026-10884-y
 - VirTues code/model information and weight licences: https://github.com/bunnelab/virtues
-- Spatium: https://pmc.ncbi.nlm.nih.gov/articles/PMC13419744/
-- CONCERT: https://pmc.ncbi.nlm.nih.gov/articles/PMC12642540/
+- Spatium preprint (DOI 10.64898/2026.07.23.740264): https://pmc.ncbi.nlm.nih.gov/articles/PMC13419744/
+- CONCERT preprint (DOI 10.1101/2025.11.08.686890): https://pmc.ncbi.nlm.nih.gov/articles/PMC12642540/
 - Spatial metabolomics imputation benchmark: https://doi.org/10.1016/j.isci.2026.115203
 - spora data/platform documentation: https://spora.epfl.ch/docs/
+- BioImage Archive data-licence FAQ: https://www.ebi.ac.uk/bioimage-archive/help-faq/
+- BioImage Archive policies: https://www.ebi.ac.uk/bioimage-archive/help-policies/
 - spora benchmark licence: https://spora.epfl.ch/docs/bench/licence.html
 
 This was a targeted search, not a systematic review. Search terms, conference proceedings, preprints, supplements and newer releases may reveal additional overlap.
@@ -55,7 +57,7 @@ The official repository lists:
 - `virtues-sp31`: trained on 31 datasets; MIT-licensed weights.
 - `virtues-imc14`: trained on 14 IMC datasets; CC BY-NC 4.0 weights.
 
-The model-weight licence is separate from the code licence and from the licence/terms for each dataset. A dataset cannot be called held out merely because a benchmark uses a leave-one-dataset-out evaluation mode: the exact checkpoint and its training cohort list must be verified. The standard `virtues-sp32` checkpoint is not an independent test for any cohort included in its 32 training datasets. Commercial/patent intentions also require careful review of non-commercial weight restrictions and all underlying dataset terms.
+The model-weight licence is separate from the code licence and from the licence/terms for each dataset. BioImage Archive states that accessions can carry their own licence; where no licence is stated, its EMBL-EBI Terms of Use apply. Therefore inspect the exact cohort accession and terms instead of assuming either unrestricted use or a restriction. A dataset cannot be called held out merely because a benchmark uses a leave-one-dataset-out evaluation mode: the exact checkpoint and its training cohort list must be verified. The standard `virtues-sp32` checkpoint is not an independent test for any cohort included in its 32 training datasets. Commercial/patent intentions also require careful review of non-commercial weight restrictions and all underlying dataset terms.
 
 ### Candidate cohort
 

@@ -42,6 +42,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 
 - [Research question](docs/research_question.md)
 - [Full candidate study protocol](docs/virtual_marker_counterfactual_study.md)
+- [Manuscript outline](docs/manuscript_outline.md)
 - [Literature review](docs/literature_review.md)
 - [Novelty assessment](docs/novelty_assessment.md)
 - [Related-work addendum](docs/related_work_addendum_2026.md)
@@ -64,9 +65,10 @@ The candidate question is whether good marker reconstruction scores can still ma
 
 ## Current recommended dataset sequence
 
-1. Use allam2022spatially only for a small data-loading/channel-mask smoke test if its dataset-specific terms and labels pass.
+1. Check rigamonti2024integrating first for a held-out recommendation-fidelity test: spora lists 108 patients / 158 IMC images and a CD8 T-cell annotation. Use only after verifying the panel, exact data terms and a VirTues checkpoint trained without this cohort.
 2. Audit hoch2022multiplexed for the biological development run; because VirTues evaluates this cohort, do not present the standard full VirTues model on it as independent generalization.
-3. Check moldoveanu2022spatially and xiao2022multiplexed for unseen-cohort evaluation only after verifying shared markers, measured immune labels, exact data terms and whether VirTues saw the cohort during training.
+3. Use allam2022spatially only for a small data-loading/channel-mask smoke test if its dataset-specific terms and labels pass.
+4. Check moldoveanu2022spatially and xiao2022multiplexed as alternatives after verifying shared markers, measured immune labels, exact data terms and foundation-model exposure.
 
 No dataset is approved for the final analysis yet. The cohort screening CSV and YAML pilot config are templates with unresolved fields; they are not evidence that a cohort has passed the gates.
 

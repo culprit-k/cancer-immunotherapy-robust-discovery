@@ -173,3 +173,12 @@ This pins the file for reproducible future loading. It does not verify exact coh
 - The workflow failed only at artifact upload: the configured path contained an escaped GitHub expression (`\\${{ runner.temp }}`) and became an invalid path beginning with a backslash. Corrected it to `${{ runner.temp }}/salie-hcc-discovery-audit.json`, matching the script's `$RUNNER_TEMP` output destination. A fresh run is required to confirm artifact publication.
 - The audit's current Zenodo API response for record 10794904 reports `cc-by-4.0` with the license field present. Keep a note of the landing-page display discrepancy; do not describe legal review as complete based only on the API field.
 - Panel-level caution: the panel contains CD8a, PD1, PD-L1, TIGIT, Tim3 and Lag3, but this does not automatically make the cohort compatible with Morpheus's counterfactual intervention set or prove the model's target-discovery objective transfers to HCC. Map target markers and cell-label/end-point definitions before inference.
+
+
+## 25 October 2026 — corrected HCC audit workflow verified end-to-end
+
+- Corrected workflow run [40198884781](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40198884781) completed successfully, including the metadata-only artifact upload. Artifact: `salie-hcc-discovery-metadata-audit`, ID `12601036644`, expires 24 November 2026 UTC; artifact digest `sha256:91b9b9fc0dd3fe1fda5d488822e2f782ba156dd34710e2c8e5144a1a9e0e115d`.
+- Downloaded and inspected the artifact JSON independently. It confirms archive integrity (`1541132381` bytes; MD5 `a842fa253ac2f0eda3cbf4d41e1b0ec1`), panel `DiscoveryCohort_panel.csv`, 42 parsed rows and columns `Channel`, `MetalTag`, `Target`. No raw images or masks are in the artifact.
+- The current Zenodo API metadata for both records reports `cc-by-4.0` and a present license field. The 42-patient cohort remains metadata-only and was not downloaded. Keep the landing-page/API display discrepancy documented and re-check source terms before redistribution.
+- The latest analysis-helper test check on commit `cd8bc5c524d21814979fdf3bff54a766b2b865f5` passed: [GitHub Actions test job](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40199745223/job/121188188741).
+- Status is now **archive integrity + panel parsing + audit artifact publication verified**. Model preprocessing compatibility, model exposure, endpoint validity, baseline compatibility, inference and biological interpretation remain pending.

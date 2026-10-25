@@ -189,3 +189,8 @@ The public spora dataset browser lists a small set of particularly relevant coho
 - **schurch2020coordinated**: colorectal cancer, CODEX/H&E, 35 patients / 251 images; a potential secondary tissue-architecture cohort but not a drop-in match for an IMC panel.
 
 Source catalogue: https://spora.bioimagearchive.org/projects/spora/dataset. Dataset-level terms vary, and a cohort should not be treated as reusable simply because it appears in the catalogue. See docs/dataset_shortlist.md for the exact eligibility checklist. These counts and annotations come from the public catalogue and do not yet represent locally inspected files.
+
+
+## 16. Adjacent missing-data benchmark in spatial omics (2026)
+
+*Overcoming missing data in spatial metabolomics with machine learning imputation to accelerate downstream discovery* (iScience, 17 April 2026; DOI 10.1016/j.isci.2026.115203) benchmarks eight imputation methods and evaluates both imputation accuracy and preservation of spatial clustering. It is a useful conceptual precedent that reconstruction quality and downstream structure should be evaluated together, but it concerns mass-spectrometry imaging of spatial metabolites rather than multiplexed spatial proteins, and it does not establish whether counterfactual immunotherapy intervention recommendations remain faithful. It reinforces the need for a clearly defined downstream decision endpoint rather than imputation accuracy alone.

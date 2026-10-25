@@ -210,7 +210,7 @@ The public HCC image stacks are PENGUIN-normalized to 0–1 with background remo
 
 ### Checkpoint exposure decision
 
-The selected official checkpoint is `virtues-imc14/model.safetensors`, pinned at revision `43fd00fce052c46f9e0cc1a87f42806620632319`, SHA-256 `714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f`, 173,543,728 bytes. The VirTues Methods list the Salié HCC study as ref. 95 among seven IMC cohorts added to the extended corpus, while the checkpoint is the published core 14-IMC model. Therefore direct Salié-study exposure is not indicated by the published corpus inventory; this remains reference-level evidence rather than a separate accession-to-training-job certificate. Do not use `virtues-sp32` or `virtues-sp31` for held-out HCC testing because they include the extended corpus.
+The selected official checkpoint is `virtues-imc14/model.safetensors`, pinned at revision `43fd00fce052c46f9e0cc1a87f42806620632319`, SHA-256 `714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f`, 173,543,728 bytes. The VirTues Methods list the Salié HCC study as ref. 95 among seven IMC cohorts added to the extended corpus, while the checkpoint is the published core 14-IMC model. Therefore direct Salié-study exposure is not indicated for the core-14 checkpoint by the published corpus inventory; this remains reference-level evidence rather than a separate accession-to-training-job certificate. Do not use `virtues-sp32` for held-out HCC testing because it includes the HCC study. The precise cohort omitted from `virtues-sp31` was not verified, so do not use it for held-out HCC testing unless the released training inventory confirms Salié HCC is excluded.
 
 ### Scientific status and next gate
 

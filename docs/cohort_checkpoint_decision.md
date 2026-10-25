@@ -34,7 +34,7 @@ Why this variant:
 
 1. **Development / method calibration:** 54-patient discovery cohort (Zenodo 10793609), patient-level splits only. Use this cohort to settle image preprocessing, panel-to-marker mapping, endpoint definition, masking cases and validation-calibrated thresholds.
 2. **External evaluation:** 42-patient ICI cohort (Zenodo 10794904), untouched until the pipeline, target budget, marker shortlist, threshold and reliability/abstention rule are frozen. Do not tune on this test cohort.
-3. **Reconstruction checkpoint:** freeze `virtues-imc14`, pin the downloaded snapshot to an immutable Hugging Face commit and store SHA-256, file size, download date and model licence text in the run log. If the exact model-training exclusion cannot be confirmed, report it as a *candidate external checkpoint with uncertain exposure*, not as strictly independent.
+3. **Reconstruction checkpoint:** freeze `virtues-imc14`, use the pinned immutable revision `43fd00fce052c46f9e0cc1a87f42806620632319`, SHA-256 `714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f`, file size 173543728 bytes, and retrieval date 2026-10-25T13:10:07.676504+00:00; do not substitute a later model revision silently. Exact file identity is now pinned, but if the model-training exclusion cannot be confirmed, report it as a *candidate external checkpoint with uncertain exposure*, not as strictly independent.
 4. **Evaluation unit:** patient. All ROIs/images from a patient must remain in one split. Never treat cells, tiles or ROIs as independent patients.
 5. **Primary output:** signed intervention recommendation fidelity (marker identity plus increase/decrease direction) and patient-level change in the model-predicted CD8 objective between full-panel and reconstructed-panel runs. Full-panel output is a model reference, not biological ground truth. Predicted change is not a demonstrated treatment effect.
 
@@ -59,3 +59,19 @@ This establishes a **specific, scientifically compatible cohort pair and the mos
 ## Checkpoint pinning implementation
 
 A small script, `scripts/resolve_virtues_imc14_checkpoint.py`, resolves the official Hugging Face repository's current immutable revision, downloads only `virtues-imc14/model.safetensors` to a temporary runner cache, computes file SHA-256/size and emits a JSON provenance manifest. The workflow `.github/workflows/resolve_virtues_imc14_checkpoint.yml` uploads only that manifest (not the model weights). Once the first run finishes, copy the exact revision and checksum into the study configuration and run log. This does not independently certify training exposure; it only makes the fetched artifact reproducible.
+
+
+## Retrieved checkpoint provenance — verified 25 October 2026
+
+The official checkpoint was downloaded on an ephemeral GitHub Actions runner from the official Hugging Face repository at the immutable revision returned by the Hugging Face API. The script calculated the SHA-256 of the actual downloaded weight file. **The 173,543,728-byte model file itself was not committed to the public GitHub repository; only the JSON provenance manifest was uploaded as an Actions artifact.**
+
+- Repository/file: `bunnelab/virtues` / `virtues-imc14/model.safetensors`
+- Immutable repository revision: `43fd00fce052c46f9e0cc1a87f42806620632319`
+- Weight-file SHA-256: `714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f`
+- File size: `173543728` bytes
+- Retrieved timestamp: `2026-10-25T13:10:07.676504+00:00`
+- Successful resolver workflow: https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40196348184
+- Manifest artifact: `virtues-imc14-checkpoint-manifest` (artifact ID `12600630655`; expires 24 November 2026 UTC)
+- Hashing procedure: `scripts/resolve_virtues_imc14_checkpoint.py`
+
+This resolves version pinning and file integrity for that retrieved copy. It does **not** by itself prove that the HCC accessions were absent from all pretraining/fine-tuning, does not clear the 42-patient dataset's source-level licence discrepancy, and does not mean inference has been run. Preserve the checksum/revision in all future runs; if the file is re-downloaded from a different revision, treat it as a different model.

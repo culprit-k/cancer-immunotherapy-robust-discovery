@@ -46,6 +46,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Literature review](docs/literature_review.md)
 - [Novelty assessment](docs/novelty_assessment.md)
 - [Targeted prior-art and feasibility audit (25 Oct 2026)](docs/targeted_prior_art_and_feasibility_audit_2026-10-25.md)
+- [Cohort and checkpoint decision record](docs/cohort_checkpoint_decision.md)
 - [Related-work addendum](docs/related_work_addendum_2026.md)
 - [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
 - [Dataset shortlist and eligibility checklist](docs/dataset_shortlist.md)
@@ -64,14 +65,19 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Panel-shift metric tests](tests/test_panel_shift_metrics.py)
 - [Panel-shift report tests](tests/test_panel_shift_report.py)
 
-## Current recommended dataset sequence
+## Current cohort and checkpoint decision
 
-1. Treat rigamonti2024integrating as a pipeline smoke-test cohort, not the primary target-discovery cohort: its published 24-marker panel supports CD8 annotation but does not obviously contain the chemokine target set needed for a Morpheus-style intervention-fidelity test.
-2. Evaluate the Godbole et al. 2026 melanoma IMC cohort (Zenodo 15124735) as a possible small external exploratory test: its panel includes CD8a, PD-1, PD-L1, CTLA-4, TIM-3, LAG-3, TIGIT, CCL2 and CCL4, but it has only six patients and the Zenodo record displays no explicit licence. Do not use it until terms are clarified, and do not call six patients definitive validation.
-3. Xiao et al. 2022 has a useful CD8a/PD-1/PD-L1 panel, but the VirTues 32-cohort corpus includes this cohort; the standard virtues-sp32 weights are not an independent imputer for it. Any use requires an alternative independent imputer or leave-one-cohort-out retraining, plus a restricted target set justified in advance.
-4. Keep hoch2022multiplexed as a biological development candidate only after auditing its relation to the Morpheus melanoma data and the exact model training exposure. Use allam2022spatially only for pipeline smoke testing if terms and labels pass.
+**Best current choice:** the Salié et al. HCC IMC cohort pair.
 
-No dataset is approved for the final analysis yet. The cohort screening CSV and YAML pilot config are templates with unresolved fields; they are not evidence that a cohort has passed the gates.
+- Development/calibration: 54-patient HCC discovery cohort, [Zenodo 10793609](https://zenodo.org/records/10793609). The NLM Dataset Catalog reports CC BY 4.0.
+- Untouched external evaluation: 42-patient ICI-treatment HCC cohort, [Zenodo 10794904](https://zenodo.org/records/10794904). OpenAIRE metadata reports CC BY, but the Zenodo Rights/License field is blank, so record this discrepancy and confirm with the data contact or institution where needed.
+- Reconstruction checkpoint candidate: official VirTues `virtues-imc14/model.safetensors` from [Hugging Face](https://huggingface.co/bunnelab/virtues), with source code at [bunnelab/virtues](https://github.com/bunnelab/virtues). The variant is trained on 14 IMC cohorts and its weights are CC BY-NC 4.0. It is the best candidate based on the published training-inventory grouping; exact exposure and file hash still need final pinning. Do not use `virtues-sp32` or `virtues-sp31` for a clean held-out claim.
+
+The 54-patient cohort is for development only; keep the 42-patient cohort untouched until target markers, preprocessing, thresholds and the analysis pipeline are frozen. The HCC marker panels must be inspected before locking the intervention set. Morpheus is not yet directly reproduced on HCC.
+
+Full decision record: [Cohort and checkpoint decision](docs/cohort_checkpoint_decision.md).
+
+The project is now at **candidate selection, not data-ready execution**. No dataset archive or model weights have been downloaded, checksummed or run yet.
 
 ## Important data and interpretation limits
 

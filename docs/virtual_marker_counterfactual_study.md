@@ -194,3 +194,14 @@ The helper expects clean, held-out data already exported by the model pipeline. 
 4. **Later alternatives:** moldoveanu2022spatially and xiao2022multiplexed, subject to the same checks.
 
 Do not treat a paper's leave-one-dataset-out experiment as proof that a released default checkpoint was trained without that dataset. The exact checkpoint file and its recorded training cohort list must match the evaluation claim.
+
+## Selected cohort and reconstruction checkpoint (25 October 2026)
+
+The operational selection is the Salié et al. HCC IMC cohort pair:
+- Development/calibration: 54-patient discovery cohort, Zenodo 10793609; the NLM Dataset Catalog reports CC BY 4.0.
+- Untouched external test: 42-patient ICI cohort, Zenodo 10794904; OpenAIRE/Datacite metadata reports CC BY, but the direct Zenodo licence field is blank, so this source-level discrepancy must be resolved where required before redistribution.
+- Reconstruction checkpoint candidate: `bunnelab/virtues`, `virtues-imc14/model.safetensors`, model weights CC BY-NC 4.0. This is the same-modality 14-IMC variant and is preferred over `virtues-sp32`/`virtues-sp31` because the Salié study is in the extended corpus. Exact checkpoint exposure and the immutable model revision/hash remain to be verified.
+
+The HCC paper reports a 41-plex panel and relevant CD8/checkpoint immune architecture. However, actual `DCCohort_panel.csv` and `ICICohort_panel.csv` have not been inspected locally, and a Morpheus-equivalent counterfactual target pipeline has not been reproduced on HCC. Therefore this establishes a strong *candidate design*, not a completed data-ready experiment. The 42-patient cohort is not to be used for any model, marker, threshold or abstention-rule tuning.
+
+See [cohort/checkpoint decision record](cohort_checkpoint_decision.md) for evidence, licensing boundaries, and the exact pre-inference checklist.

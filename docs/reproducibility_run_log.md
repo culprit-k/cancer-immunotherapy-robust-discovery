@@ -182,3 +182,13 @@ This pins the file for reproducible future loading. It does not verify exact coh
 - The current Zenodo API metadata for both records reports `cc-by-4.0` and a present license field. The 42-patient cohort remains metadata-only and was not downloaded. Keep the landing-page/API display discrepancy documented and re-check source terms before redistribution.
 - The latest analysis-helper test check on commit `cd8bc5c524d21814979fdf3bff54a766b2b865f5` passed: [GitHub Actions test job](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions/runs/40199745223/job/121188188741).
 - Status is now **archive integrity + panel parsing + audit artifact publication verified**. Model preprocessing compatibility, model exposure, endpoint validity, baseline compatibility, inference and biological interpretation remain pending.
+
+
+## 25 October 2026 — preprocessing contract blocks the selected model/data pairing
+
+- Inspected the official VirTues dataset loader and model README. Its pipeline clips at per-tissue 99th percentiles, applies `log1p`, Gaussian blur, then per-tissue log-standardization using quantile/mean/std tables; channels are retained only when a canonical `protein_id` has a matching marker embedding.
+- The verified HCC archive contains 324 TIFFs plus one CSV, with only `DC_img_normalized`, `DC_cellmasks` and `DC_stromamasks` directories. No raw-MCD/raw-intensity directory or VirTues per-tissue preprocessing-statistics tables were present. The Salié paper describes arcsinh transformation of raw channels with cofactor 0.5 for downstream analysis. This is not equivalent to VirTues' preprocessing.
+- Decision changed from conditional pilot to **NO-GO for HCC-normalized-TIFF + VirTues inference** until compatible original-scale data/metadata are obtained or a different compatible model/dataset is chosen. Do not invert normalized TIFF values or apply the VirTues pipeline blindly.
+- Added `docs/data_clarification_request_salie_hcc.md` with a draft author inquiry for original intensities, normalization provenance, channel mapping and cell phenotype labels; it has not been sent.
+- Added `docs/next_execution_plan.md` with staged gates, an explicit alternative if raw data are unavailable, patient-level evaluation rules and go/no-go criteria.
+- The research hypothesis remains plausible but unproven; no inference or biological result has been generated. The next meaningful action is resolving the input contract, not forcing a model run.

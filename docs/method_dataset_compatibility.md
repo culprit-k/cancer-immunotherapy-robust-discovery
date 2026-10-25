@@ -71,3 +71,18 @@ The spora catalogue lists rigamonti2024integrating as 108 patients / 158 IMC ima
 The hoch2022multiplexed melanoma/chemokine cohort (35 patients / 50 IMC images) is more directly relevant biologically, but VirTues already performs cell-typing evaluation on it and training exposure may complicate independent validation. It should be treated as a development cohort or evaluated using a suitably held-out reconstruction checkpoint.
 
 See docs/dataset_shortlist.md for the full candidate ranking and unresolved license/panel gates.
+
+## Selected cohort/checkpoint decision (25 October 2026)
+
+| Component | Selected option | Compatibility / restrictions | Remaining gate |
+|---|---|---|---|
+| Development data | Salié HCC discovery cohort, 54 patients, Zenodo 10793609 | IMC; 41-plex panel, normalized per-channel image stacks, cell/stroma masks; NLM Dataset Catalog reports CC BY 4.0. | Download, checksum, inspect the panel CSV and confirm all image-to-patient mappings. |
+| Independent evaluation data | Salié HCC ICI cohort, 42 patients, Zenodo 10794904 | Same study/panel/IMC modality; treated cohort with CD8/immune architecture and ICI outcome context. OpenAIRE/Datacite metadata reports CC BY; direct Zenodo license display is blank. | Resolve license-display mismatch; validate patient IDs and metadata; keep all ROIs per patient in one split. |
+| Reconstruction checkpoint | VirTues `virtues-imc14/model.safetensors` | Official repository says 14 IMC training datasets; weights CC BY-NC 4.0. The Salié study is grouped among the seven additional IMC cohorts in the extended 32-cohort corpus, so the 14-IMC variant is the best candidate for an exposure-separated run. | Pin immutable model revision/hash at download and verify exact cohort exposure; ask authors if the model card/supplement is ambiguous. |
+| Counterfactual target model | Adapt/reproduce after input audit | HCC panel and disease differ from Morpheus melanoma/CRC settings. VirTues reconstructs markers; it does not itself reproduce Morpheus target discovery. | Do not claim a direct Morpheus reproduction until baseline is run and compatibility established; predefine the CD8 endpoint and target-marker list. |
+
+The 54-patient cohort is assigned to development/calibration only. The 42-patient ICI cohort is untouched external evaluation only; do not use its outcome labels, cell/ROI distributions or reconstruction errors to select targets, thresholds, or an abstention rule. Exact panel and marker names must be read from `DCCohort_panel.csv` and `ICICohort_panel.csv` before finalizing the target set. Never perturb the CD8 marker if the objective is CD8 infiltration.
+
+**Checkpoint choice:** use `virtues-imc14`, not `virtues-sp32` or `virtues-sp31`. All released weights are licensed separately from the MIT-licensed source code; the selected weight variant is non-commercial. If future commercial development or patent licensing is contemplated, obtain the appropriate written permissions and legal review before relying on this checkpoint.
+
+See [cohort/checkpoint decision record](cohort_checkpoint_decision.md) for the rights evidence and exact go/no-go checklist.

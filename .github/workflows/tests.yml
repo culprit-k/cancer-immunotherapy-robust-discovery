@@ -16,6 +16,6 @@ jobs:
         with:
           python-version: "3.11"
       - name: Install minimal test dependencies
-        run: python -m pip install --upgrade pip numpy pandas scipy pytest
+        run: python -m pip install --upgrade pip numpy pandas scipy pytest tifffile
       - name: Run synthetic unit tests
         run: python -m pytest -q

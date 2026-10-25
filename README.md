@@ -19,8 +19,8 @@ The first proposed paper was to measure how spatial-proteomic counterfactual tar
 
 - First-pass literature, paper Methods, public-code, notebook, dataset and prior-method audits.
 - Updated prior-art addendum for recent spatial counterfactual methods.
-- Novelty assessment now explicitly records a no-go decision for the current generic robustness-only framing.
-- Pivot candidates and a decision tree for choosing a stronger question.
+- Novelty assessment explicitly records a no-go decision for the current generic robustness-only framing.
+- Pivot candidates and a method/dataset compatibility matrix.
 - Written decision-gate protocol and reproducibility run log.
 - Generic analysis helpers: target selection frequency, pairwise/full-set Jaccard, signed-direction consistency, patient-equal-weight predicted uplift, and patient-level bootstrap confidence intervals.
 - Six synthetic unit tests for those helpers; recorded local result: **6 passed**. These tests validate generic metric code only—not Morpheus, its data, or a biological hypothesis.
@@ -29,7 +29,7 @@ The first proposed paper was to measure how spatial-proteomic counterfactual tar
 ## Next steps, in order
 
 1. Finish reading the full Morpheus supplementary PDF. Its download redirect could not be retrieved in the current execution environment.
-2. Verify reuse terms for the exact code/data artifacts and build a dataset/method compatibility table.
+2. Verify reuse terms for the exact code/data artifacts and map marker/endpoint compatibility across candidate methods.
 3. Compare Candidate A (cross-method intervention decision utility) and Candidate B (cross-cohort/platform transfer) against current prior art.
 4. If a small permitted tutorial bundle is obtainable in a network-enabled environment, reproduce a published baseline and record compute needs.
 5. Select one primary question only after the compatibility/prior-art gate passes.
@@ -42,6 +42,7 @@ The first proposed paper was to measure how spatial-proteomic counterfactual tar
 - [Existing-method comparison matrix](docs/existing_methods_matrix.md)
 - [October 2026 related-work addendum](docs/related_work_addendum_2026.md)
 - [Pivot candidates](docs/pivot_candidates.md)
+- [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
 - [Morpheus code audit](docs/morpheus_code_audit.md)
 - [Dataset feasibility and permissions](docs/dataset_audit.md)
 - [Prespecified analysis plan](docs/analysis_plan.md)

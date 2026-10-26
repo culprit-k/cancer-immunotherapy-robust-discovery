@@ -1,0 +1,1 @@
+patient_id,roi_id,image_path,cell_mask_path,stromal_mask_path,channel_map_version,qc_status

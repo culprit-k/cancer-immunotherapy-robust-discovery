@@ -24,7 +24,7 @@
 - Exact ordered marker/channel map and UniProt mapping remain unverified.
 - Tensor compatibility and mask semantics are not established by filenames alone.
 - ICI_24 and ICI_39 ROI counts remain discrepant.
-- The virtues-imc14 checkpoint was a candidate only; revision/hash/exposure must be reverified.
+- `virtues-imc14` is the leading checkpoint candidate after paper-level cohort screening; the exact checkpoint-release-to-supplement cohort mapping and pinned code/config still need final confirmation. Its model-file SHA-256 and CC BY-NC 4.0 terms are recorded in `docs/virtues_checkpoint_provenance_2026-10-26.md`.
 - The virtues-sp32 checkpoint is ineligible for held-out evaluation because the Salié HCC cohort is included in its training corpus; virtues-sp31 requires omitted-cohort confirmation.
 
 ## Definition of ready

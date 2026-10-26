@@ -17,6 +17,8 @@ jobs:
         with:
           python-version: "3.12"
       - name: Compile local QC scripts
-        run: python -m py_compile scripts/validate_hcc_manifest.py scripts/hcc_tensor_qc.py scripts/hcc_preinference_preflight.py scripts/hcc_reconstruction_pilot_gate.py
+        run: |
+          python -m py_compile scripts/validate_hcc_manifest.py scripts/hcc_tensor_qc.py scripts/hcc_preinference_preflight.py scripts/hcc_reconstruction_pilot_gate.py
+          bash -n scripts/bootstrap_hcc_public_data.sh
       - name: Run metadata-validator unit tests
         run: python -m unittest discover -s tests -p 'test_validate_hcc_manifest.py' -v

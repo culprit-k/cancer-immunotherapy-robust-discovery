@@ -79,7 +79,7 @@ def validate_manifest(
             pair_keys.append((patient_id, roi_id))
         for key in ("image_path", "cell_mask_path", "stromal_mask_path"):
             value = val(key)
-            if value and "\\x00" in value:
+            if value and chr(0) in value:
                 errors.append(f"Row {row_index}: NUL byte in {key}")
             if value and check_files:
                 candidate = Path(value)

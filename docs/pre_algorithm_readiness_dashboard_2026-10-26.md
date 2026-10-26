@@ -31,6 +31,8 @@
 - HCC discovery cohort: https://zenodo.org/records/10793609
 - VirTues code: https://github.com/bunnelab/virtues
 - VirTues model and weights: https://huggingface.co/bunnelab/virtues
+- Checkpoint provenance log: docs/virtues_checkpoint_provenance_2026-10-26.md
+- VirTues model and weights: https://huggingface.co/bunnelab/virtues
 - Checkpoint record: [checkpoint provenance decision log](virtues_checkpoint_provenance_2026-10-26.md)
 - HCC source paper: https://doi.org/10.1136/gutjnl-2024-332837
 - VirTues paper: https://doi.org/10.1038/s41586-026-10884-y

@@ -63,6 +63,13 @@ class ManifestValidationTests(unittest.TestCase):
         self.assertEqual(result["status"], "BLOCKED")
         self.assertTrue(any("does not exist" in error for error in result["errors"]))
 
+    def test_nul_byte_in_path_is_blocked(self):
+        row = {"patient_id": "P001", "roi_id": "R001", "image_path": "images/roi1.tif\u0000", "cell_mask_path": "cells/roi1.tif", "stromal_mask_path": "stroma/roi1.tif", "channel_map_version": "v1", "qc_status": "not_run"}
+        self.write_manifest([row])
+        result = validate_manifest(self.manifest)
+        self.assertEqual(result["status"], "BLOCKED")
+        self.assertTrue(any("NUL byte" in error for error in result["errors"]))
+
     def test_expected_roi_count_mismatch_is_blocked(self):
         result = validate_manifest(self.manifest, expected_roi_count=86)
         self.assertEqual(result["status"], "BLOCKED")

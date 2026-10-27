@@ -220,10 +220,20 @@ def run() -> tuple[dict[str, Any], int]:
 
             conf = OmegaConf.load(str(config_path))
             marker_embeddings = load_marker_embeddings(str(embeddings_dir))
-            if marker_embeddings.ndim != 2 or marker_embeddings.shape[1] != 768:
+            # The official checkpoint defines the required embedding width.
+            # Do not hard-code 768: the pinned IMC14 checkpoint expects 640.
+            projection_key = "encoder.prior_embedding_encoder.weight"
+            if projection_key not in weights:
+                # Load weights before model construction only to inspect the released projection.
+                weights = load_file(str(checkpoint), device="cpu")
+            projection = weights.get(projection_key)
+            if projection is None or projection.ndim != 2:
+                raise ValueError(f"Checkpoint is missing a 2-D {projection_key} tensor")
+            expected_embedding_dim = int(projection.shape[1])
+            if marker_embeddings.ndim != 2 or marker_embeddings.shape[1] != expected_embedding_dim:
                 raise ValueError(
-                    "Example marker embeddings must have shape (N, 768); observed "
-                    f"{tuple(marker_embeddings.shape)}"
+                    f"Marker embeddings must have shape (N, {expected_embedding_dim}) "
+                    f"according to checkpoint tensor {projection_key}; observed {tuple(marker_embeddings.shape)}"
                 )
 
             model = MultiplexVirtues(

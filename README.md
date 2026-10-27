@@ -43,6 +43,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 ## Repository map
 
 - [Research question](docs/research_question.md)
+- [Project execution status and remaining gates (27 Oct 2026)](docs/project_execution_status_2026-10-27.md)
 - [Full candidate study protocol](docs/virtual_marker_counterfactual_study.md)
 - [Manuscript outline](docs/manuscript_outline.md)
 - [Literature review](docs/literature_review.md)

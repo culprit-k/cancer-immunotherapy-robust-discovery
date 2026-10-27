@@ -12,7 +12,7 @@ def row(stem, patient, roi, *, response="PD", table_roi_count=1, read_status="OK
         "has_cell_mask": "True", "has_stromal_mask": "True",
         "cell_spatial_match": "True", "stroma_spatial_match": "True",
         "table_roi_count": str(table_roi_count), "best_response": response,
-        "response_binary": "0", "PFS_months": "2.0", "OS_months": "5.0",
+        "response_binary": "1" if response == "PR" else "0", "PFS_months": "2.0", "OS_months": "5.0",
         "censored": "1", "etiology": "HCV", "immunotype": "Enriched",
         "clinical_outcome_level": "PATIENT_LEVEL_REPEATED_PER_ROI_DO_NOT_SPLIT_BY_ROI",
     }

@@ -164,7 +164,11 @@ def run() -> tuple[dict[str, Any], int]:
 
     # Test the exact CPU packed-attention execution path.
     import_ok = False
-    if report["steps"].get("patch", {}).get("status") == "PASS" and report["steps"]["patch"].get("mode") == "apply":
+    if report["steps"].get("patch", {}).get("status") == "PASS":
+        # A successful dry-run is also safe when the patch helper reports the
+        # source is already patched. The smoke test itself imports and exercises
+        # the live source; requiring this invocation to use --apply incorrectly
+        # blocked repeat runs after the first successful patch.
         sys.path.insert(0, str(root))
         try:
             import torch

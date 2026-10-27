@@ -32,3 +32,10 @@ Record search strings, date, inclusion/exclusion rules, and extracted attributes
 
 ## Claim language
 Until supported by experiments, say “candidate contribution” or “we propose to test.” Avoid “first,” “unprecedented,” “causal target,” “clinically useful,” or “state-of-the-art” without evidence. Computational feature attribution, association, and simulated perturbation are not evidence of causal therapeutic efficacy.
+
+
+## Fresh overlap check — VirTues published in Nature, 5 August 2026
+
+The literature landscape must now treat VirTues as a published Nature foundation model, not only a preprint. The Nature methods explicitly include the Salié HCC ICI cohort among seven additional IMC cohorts used in the expanded multi-technology corpus. This rules out a broad novelty claim framed as “applying VirTues/spatial AI to the same HCC cohort” without a more specific methodological contribution, and it rules out `virtues-sp32` for held-out HCC evaluation. The current methodological angle remains a hypothesis: auditable checkpoint-exposure control, preprocessing-domain robustness, patient-level aggregation and uncertainty reporting. It is not yet established as novel or first; it requires a focused search against other 2025–2026 work.
+
+Source: [Wenckstern et al., The Virtual Tissues foundation model resolves spatial proteomics across scales, Nature (2026)](https://www.nature.com/articles/s41586-026-10884-y). The HCC cohort was cited within the paper's description of the additional IMC datasets in the extended corpus.

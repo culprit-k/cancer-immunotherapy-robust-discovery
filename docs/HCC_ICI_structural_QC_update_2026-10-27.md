@@ -54,3 +54,16 @@ Before any outcome analysis, compare the proposed contribution directly against 
 - Pin checkpoint revision and weight hash and substantiate training exposure. Do not use `virtues-sp32` for held-out HCC evaluation; `virtues-imc14` is only a candidate until provenance is confirmed.
 - Demonstrate official preprocessing compatibility, or separately predeclare and label a normalized-domain adaptation experiment.
 - Only then run a deterministic outcome-blind pilot with simple baselines and predefined failure thresholds. No biological result is established by the current audit.
+
+## Panel-validator tooling added (2026-10-27)
+A fail-closed script, `scripts/validate_hcc_panel.py`, now checks that the panel workbook has the required `Channel`, `MetalTag`, and `Target` columns; validates integer channel IDs, uniqueness, the expected 1–45 channel set, and nonblank marker/tag fields; and exports a channel-sorted CSV plus a JSON report. The HCC pre-algorithm workflow now syntax-checks this script.
+
+Run in the existing Colab runtime after confirming the workbook path:
+```bash
+python scripts/validate_hcc_panel.py \
+  --panel /content/hcc_virtues_audit/dataset/ICICohort_panel.xlsx \
+  --sheet Sheet1 --expected-channels 45 \
+  --out-csv /content/hcc_virtues_audit/next_gate/channel_map_panel_order.csv \
+  --out-json /content/hcc_virtues_audit/next_gate/panel_validation.json
+```
+This validates the spreadsheet table only. It does **not** prove TIFF plane ordering, nor does it map marker names to the exact protein identifiers/embedding vocabulary required by VirTues. Those remain separate gates.

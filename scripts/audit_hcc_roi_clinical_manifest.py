@@ -92,6 +92,13 @@ def validate_manifest(
             errors.append(f"Row {line}: invalid image finite fraction or intensity range.")
         if "PATIENT_LEVEL" not in row["clinical_outcome_level"]:
             errors.append(f"Row {line}: patient-level outcome warning is missing.")
+        try:
+            binary_response = int(row["response_binary"])
+            expected_binary = int(row["best_response"].strip() == "PR")
+            if binary_response != expected_binary:
+                errors.append(f"Row {line}: response_binary disagrees with best_response.")
+        except (ValueError, TypeError):
+            errors.append(f"Row {line}: invalid response_binary value.")
         patients[patient].append(row)
 
     if len(rows) != expected_images:

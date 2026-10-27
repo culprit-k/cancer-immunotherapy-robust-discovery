@@ -1,0 +1,28 @@
+{
+  "analysis_date": "2026-10-27",
+  "clinical_rows_parsed": 42,
+  "image_inventory_rows": 86,
+  "unique_patients_in_images": 42,
+  "sum_table_reported_roi_counts": 84,
+  "sum_image_file_counts": 86,
+  "patients_with_images_missing_clinical_row": [],
+  "clinical_rows_missing_all_images": [],
+  "per_patient_roi_count_mismatches": [
+    {
+      "patient_id": "ICI_24",
+      "table_roi_count": 2,
+      "image_file_count": 3,
+      "difference_image_minus_table": 1,
+      "status": "Patient identity explicit from filename prefix; count field conflicts."
+    },
+    {
+      "patient_id": "ICI_39",
+      "table_roi_count": 1,
+      "image_file_count": 2,
+      "difference_image_minus_table": 1,
+      "status": "Patient identity explicit from filename prefix; count field conflicts."
+    }
+  ],
+  "crosswalk_status": "PASS_PATIENT_ID_MAPPING_WITH_DISCLOSED_ROI_COUNT_DISCREPANCIES",
+  "critical_limit": "Filename-derived ROI labels identify each image's patient and ROI number. Supplementary Table 3 has patient-level clinical outcomes, not separate outcome per ROI. Do not treat 86 ROIs as 86 independent patients. Keep clinical outcomes at patient level and aggregate image/ROI features to patient level. Preserve the two reported ROI-count discrepancies; do not silently overwrite Table 3."
+}

@@ -103,3 +103,12 @@ The publication's description of the ICI cohort reports 86 ROIs, and the filenam
 Important analysis constraint: Supplementary Table 3 outcomes are patient-level. Do not interpret per-ROI images as independent patient outcomes; aggregate ROI-level imaging features to the patient level before outcome modelling, and split/evaluate at patient level. The crosswalk's `clinical_roi_id` is the ROI ordinal parsed from the released filename, not a separate source-provided ROI clinical record.
 
 Sources: [Zenodo ICI cohort record](https://zenodo.org/records/10794904) describes the 42-patient dataset, channel-per-stack images, and panel file; [Salié et al., Gut](https://gut.bmj.com/content/74/3/451) provides the published cohort context.
+
+
+## Latest study-readiness reconciliation (2026-10-27)
+
+The source-derived patient-level reconciliation is now committed under `data/derived/`. It establishes 42 clinical patients matched to 86 image ROIs, with the two ROI-count discrepancies disclosed (ICI_24: 2 listed vs 3 images; ICI_39: 1 listed vs 2 images). Outcomes remain patient-level. The combined derived manifest is `data/derived/hcc_roi_qc_clinical_manifest_2026-10-27.csv`; it intentionally flags patient outcomes repeated on ROI rows to discourage ROI-level pseudo-replication.
+
+The checkpoint/preprocessing decision is documented in `docs/checkpoint_preprocessing_gate_2026-10-27.md`. A specific `virtues-imc14/model.safetensors` file revision and SHA-256 are now pinned from its Hugging Face file page. `virtues-sp32` is excluded from a held-out HCC evaluation because the published paper places the Salié HCC cohort among the additional cohorts in the expanded 32-cohort corpus. Official VirTues preprocessing on the already-normalized HCC TIFFs remains blocked; a separately labelled, outcome-blind normalized-domain pilot is the allowed fallback after panel-order validation. Numeric stromal-mask class IDs remain unmapped, despite the paper describing the classifier as parenchyma versus stroma.
+
+The available response labels are 27 SD, 10 PD, and 5 PR. This small responder count precludes claims of a robust supervised clinical predictor from the present cohort alone. No inference or novel biological target has been claimed.

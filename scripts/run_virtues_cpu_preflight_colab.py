@@ -280,7 +280,6 @@ def run() -> tuple[dict[str, Any], int]:
                 verbose=False,
             ).cpu()
 
-            weights = load_file(str(checkpoint), device="cpu")
             incompatible = model.load_state_dict(weights, strict=True)
             model.eval()
 

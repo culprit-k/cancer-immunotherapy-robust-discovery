@@ -1,0 +1,74 @@
+name: HCC ICI archive download connectivity probe
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - hcc-virtues-audit-next-step
+    paths:
+      - ".github/workflows/hcc-ici-download-probe.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Probe Zenodo metadata, headers, and a small HTTP range
+        run: |
+          python - <<'PY'
+          import json, time
+          import requests
+
+          record = "https://zenodo.org/api/records/10794904"
+          download = "https://zenodo.org/records/10794904/files/HCC_ICICohort.zip?download=1"
+          session = requests.Session()
+          out = {"record_url": record, "download_url": download, "checks": []}
+
+          for label, method, url, kwargs in [
+              ("record_metadata", "GET", record, {"stream": True}),
+              ("download_head", "HEAD", download, {"allow_redirects": True}),
+              ("download_range", "GET", download, {
+                  "headers": {"Range": "bytes=0-1048575"},
+                  "allow_redirects": True,
+                  "stream": True,
+              }),
+          ]:
+              started = time.time()
+              try:
+                  response = session.request(method, url, timeout=(15, 45), **kwargs)
+                  item = {
+                      "label": label,
+                      "status_code": response.status_code,
+                      "elapsed_seconds": round(time.time() - started, 2),
+                      "final_host": response.url.split("/")[2],
+                      "content_length": response.headers.get("Content-Length"),
+                      "content_range": response.headers.get("Content-Range"),
+                      "accept_ranges": response.headers.get("Accept-Ranges"),
+                      "content_type": response.headers.get("Content-Type"),
+                  }
+                  if label == "record_metadata" and response.ok:
+                      try:
+                          data = response.json()
+                          item["record_id"] = data.get("id")
+                          item["file_list"] = [
+                              {"key": f.get("key"), "size": f.get("size"), "checksum": f.get("checksum")}
+                              for f in data.get("files", [])
+                          ]
+                      except Exception as exc:
+                          item["metadata_parse_error"] = type(exc).__name__
+                  if label == "download_range" and response.status_code == 206:
+                      item["range_bytes_read"] = len(next(response.iter_content(1024 * 1024), b""))
+                  response.close()
+              except Exception as exc:
+                  item = {
+                      "label": label,
+                      "elapsed_seconds": round(time.time() - started, 2),
+                      "error_type": type(exc).__name__,
+                      "error": str(exc)[:500],
+                  }
+              out["checks"].append(item)
+          print(json.dumps(out, indent=2))
+          PY

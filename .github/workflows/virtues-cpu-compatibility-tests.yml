@@ -1,0 +1,56 @@
+name: VirTues CPU compatibility helper tests
+
+on:
+  push:
+    branches:
+      - hcc-virtues-audit-next-step
+  pull_request:
+
+jobs:
+  cpu-compatibility-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pytest torch
+      - name: Test reversible CPU SDPA patch
+        run: python -m pytest -q tests/test_patch_virtues_cpu_sdpa.py tests/test_virtues_cpu_preflight_cli.py
+
+      - name: Fetch pinned official VirTues source
+        run: |
+          git clone https://github.com/bunnelab/virtues.git /tmp/virtues
+          git -C /tmp/virtues checkout 2c9c6cba1ee796c4d8dff9329175c47e4a72f409
+      - name: Apply tested CPU compatibility patch to official source
+        run: python scripts/patch_virtues_cpu_sdpa.py --virtues-root /tmp/virtues --apply
+      - name: Run packed-attention smoke test against official module
+        env:
+          PYTHONPATH: /tmp/virtues
+        run: |
+          python - <<'PY'
+          import torch
+          from virtues.modules.layers.attention_flashattention import MHAwithPosEmb
+
+          torch.manual_seed(7)
+          attention = MHAwithPosEmb(
+              embed_dim=16, num_heads=4, dropout=0.0, inbuilt_pos_emb=None
+          ).cpu().eval()
+          x = torch.randn(1, 7, 16)
+          cu = torch.tensor([0, 3, 7], dtype=torch.int32)
+          with torch.no_grad():
+              y = attention(query=x, key=x, value=x, cu_seq_len=cu, max_seq_len=4)
+          assert tuple(y.shape) == tuple(x.shape), (tuple(x.shape), tuple(y.shape))
+          assert bool(torch.isfinite(y).all()), "Non-finite attention output"
+          print({
+              "status": "PASS",
+              "official_virtues_commit": "2c9c6cba1ee796c4d8dff9329175c47e4a72f409",
+              "input_shape": list(x.shape),
+              "output_shape": list(y.shape),
+              "segments": [3, 4],
+              "device": "cpu",
+          })
+          PY

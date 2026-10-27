@@ -1,0 +1,24 @@
+metric,value,interpretation
+unique_patients,42,Corrected source-faithful clinical table row count
+clinical_table_columns,21,Corrected table structure
+field_level_extraction_discrepancies,26,13 etiology and 13 immunotype corrections
+missing_etiology,8,Preserve as missing
+missing_immunotype,2,Preserve as missing
+missing_AFP,5,Preserve as missing
+etiology_HCV,15,Descriptive only
+etiology_ALD,12,Descriptive only
+etiology_SLD,4,Descriptive only
+etiology_HBV,3,Descriptive only
+immunotype_depleted,17,Descriptive only
+immunotype_compartmentalized,13,Descriptive only
+immunotype_enriched,10,Descriptive only
+RECIST_PR,5,Not sufficient for complex supervised prediction
+RECIST_SD,27,Descriptive only
+RECIST_PD,10,Descriptive only
+clinical_reported_ROIs,84,Does not match image inventory
+image_TIFF_count,86,Filename inventory count
+cell_mask_count,86,Filename inventory count
+stromal_mask_count,86,Filename inventory count
+ROI_discrepancies,2,ICI_24 and ICI_39 require source clarification
+VirTues_inference_run,0,No model inference has been run
+outcome_model_run,0,No outcome model has been run

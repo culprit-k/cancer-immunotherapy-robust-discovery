@@ -1,6 +1,4 @@
-# Cancer Immunotherapy AI: Robust Target Discovery
-
-**Project status (25 October 2026): HCC archive integrity and marker-panel structural QC PASS. Direct inference on the released HCC normalized TIFFs with pretrained VirTues is NO-GO because the input intensity representation is incompatible. Published training-corpus evidence supports using `virtues-imc14` as outside direct Salié HCC pretraining exposure at the study-reference level; an accession-to-training-run certificate was not found. `virtues-sp32` includes Salié HCC and is unsuitable for held-out testing; `virtues-sp31` is not approved for held-out HCC use until its omitted cohort is verified. No real-data inference has been run; novelty is not established. See [the HCC preprocessing/exposure decision](docs/hcc_preprocessing_and_checkpoint_exposure_decision_2026-10-25.md).
+**Project status (27 October 2026):** HCC archive integrity and structural image/mask QC have passed the checks documented in the audit, including an 86-image/mask inventory and explicit unresolved patient/ROI multiplicity conflicts (ICI_24 and ICI_39). The released HCC images are normalized to [0,1], and official VirTues input compatibility remains **UNPROVEN**; do not run official pretrained inference on them or invent inverse preprocessing. The candidate `virtues-imc14` checkpoint is hash-pinned but remains conditional on exact training-manifest/exposure verification; `virtues-sp32` is not eligible for held-out HCC evaluation. An experimental, reversible CPU SDPA attention helper and synthetic tests have now been added to the open audit branch, but it has **not** been executed in the user's Colab or on real data. No real-data inference, validated biological target, clinical prediction, or novelty claim has been established. See the [HCC preprocessing/exposure decision](docs/hcc_preprocessing_and_checkpoint_exposure_decision_2026-10-25.md), [latest compatibility review](docs/HCC_virtues_compatibility_review_2026-10-27.md), and [CPU SDPA helper scope and instructions](docs/virtues_cpu_sdpa_compatibility_patch_2026-10-27.md).
 
 ## Current research candidate
 
@@ -45,14 +43,22 @@ The candidate question is whether good marker reconstruction scores can still ma
 ## Repository map
 
 - [Research question](docs/research_question.md)
+- [Project execution status and remaining gates (27 Oct 2026)](docs/project_execution_status_2026-10-27.md)
 - [Full candidate study protocol](docs/virtual_marker_counterfactual_study.md)
 - [Manuscript outline](docs/manuscript_outline.md)
 - [Literature review](docs/literature_review.md)
 - [Novelty assessment](docs/novelty_assessment.md)
 - [Targeted prior-art and feasibility audit (25 Oct 2026)](docs/targeted_prior_art_and_feasibility_audit_2026-10-25.md)
+- [Targeted prior-art update (27 Oct 2026)](docs/targeted_prior_art_update_2026-10-27.md)
 - [Cohort and checkpoint decision record](docs/cohort_checkpoint_decision.md)
 - [Checkpoint revision/hash resolver](scripts/resolve_virtues_imc14_checkpoint.py)
 - [Checkpoint resolver workflow](.github/workflows/resolve_virtues_imc14_checkpoint.yml)
+- [Experimental VirTues CPU SDPA compatibility helper and limits](docs/virtues_cpu_sdpa_compatibility_patch_2026-10-27.md)
+- [Reversible CPU SDPA patch utility](scripts/patch_virtues_cpu_sdpa.py)
+- [CPU SDPA patch tests](tests/test_patch_virtues_cpu_sdpa.py)
+- [Interactive Colab preflight notebook](notebooks/01_virtues_cpu_preflight_colab.ipynb)
+- [One-command Colab preflight runner](scripts/run_virtues_cpu_preflight_colab.py)
+- [Colab preflight CLI test](tests/test_virtues_cpu_preflight_cli.py)
 - [Related-work addendum](docs/related_work_addendum_2026.md)
 - [Method/dataset compatibility matrix](docs/method_dataset_compatibility.md)
 - [Verified HCC discovery marker-panel audit and inference gates](docs/discovery_panel_audit.md)

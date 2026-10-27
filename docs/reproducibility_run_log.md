@@ -223,3 +223,29 @@ The selected official checkpoint is `virtues-imc14/model.safetensors`, pinned at
 - No real-data inference, target recommendations, clinical claims or biological validation have been produced.
 
 Next actions: request the original compensated data, full image-normalization metadata, canonical panel/embedding mapping and cell phenotype annotations from the authors (draft only; not sent); otherwise select a verified compatible spora cohort with a checkpoint proven to exclude it.
+
+
+## 2026-10-27 — CPU compatibility preflight and prior-art refresh
+
+**Work performed**
+- Inspected the official VirTues attention source and confirmed its module imports FlashAttention unconditionally while also implementing a standard PyTorch SDPA path for masked attention. This motivates an experimental variable-length CPU fallback, but the user checkout may differ from the inspected public blob.
+- Added a source-anchor-checked, dry-run-first patch helper. Applying the helper creates a timestamped backup and changes only the official attention module.
+- Added a one-command Colab runner to check checkpoint SHA-256, byte count and tensor count; import/test the packed attention path; strict-load the default model; and run a tiny synthetic forward. It does not load any HCC image or mask.
+- Added unit tests for patch idempotence/fail-closed behavior, backup creation, dry-run non-mutation, numerical segmented-SDPA equivalence when PyTorch is available, and preflight CLI help.
+- Refreshed targeted prior-art review for Morpheus, VirTues (Nature, Aug 2026), Spatium (2026 preprint), SPAD-CFR, Celcomen and TISSUE; added a dated execution-status record.
+
+**Software evidence**
+- Isolated Python 3.13.5 / PyTorch 2.10.0+cpu environment: 7 helper tests passed, including numeric comparison against independent segmented SDPA reference calculations.
+- Latest GitHub Actions runs for analysis helper tests and HCC metadata-gate tests passed on the then-current branch revision. The lightweight CI environment has no PyTorch, so the numeric PyTorch-specific test is skipped there.
+- Public upstream attention source blob SHA recorded in the compatibility note: 7a907156f995bddc0e371daad4c485abdb00a74b.
+
+**Not performed / do not claim**
+- The helper has not been applied or executed in the user's Colab session.
+- The user's local checkpoint hash has not yet been verified against the pinned SHA, and strict state-dict loading/synthetic full-model forward have not yet run against the user's runtime.
+- No HCC image has been passed through VirTues; no reconstruction metrics, counterfactual target set, clinical prediction or biological validation has been produced.
+- Official pretrained inference on the released PENGUIN-normalized [0,1] TIFFs remains NO-GO until input compatibility is resolved. ICI_24/ICI_39 ROI multiplicities, exact panel-plane mapping, stromal-mask label semantics and checkpoint exposure remain open gates.
+
+**Next action**
+Run the preflight runner in Colab with the expected source/checkpoint/marker-embedding paths and preserve its private JSON report. Proceed only if checkpoint identity, strict model loading and the tiny synthetic forward pass all pass. Still do not use the HCC images until the scientific input-contract gates have been cleared.
+
+Related records: docs/project_execution_status_2026-10-27.md, docs/virtues_cpu_sdpa_compatibility_patch_2026-10-27.md, docs/targeted_prior_art_update_2026-10-27.md.

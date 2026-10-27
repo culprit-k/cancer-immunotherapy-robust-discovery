@@ -1,0 +1,14 @@
+{
+  "image_dir": "/content/HCC_DATA/images",
+  "cell_mask_dir": "/content/HCC_DATA/cell_masks",
+  "stromal_mask_dir": "/content/HCC_DATA/stromal_masks",
+  "channel_map": "/content/HCC_DATA/channel_map.csv",
+  "qc_json": "/content/HCC_DATA/hcc_preflight_report.json",
+  "checkpoint_path": "/content/checkpoints/virtues-imc14/model.safetensors",
+  "checkpoint_revision": "REPLACE_WITH_VERIFIED_IMMUTABLE_REVISION",
+  "checkpoint_sha256": "REPLACE_WITH_VERIFIED_SHA256",
+  "preprocessing_mode": "normalized_domain_adaptation",
+  "preprocessing_record": "/content/HCC_DATA/preprocessing_record.md",
+  "roi_id": "REPLACE_WITH_PREDECLARED_ELIGIBLE_ROI",
+  "seed": 20261026
+}

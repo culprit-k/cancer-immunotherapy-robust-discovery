@@ -92,6 +92,27 @@ def summarize_panel(zf: zipfile.ZipFile, member: str) -> dict[str, Any]:
         out["channels_are_1_to_45"] = sorted(vals) == list(range(1, 46))
         out["channel_count"] = len(vals)
         out["duplicate_channel_count"] = len(vals) - len(set(vals))
+    # The panel is public metadata, not patient-level data. Persist it so channel
+    # targets can be mapped against canonical UniProt IDs without guessing.
+    target_col = next((c for c in frame.columns if str(c).strip().casefold() in {"target", "marker", "protein", "antigen"}), None)
+    metal_col = next((c for c in frame.columns if "metal" in str(c).strip().casefold() and "tag" in str(c).strip().casefold()), None)
+    comment_col = next((c for c in frame.columns if str(c).strip().casefold() in {"comment", "comments", "notes"}), None)
+    marker_rows = []
+    for _, row in frame.iterrows():
+        item = {}
+        if channel_col is not None:
+            val = pd.to_numeric(pd.Series([row[channel_col]]), errors="coerce").iloc[0]
+            item["channel"] = int(val) if pd.notna(val) and float(val).is_integer() else str(row[channel_col])
+        if metal_col is not None:
+            item["metal_tag"] = str(row[metal_col])
+        if target_col is not None:
+            item["target"] = str(row[target_col])
+        if comment_col is not None:
+            item["comment"] = str(row[comment_col])
+        marker_rows.append(item)
+    out["source_target_column"] = str(target_col) if target_col is not None else None
+    out["source_metal_tag_column"] = str(metal_col) if metal_col is not None else None
+    out["marker_rows"] = marker_rows
     return out
 
 

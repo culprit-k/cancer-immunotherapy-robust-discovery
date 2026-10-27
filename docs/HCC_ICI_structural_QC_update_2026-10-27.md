@@ -70,3 +70,21 @@ python scripts/validate_hcc_panel.py \
   --out-json /content/hcc_virtues_audit/next_gate/panel_validation.json
 ```
 This validates the spreadsheet table only. It does **not** prove TIFF plane ordering, nor does it map marker names to the exact protein identifiers/embedding vocabulary required by VirTues. Those remain separate gates.
+
+
+## Fail-closed ROI crosswalk tooling added (2026-10-27)
+
+Added `scripts/validate_hcc_roi_crosswalk.py` and unit tests in `tests/test_validate_hcc_roi_crosswalk.py`. The validator requires a source-backed CSV with columns `image_stem,patient_id,clinical_roi_id,source_reference,resolution_status`. It rejects unresolved rows, duplicate image stems, duplicate patient/clinical-ROI keys, blank source evidence, missing image stems, and unknown image stems. It never tries to infer the two disputed matches.
+
+Example after creating a CSV from an authoritative source document (do not fill it by guessing):
+
+```bash
+python scripts/validate_hcc_roi_crosswalk.py \
+  --crosswalk /content/hcc_virtues_audit/next_gate/authoritative_roi_crosswalk.csv \
+  --images-dir /content/hcc_virtues_audit/dataset/images \
+  --out-json /content/hcc_virtues_audit/next_gate/roi_crosswalk_validation.json
+```
+
+Adjust `--images-dir` to the actual image folder in the existing workspace. The script's pass means only that the supplied crosswalk is internally complete and marked resolved with source references; it cannot independently authenticate those source references. No crosswalk has been populated or validated in this environment because the private workbook, clinical table, and image inventory are not mounted here.
+
+The HCC CI workflow was extended to compile this script and run its unit tests. The workflow run for the latest commit must be checked before claiming these new tests passed.

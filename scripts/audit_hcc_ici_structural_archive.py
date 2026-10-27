@@ -326,6 +326,13 @@ def main() -> int:
 
     counts = report["counts"]
     panel = report["panel"]
+    # Export the source panel's public marker metadata as a separate artifact so
+    # UniProt/ESM mapping can be audited explicitly. This contains no patient data.
+    panel_rows = panel.get("marker_rows", [])
+    if panel_rows:
+        panel_path = args.out.with_name("hcc_ici_panel_targets.csv")
+        pd.DataFrame(panel_rows).to_csv(panel_path, index=False)
+        panel["panel_targets_export_file"] = panel_path.name
     report["go_no_go"] = "PASS_STRUCTURAL_ONLY" if (
         report["archive_md5_match"]
         and counts.get("image_tiffs") == 86

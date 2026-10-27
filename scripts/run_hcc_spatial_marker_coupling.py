@@ -34,7 +34,7 @@ def canonical_stem(path: Path, kind: str) -> str:
 
 
 def files_by_stem(folder: Path, kind: str) -> dict[str, Path]:
-    allowed = IMAGE_EXTS if kind == "image" else IMAGE_EXTS | {".png"}
+    allowed = IMAGE_EXTS
     found: dict[str, Path] = {}
     for path in sorted(folder.iterdir()):
         if not path.is_file() or path.suffix.lower() not in allowed:

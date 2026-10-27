@@ -49,6 +49,7 @@ The candidate question is whether good marker reconstruction scores can still ma
 - [Literature review](docs/literature_review.md)
 - [Novelty assessment](docs/novelty_assessment.md)
 - [Targeted prior-art and feasibility audit (25 Oct 2026)](docs/targeted_prior_art_and_feasibility_audit_2026-10-25.md)
+- [Targeted prior-art update (27 Oct 2026)](docs/targeted_prior_art_update_2026-10-27.md)
 - [Cohort and checkpoint decision record](docs/cohort_checkpoint_decision.md)
 - [Checkpoint revision/hash resolver](scripts/resolve_virtues_imc14_checkpoint.py)
 - [Checkpoint resolver workflow](.github/workflows/resolve_virtues_imc14_checkpoint.yml)

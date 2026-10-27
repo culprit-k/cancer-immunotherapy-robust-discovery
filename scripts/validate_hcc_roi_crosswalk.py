@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
-"""Validate an authoritative HCC image-to-clinical ROI crosswalk.
+"""Validate the filename-derived HCC image-to-patient ROI crosswalk.
 
-This tool does not infer or guess matches. The supplied CSV must be populated
-from an authoritative source record. Rows with unresolved status, duplicate
-image stems, duplicate clinical ROI keys, or missing source evidence fail closed.
-Required CSV columns: image_stem, patient_id, clinical_roi_id, source_reference,
-resolution_status. Use resolution_status=resolved only when source evidence
-explicitly supports the mapping.
+The ROI ordinal comes from the released image filename; outcomes remain patient-level.
+Rows with unresolved status, duplicate image stems, duplicate patient/ROI-label keys,
+or missing source references fail closed.
+Required CSV columns: image_stem, patient_id, roi_label_from_filename, source_reference,
+resolution_status. The source reference should identify the published patient row and image filename.
 """
 from __future__ import annotations
 import argparse
@@ -15,7 +14,7 @@ import json
 from pathlib import Path
 
 REQUIRED = {
-    "image_stem", "patient_id", "clinical_roi_id",
+    "image_stem", "patient_id", "roi_label_from_filename",
     "source_reference", "resolution_status",
 }
 
@@ -27,12 +26,12 @@ def validate(rows: list[dict[str, str]], expected_image_stems: set[str]) -> dict
         return {"gate": "BLOCKED", "errors": [f"Missing required columns: {missing_cols}"],
                 "row_count": len(rows), "mapped_image_count": 0}
     seen_images: set[str] = set()
-    seen_clinical: set[tuple[str, str]] = set()
+    seen_patient_roi_labels: set[tuple[str, str]] = set()
     resolved_images: set[str] = set()
     for i, row in enumerate(rows, start=2):
         image = row.get("image_stem", "").strip()
         patient = row.get("patient_id", "").strip()
-        roi = row.get("clinical_roi_id", "").strip()
+        roi = row.get("roi_label_from_filename", "").strip()
         source = row.get("source_reference", "").strip()
         status = row.get("resolution_status", "").strip().lower()
         if not all((image, patient, roi, source, status)):
@@ -42,9 +41,9 @@ def validate(rows: list[dict[str, str]], expected_image_stems: set[str]) -> dict
             errors.append(f"Row {i}: duplicate image_stem {image!r}.")
         seen_images.add(image)
         key = (patient, roi)
-        if key in seen_clinical:
-            errors.append(f"Row {i}: duplicate clinical ROI key {key!r}.")
-        seen_clinical.add(key)
+        if key in seen_patient_roi_labels:
+            errors.append(f"Row {i}: duplicate patient/ROI-label key {key!r}.")
+        seen_patient_roi_labels.add(key)
         if status != "resolved":
             errors.append(f"Row {i}: mapping for {image!r} is not resolved.")
         else:
@@ -56,14 +55,14 @@ def validate(rows: list[dict[str, str]], expected_image_stems: set[str]) -> dict
     if unexpected:
         errors.append(f"Crosswalk contains unknown image stems: {unexpected}")
     return {
-        "gate": "PASS_AUTHORITATIVE_CROSSWALK" if not errors else "BLOCKED",
+        "gate": "PASS_FILENAME_DERIVED_PATIENT_ROI_CROSSWALK" if not errors else "BLOCKED",
         "errors": errors,
         "row_count": len(rows),
         "expected_image_count": len(expected_image_stems),
         "mapped_image_count": len(resolved_images),
         "missing_image_stems": missing,
         "unexpected_image_stems": unexpected,
-        "critical_limit": "A pass checks consistency of supplied source-backed mappings; it cannot establish that the cited source itself is authoritative.",
+        "critical_limit": "A pass checks completeness of filename-derived image-to-patient ROI labels. It does not establish an independent clinical record for every ROI; patient-level outcomes must be aggregated at patient level and patients must never be split across folds.",
     }
 
 
@@ -93,7 +92,7 @@ def main() -> int:
     args.out_json.parent.mkdir(parents=True, exist_ok=True)
     args.out_json.write_text(json.dumps(report, indent=2), encoding="utf-8")
     print(json.dumps(report, indent=2))
-    return 0 if report["gate"] == "PASS_AUTHORITATIVE_CROSSWALK" else 2
+    return 0 if report["gate"] == "PASS_FILENAME_DERIVED_PATIENT_ROI_CROSSWALK" else 2
 
 
 if __name__ == "__main__":

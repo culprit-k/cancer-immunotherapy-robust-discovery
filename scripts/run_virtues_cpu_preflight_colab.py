@@ -223,9 +223,7 @@ def run() -> tuple[dict[str, Any], int]:
             # The official checkpoint defines the required embedding width.
             # Do not hard-code 768: the pinned IMC14 checkpoint expects 640.
             projection_key = "encoder.prior_embedding_encoder.weight"
-            if projection_key not in weights:
-                # Load weights before model construction only to inspect the released projection.
-                weights = load_file(str(checkpoint), device="cpu")
+            weights = load_file(str(checkpoint), device="cpu")
             projection = weights.get(projection_key)
             if projection is None or projection.ndim != 2:
                 raise ValueError(f"Checkpoint is missing a 2-D {projection_key} tensor")

@@ -102,9 +102,12 @@ def test_coupling_fails_for_too_few_cells_or_missing_marker():
             frame, cytotoxic_markers=["A"], myeloid_associated_markers=["B"],
             k_neighbours=2, n_permutations=99,
         )
-    frame["centroid_x_px"] = np.arange(2)
-    with pytest.raises(ValueError, match="n_cells must exceed"):
+    larger = pd.DataFrame({
+        "centroid_x_px": [0, 1, 2, 3], "centroid_y_px": [0, 0, 0, 0],
+        "A": [1, 2, 3, 4], "B": [4, 3, 2, 1],
+    })
+    with pytest.raises(ValueError, match="marker columns missing"):
         compute_spatial_marker_state_coupling(
-            frame, cytotoxic_markers=["MISSING"], myeloid_associated_markers=["B"],
-            k_neighbours=2, n_permutations=99,
+            larger, cytotoxic_markers=["MISSING"], myeloid_associated_markers=["B"],
+            k_neighbours=1, n_permutations=99,
         )

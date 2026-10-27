@@ -8,6 +8,7 @@ on:
     paths:
       - ".github/workflows/hcc-ici-structural-qc.yml"
       - "scripts/audit_hcc_ici_structural_archive.py"
+      - "scripts/download_http_range_parallel.py"
 
 permissions:
   contents: read
@@ -15,7 +16,7 @@ permissions:
 jobs:
   audit-public-archive:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - name: Check out research code
         uses: actions/checkout@v4
@@ -35,9 +36,10 @@ jobs:
             --out /tmp/HCC_ICICohort.zip \
             --expected-size 882022729 \
             --expected-md5 d0b3242740b70c1355f67bc7bd176c6a \
-            --workers 16 \
+            --workers 8 \
             --chunk-mib 16 \
-            --retries 5
+            --retries 8 \
+            --timeout 180
 
       - name: Audit all image and mask stacks; save aggregate-only report
         run: |

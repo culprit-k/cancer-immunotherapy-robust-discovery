@@ -75,6 +75,10 @@ For the current evidence-based decision, see:
 - docs/HCC_VirTues_next_step_gate_plan.md
 - docs/hcc_preprocessing_and_checkpoint_exposure_decision_2026-10-25.md
 
+## Upstream source check
+
+On 27 October 2026, the official upstream file at https://github.com/bunnelab/virtues/blob/main/virtues/modules/layers/attention_flashattention.py was inspected through GitHub. The upstream blob SHA was `7a907156f995bddc0e371daad4c485abdb00a74b`; the expected import line, packed-QKV start anchor, and FlashAttention call-end anchor each occurred exactly once. This supports the helper's fail-closed patch targeting the observed upstream revision, but does not prove the user's local checkout is identical.
+
 ## Current validation status
 
 The helper and its synthetic fixture tests passed locally in the assistant's isolated environment (6 tests). GitHub Actions was triggered on the research pull request; see the [Actions runs](https://github.com/culprit-k/cancer-immunotherapy-robust-discovery/actions). This is not a test against the user's Colab files. Actual upstream-source patching, model import, checkpoint loading, and HCC inference remain unverified until executed in the appropriate runtime.

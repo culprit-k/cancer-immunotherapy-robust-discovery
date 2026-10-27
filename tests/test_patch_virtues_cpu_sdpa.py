@@ -123,7 +123,10 @@ def test_cli_apply_creates_backup_and_patches(tmp_path, source_fixture):
 
 
 def test_packed_cpu_fallback_matches_independent_sdpa_segments(source_fixture):
-    import torch
+    torch = pytest.importorskip(
+        "torch",
+        reason="PyTorch is optional in lightweight CI; the Colab preflight executes this path.",
+    )
     import torch.nn.functional as F
 
     namespace = {}

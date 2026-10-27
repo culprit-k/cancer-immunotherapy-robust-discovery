@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-27",
+  "patients": 42,
+  "roi_images": 86,
+  "roi_count_as_reported_supplementary_table": 84,
+  "roi_image_inventory_count": 86,
+  "table_rows_without_any_image": [],
+  "image_patient_ids_without_clinical_row": [],
+  "roi_count_discrepancies": [
+    {
+      "patient_id": "ICI_24",
+      "table_roi_count": 2,
+      "image_file_count": 3,
+      "difference": 1
+    },
+    {
+      "patient_id": "ICI_39",
+      "table_roi_count": 1,
+      "image_file_count": 2,
+      "difference": 1
+    }
+  ],
+  "response_counts": {
+    "SD": 27,
+    "PD": 10,
+    "PR": 5
+  },
+  "response_positive_PR_count": 5,
+  "mapping_status": "patient-level prefix mapping reconciled; two ROI count discrepancies disclosed",
+  "analysis_rule": "Clinical response/PFS/OS are patient-level outcomes repeated on ROI rows in the combined manifest. Never split different ROIs from the same patient across folds; aggregate ROI features to one patient record before modelling."
+}

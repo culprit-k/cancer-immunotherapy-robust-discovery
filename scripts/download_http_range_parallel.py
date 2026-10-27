@@ -78,6 +78,55 @@ def download_chunk(url: str, total: int, index: int, start: int, end: int,
     raise RuntimeError(f"failed chunk {index} range {start}-{end} after {retries} attempts: {error}")
 
 
+def probe_range(url: str, total: int, retries: int, timeout: int) -> dict:
+    """Retry the small range preflight; large-file gateways can return transient 502/504s."""
+    end = min(1024 * 1024 - 1, total - 1)
+    expected_len = end + 1
+    wanted_range = f"bytes 0-{end}/{total}"
+    error = None
+    for attempt in range(1, retries + 1):
+        try:
+            req = Request(
+                url,
+                headers={"Range": f"bytes=0-{end}", "Accept-Encoding": "identity"},
+            )
+            with urlopen(req, timeout=timeout) as response:
+                if response.status != 206:
+                    raise RuntimeError(
+                        f"range preflight expected HTTP 206, got {response.status}"
+                    )
+                received = response.headers.get("Content-Range", "").strip()
+                if received != wanted_range:
+                    raise RuntimeError(
+                        f"range preflight Content-Range mismatch: {received!r}; "
+                        f"expected {wanted_range!r}"
+                    )
+                payload = response.read(expected_len + 1)
+                if len(payload) != expected_len:
+                    raise RuntimeError(
+                        f"range preflight returned {len(payload)} bytes; "
+                        f"expected {expected_len}"
+                    )
+                return {
+                    "status": "PASS",
+                    "status_code": response.status,
+                    "content_range": received,
+                    "bytes_read": len(payload),
+                    "attempt": attempt,
+                }
+        except Exception as exc:
+            error = f"{type(exc).__name__}: {exc}"
+            print(json.dumps({
+                "event": "range_preflight_retry",
+                "attempt": attempt,
+                "max_attempts": retries,
+                "error": error[:400],
+            }), flush=True)
+            if attempt < retries:
+                time.sleep(min(2 ** (attempt - 1), 30))
+    raise RuntimeError(f"HTTP range preflight failed after {retries} attempts: {error}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--url", required=True)
@@ -96,20 +145,10 @@ def main() -> int:
     out.parent.mkdir(parents=True, exist_ok=True)
     total = args.expected_size
 
-    # Quick preflight confirms that the origin supports ranged reads before
-    # launching the full parallel download.
-    probe_end = min(1023 * 1024, total - 1)
-    req = Request(args.url, headers={"Range": f"bytes=0-{probe_end}", "Accept-Encoding": "identity"})
-    with urlopen(req, timeout=args.timeout) as response:
-        if response.status != 206:
-            raise RuntimeError(f"origin does not support HTTP range requests: HTTP {response.status}")
-        expected_range = f"bytes 0-{probe_end}/{total}"
-        if response.headers.get("Content-Range", "").strip() != expected_range:
-            raise RuntimeError(
-                f"range preflight mismatch: got {response.headers.get('Content-Range')!r}; "
-                f"expected {expected_range!r}"
-            )
-        response.read()
+    # Retry the preflight too: the origin/proxy has transiently returned HTTP 504.
+    # Do not start hundreds of requests until range support is verified.
+    probe = probe_range(args.url, total, args.retries, args.timeout)
+    print(json.dumps({"event": "range_preflight", **probe}), flush=True)
 
     chunk_size = args.chunk_mib * 1024 * 1024
     ranges = []

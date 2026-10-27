@@ -1,0 +1,22 @@
+name: VirTues CPU compatibility helper tests
+
+on:
+  push:
+    branches:
+      - hcc-virtues-audit-next-step
+  pull_request:
+
+jobs:
+  cpu-compatibility-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install test dependencies
+        run: python -m pip install --upgrade pytest torch
+      - name: Test reversible CPU SDPA patch
+        run: python -m pytest -q tests/test_patch_virtues_cpu_sdpa.py tests/test_virtues_cpu_preflight_cli.py

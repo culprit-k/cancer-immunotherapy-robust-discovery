@@ -52,5 +52,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: hcc-ici-aggregate-structural-qc
-          path: /tmp/hcc_ici_structural_qc_summary.json
+          path: |
+            /tmp/hcc_ici_structural_qc_summary.json
+            /tmp/hcc_ici_panel_targets.csv
           if-no-files-found: warn

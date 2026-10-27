@@ -196,7 +196,7 @@ def run() -> tuple[dict[str, Any], int]:
                 "segments": [3, 4],
                 "device": str(y.device),
             }
-            import_ok = True
+            import_ok = attention_pass
             if not attention_pass:
                 failures += 1
         except Exception as exc:

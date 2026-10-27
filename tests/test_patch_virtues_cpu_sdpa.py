@@ -28,6 +28,9 @@ class Example:
         self.W_o = torch.nn.Identity()
 
     def forward(self, Q, K, V, B, L, S, cu_seq_len, max_seq_len):
+        Q = Q.view(B, L, self.num_heads, self.head_dim)
+        K = K.view(B, S, self.num_heads, self.head_dim)
+        V = V.view(B, S, self.num_heads, self.head_dim)
 {START}
         attn_out = flash_attn_varlen_qkvpacked_func(
             qkv=qkv,

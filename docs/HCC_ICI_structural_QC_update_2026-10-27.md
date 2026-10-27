@@ -32,3 +32,25 @@ This update summarizes the private Colab audit output shared on 2026-10-27. The 
 
 ## Public dataset documentation
 The Zenodo description for record 10794904 says the archive contains normalized multistack TIFFs, a panel table, cell masks, stromal/parenchymal masks, and points to supplementary table 3 for patient metadata. It does not, in the description itself, document the meanings of numeric stromal-mask codes.
+
+## Follow-up checks (2026-10-27)
+
+### CI status
+The commit containing this report has two completed successful GitHub Actions runs:
+- **HCC pre-algorithm metadata-gate tests** (run 40485611174): compile/QC-script syntax step and metadata-validator unit tests passed.
+- **Analysis helper tests** (run 40485611185): synthetic unit tests passed.
+These are software/metadata checks only. They do not mean the private dataset was downloaded in this execution environment, that tensor-level QC was independently reproduced here, or that VirTues inference ran.
+
+### Source clarification
+The official Zenodo record confirms that the ICI archive contains normalized multistack TIFFs, a marker panel, cell masks, and masks identifying stromal and parenchymal regions; it directs users to supplementary table 3 for patient metadata. It does not provide an explicit numeric-code dictionary for stromal-mask labels 3–9. The article describes spatial immunotypes (depleted, compartmentalized, enriched) associated with different ICI outcomes. Therefore, simply re-describing these spatial phenotypes or reporting a broad association with outcome would not, by itself, establish novelty. A defensible contribution would need a clearly differentiated, predeclared AI/methodological claim and independent validation.
+
+### Research novelty gate
+Before any outcome analysis, compare the proposed contribution directly against the published HCC spatial-immunotype analysis and other recent work on spatial immune architecture/ICI response. Keep the claim narrow: e.g., robustness and transportability of a specified model-derived pattern across patient-level held-out data, only if a permitted independent cohort and compatible measurements can actually support that test. Do not describe this as causal target discovery unless the design supports causal inference. If no independent compatible cohort is available, frame results as exploratory within-cohort method evaluation and state that limitation.
+
+### Remaining hard blockers (unchanged)
+- Obtain an authoritative mapping between the 86 image ROIs and the 84 clinical ROI entries; exclude ICI_24 and ICI_39 from clinical analysis until resolved.
+- Verify TIFF plane-to-panel ordering from a source of record or a known reference ROI.
+- Obtain the numeric stromal-mask label dictionary and confirm cell-mask semantics.
+- Pin checkpoint revision and weight hash and substantiate training exposure. Do not use `virtues-sp32` for held-out HCC evaluation; `virtues-imc14` is only a candidate until provenance is confirmed.
+- Demonstrate official preprocessing compatibility, or separately predeclare and label a normalized-domain adaptation experiment.
+- Only then run a deterministic outcome-blind pilot with simple baselines and predefined failure thresholds. No biological result is established by the current audit.

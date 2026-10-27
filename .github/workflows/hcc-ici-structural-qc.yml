@@ -28,17 +28,16 @@ jobs:
       - name: Install structural QC dependencies
         run: python -m pip install --upgrade numpy pandas openpyxl tifffile
 
-      - name: Download public ICI archive to ephemeral runner storage
+      - name: Download public ICI archive in parallel ranges to ephemeral runner storage
         run: |
-          set -euo pipefail
-          curl -L --fail --retry 3 \
-            "https://zenodo.org/records/10794904/files/HCC_ICICohort.zip?download=1" \
-            -o /tmp/HCC_ICICohort.zip
-          actual="$(md5sum /tmp/HCC_ICICohort.zip | awk '{print $1}')"
-          expected="d0b3242740b70c1355f67bc7bd176c6a"
-          echo "Archive bytes: $(stat -c '%s' /tmp/HCC_ICICohort.zip)"
-          echo "Archive MD5: $actual"
-          test "$actual" = "$expected"
+          python scripts/download_http_range_parallel.py \
+            --url "https://zenodo.org/records/10794904/files/HCC_ICICohort.zip?download=1" \
+            --out /tmp/HCC_ICICohort.zip \
+            --expected-size 882022729 \
+            --expected-md5 d0b3242740b70c1355f67bc7bd176c6a \
+            --workers 16 \
+            --chunk-mib 16 \
+            --retries 5
 
       - name: Audit all image and mask stacks; save aggregate-only report
         run: |

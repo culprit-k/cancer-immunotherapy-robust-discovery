@@ -36,10 +36,13 @@ The Zenodo description for record 10794904 says the archive contains normalized 
 ## Follow-up checks (2026-10-27)
 
 ### CI status
-The commit containing this report has two completed successful GitHub Actions runs:
-- **HCC pre-algorithm metadata-gate tests** (run 40485611174): compile/QC-script syntax step and metadata-validator unit tests passed.
-- **Analysis helper tests** (run 40485611185): synthetic unit tests passed.
+At commit `39912eba8116c59b1a9e3005511dc637c458c7be`, two GitHub Actions runs completed successfully:
+- **HCC pre-algorithm metadata-gate tests** (run `40486154373`): script compilation and existing metadata-validator unit tests passed.
+- **Analysis helper tests** (run `40486154257`): synthetic unit tests passed.
 These are software/metadata checks only. They do not mean the private dataset was downloaded in this execution environment, that tensor-level QC was independently reproduced here, or that VirTues inference ran.
+
+### Panel validator regression tests added
+After the above successful runs, the workflow was strengthened to install `pandas`/`openpyxl`, compile `scripts/validate_hcc_panel.py`, and run new integration tests covering a valid sorted export, duplicate channel rejection, blank-field rejection, and missing-column rejection. The test file is `tests/test_validate_hcc_panel.py`. The workflow/test changes are committed after `39912eba8116c59b1a9e3005511dc637c458c7be`; their CI result must be checked separately and is not represented by the earlier successful run IDs.
 
 ### Source clarification
 The official Zenodo record confirms that the ICI archive contains normalized multistack TIFFs, a marker panel, cell masks, and masks identifying stromal and parenchymal regions; it directs users to supplementary table 3 for patient metadata. It does not provide an explicit numeric-code dictionary for stromal-mask labels 3–9. The article describes spatial immunotypes (depleted, compartmentalized, enriched) associated with different ICI outcomes. Therefore, simply re-describing these spatial phenotypes or reporting a broad association with outcome would not, by itself, establish novelty. A defensible contribution would need a clearly differentiated, predeclared AI/methodological claim and independent validation.

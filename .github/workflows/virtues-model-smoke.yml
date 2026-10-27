@@ -1,0 +1,73 @@
+name: VirTues checkpoint and synthetic model preflight
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - hcc-virtues-audit-next-step
+    paths:
+      - ".github/workflows/virtues-model-smoke.yml"
+      - "scripts/run_virtues_cpu_preflight_colab.py"
+      - "scripts/patch_virtues_cpu_sdpa.py"
+
+jobs:
+  checkpoint-model-smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      HF_HUB_DISABLE_TELEMETRY: "1"
+      TOKENIZERS_PARALLELISM: "false"
+    steps:
+      - name: Check out research repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install model smoke-test dependencies
+        run: python -m pip install --upgrade torch numpy einops loguru safetensors omegaconf huggingface_hub
+
+      - name: Fetch pinned official VirTues source
+        run: |
+          git clone --filter=blob:none https://github.com/bunnelab/virtues.git /tmp/virtues
+          git -C /tmp/virtues checkout 2c9c6cba1ee796c4d8dff9329175c47e4a72f409
+          git -C /tmp/virtues rev-parse HEAD
+
+      - name: Download pinned public IMC14 checkpoint to ephemeral runner storage
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from shutil import copy2
+          from huggingface_hub import hf_hub_download
+
+          revision = "43fd00fce052c46f9e0cc1a87f42806620632319"
+          downloaded = hf_hub_download(
+              repo_id="bunnelab/virtues",
+              filename="virtues-imc14/model.safetensors",
+              revision=revision,
+          )
+          checkpoint = Path("/tmp/virtues-imc14/model.safetensors")
+          checkpoint.parent.mkdir(parents=True, exist_ok=True)
+          copy2(downloaded, checkpoint)
+          print("Checkpoint path:", checkpoint)
+          print("Checkpoint size:", checkpoint.stat().st_size)
+          PY
+
+      - name: Apply reversible CPU SDPA patch and run strict checkpoint plus synthetic forward preflight
+        run: |
+          python scripts/run_virtues_cpu_preflight_colab.py \
+            --virtues-root /tmp/virtues \
+            --checkpoint /tmp/virtues-imc14/model.safetensors \
+            --marker-embeddings /tmp/virtues/assets/example_dataset/marker_embeddings \
+            --apply-patch \
+            --out /tmp/virtues_cpu_preflight_report.json
+
+      - name: Upload synthetic preflight report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: virtues-cpu-model-smoke-report
+          path: /tmp/virtues_cpu_preflight_report.json
+          if-no-files-found: warn

@@ -1,4 +1,4 @@
-image_stem,patient_id,clinical_roi_id,source_reference,resolution_status
+image_stem,patient_id,roi_label_from_filename,source_reference,resolution_status
 ICI_01_ROI1,ICI_01,ROI1,"Salié et al., Gut 2025 Supplementary Table 3 row ICI_01; ROI label from released image filename ICI_01_ROI1.tiff",resolved
 ICI_02_ROI1,ICI_02,ROI1,"Salié et al., Gut 2025 Supplementary Table 3 row ICI_02; ROI label from released image filename ICI_02_ROI1.tiff",resolved
 ICI_02_ROI2,ICI_02,ROI2,"Salié et al., Gut 2025 Supplementary Table 3 row ICI_02; ROI label from released image filename ICI_02_ROI2.tiff",resolved

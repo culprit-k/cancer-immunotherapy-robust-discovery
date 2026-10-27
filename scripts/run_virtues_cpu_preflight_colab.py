@@ -52,6 +52,24 @@ def exception_details(exc: BaseException) -> dict[str, str]:
     }
 
 
+CPU_PATCH_BEGIN = "# BEGIN CPU SDPA fallback (research compatibility patch)"
+CPU_PATCH_END = "# END CPU SDPA fallback (research compatibility patch)"
+
+
+def cpu_patch_ready(patch_step: dict[str, Any], attention_source: str) -> bool:
+    """Return true only when patch validation passed and fallback is in the live source.
+
+    The patch helper intentionally returns success in dry-run mode. That is not
+    enough to run the attention smoke test unless the official source already
+    contains the applied fallback markers.
+    """
+    return (
+        patch_step.get("status") == "PASS"
+        and CPU_PATCH_BEGIN in attention_source
+        and CPU_PATCH_END in attention_source
+    )
+
+
 def run() -> tuple[dict[str, Any], int]:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--virtues-root", type=Path, required=True)
@@ -162,9 +180,14 @@ def run() -> tuple[dict[str, Any], int]:
         if not checkpoint_ok:
             failures += 1
 
-    # Test the exact CPU packed-attention execution path.
+    # Test the CPU packed-attention execution path only when the live source has the patch.
     import_ok = False
-    if report["steps"].get("patch", {}).get("status") == "PASS":
+    try:
+        attention_source_text = required_source.read_text(encoding="utf-8")
+    except Exception:
+        attention_source_text = ""
+    patch_ready = cpu_patch_ready(report["steps"].get("patch", {}), attention_source_text)
+    if patch_ready:
         # A successful dry-run is also safe when the patch helper reports the
         # source is already patched. The smoke test itself imports and exercises
         # the live source; requiring this invocation to use --apply incorrectly
@@ -209,7 +232,7 @@ def run() -> tuple[dict[str, Any], int]:
     else:
         report["steps"]["packed_attention_smoke"] = {
             "status": "BLOCKED",
-            "detail": "Use --apply-patch to run import/smoke tests after a successful patch validation.",
+            "detail": "Patch validation passed but the live attention source lacks the CPU SDPA fallback markers; rerun with --apply-patch.",
         }
         failures += 1
 

@@ -106,3 +106,23 @@ The audit work is on pull request [#2](https://github.com/culprit-k/cancer-immun
 - Salié et al. HCC study: https://doi.org/10.1136/gutjnl-2024-332837
 - HCC discovery archive: https://zenodo.org/records/10793609
 - HCC ICI archive: https://zenodo.org/records/10794904
+
+
+## Biology-first priority update (27 October 2026)
+
+The primary project objective is now a reproducible **biological discovery**, with AI and spatial statistics used as tools. The missing-marker / counterfactual-recommendation-fidelity study is secondary, not the main biological claim.
+
+Current code added on this branch:
+- `analysis/spatial_cell_features.py`: gated extraction of cell-object marker means and an outcome-blind spatial marker-state coupling statistic versus within-ROI spatial shuffles.
+- `analysis/patient_level_discovery.py`: patient-level effect sizes, bootstrap confidence intervals, permutation p-values, multiplicity correction and leave-one-patient-out sign stability.
+- `scripts/run_hcc_spatial_marker_coupling.py`: outcome-blind runner for extracted HCC TIFFs and cell masks.
+- `scripts/run_hcc_biology_first_analysis.py`: patient-level binary contrast runner for a verified ROI feature table.
+- Synthetic tests were corrected after CI caught an assertion that tested the wrong guard. The analysis-helper, HCC metadata-gate and VirTues CPU compatibility workflows passed on commit `5e02c2fc49051bcef7c74583d6e7091089a69902`.
+
+**These are software tests only. No HCC images were processed in this turn and no biological result has been established.** The spatial coupling score is an exploratory feature candidate, not a validated cell-type interaction or a claimed discovery.
+
+Targeted prior-art review shows that the existing Salié HCC cohorts already support known immune architecture/neighbourhood claims; Ruf et al. already reported macrophage-associated MAIT dysfunction; other recent work reports ECM/lymphoid interfaces, stromal FAP-alpha and a lymphoid-enriched response-associated niche. See `docs/hcc_biology_prior_art_and_validation_gate_2026-10-27.md`.
+
+Hard blockers before outcome-linked analysis: source-verified channel-to-plane mapping; source-defined cell/stromal mask semantics; resolution or outcome-blind exclusion of ICI_24 / ICI_39 ROI-count conflicts; verified clinical endpoint and event/censor definitions; and an independent validation route. The current ICI table contains five PR cases, so a high-dimensional PR classifier is not justified.
+
+The current intended next step is to create a reviewed channel-map CSV from source evidence, review cell-mask semantics with overlays, then run outcome-blind feature extraction locally. Keep all patient-level inputs and outputs outside GitHub. Only after feature QC and the endpoint/ROI gates pass should patient-level associations be examined.

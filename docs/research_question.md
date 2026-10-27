@@ -1,74 +1,52 @@
 # Research question and scope
 
-## Current research candidate
+**Project priority reset — 27 October 2026**
 
-**What Happens When a Marker Is Missing? Counterfactual Target Discovery Under Virtual Staining in Spatial Immuno-oncology**
+## Primary objective: discover a reproducible biological relationship
 
-This is a provisional candidate for a focused benchmark study. It is not a confirmed literature gap or a claim that a new algorithm has been invented.
+The central paper should test a specific biological relationship in tumour–immune spatial organization, with AI used to generate and interrogate candidate hypotheses. A successful inference pipeline alone is not the research result. No biological discovery has yet been established.
 
-## Primary question
+### Working question
 
-When one or more complete protein-marker channels are missing from spatial-proteomics panels and reconstructed by a foundation model, do the resulting signed counterfactual target recommendations and held-out-patient model-predicted CD8+ infiltration changes remain faithful to those obtained from fully measured channels?
+**Does the spatial coupling between cytotoxic lymphocyte state and nearby suppressive myeloid state carry information about immune access or treatment outcome beyond total immune abundance, known HCC immunotype, and simple additive marker summaries?**
 
-## Secondary question
+This is a **candidate hypothesis to test**, not a marker-level claim. The exact feature definition depends on verified marker-to-plane mapping, mask semantics and available cell annotations. It should not be named after CD8, Granzyme B, CD163, CD204, Arginase1 or any other marker unless the source mapping is validated and the analysis plan is frozen.
 
-Can a prespecified reliability/abstention rule, calibrated using held-out measured markers, flag recommendations whose signed direction or model-predicted uplift changes materially under plausible marker reconstructions?
+The reason to investigate a *state-conditioned spatial relationship*, rather than another global marker or a generic “immune-excluded” phenotype, is to test whether functional-state context adds information beyond counts and known architecture labels. Whether this is novel is **unknown** until a focused prior-art comparison is completed after the exact hypothesis and measurement are defined.
 
-## Why this replaces the previous proposal
+## Explicit prior-art constraints
 
-The generic patient-resampling/Jaccard study is too incremental as a high-novelty contribution. Existing work includes:
-- Morpheus for spatial-proteomic counterfactual target discovery and held-out-patient evaluation.
-- SPAD-CFR and Celcomen for spatial generative/counterfactual perturbation modeling.
-- VirTues and Spatium for spatial-protein foundation modeling and reconstruction of missing channels.
-- Spora benchmarks for virtual staining, cross-cohort and tissue-level evaluation.
-- TISSUE and other imputation studies for uncertainty-aware reconstruction and downstream consequences.
+The existing HCC discovery/ICI cohorts have already been used to define immune-depleted, compartmentalized and enriched architectures, spatial immune neighborhoods, the prognostic relevance of an enriched region, and myeloid/T-cell relationships. Other HCC papers have reported stromal FAP-alpha associations and TAM–MAIT dysfunction at the invasive margin. Therefore, we must not present any of these broad themes as novel in themselves.
 
-VirTues already evaluates whether reconstructed marker channels preserve downstream cell phenotyping under marker masking. Therefore the narrower candidate is specifically the **counterfactual intervention-decision consequence** of virtual marker reconstruction: whether the signed target set changes and whether the target set's held-out model-predicted objective changes, not simply whether reconstructed markers or cell phenotypes are accurate.
+The current 42-patient ICI cohort includes 27 SD, 10 PD and 5 PR patients in the derived clinical table. A complex PR classifier is not justified by five PR cases. The 84-vs-86 ROI discrepancy (ICI_24 and ICI_39) remains an explicit gate. The published cohort is useful for reproducible exploratory analysis, but alone cannot demonstrate independent discovery or validation of mechanisms already described in the source paper.
 
-This distinction is plausible but not yet confirmed by an exhaustive prior-art review.
+## Primary analysis sequence
 
-## Hypotheses to test
+1. **Freeze a measurable biological phenotype before inspecting response labels.** Start with source-backed cell/compartment identity and marker mapping. If labels are ambiguous, do not infer them from integer codes.
+2. **Create patient-level summaries.** ROIs, cells and tiles are nested measurements, not independent outcomes. Aggregate using a predeclared rule or use a justified hierarchical model.
+3. **Compare against simple baselines.** At minimum: total immune/cytotoxic abundance, each marker separately, regularized additive features, and a simple neighbourhood-frequency measure. The candidate spatial coupling score must add interpretable information beyond these baselines.
+4. **Quantify uncertainty and influence.** Report effect size and confidence intervals, multiplicity correction, patient-level resampling, leave-one-patient-out direction stability, missingness, and negative controls.
+5. **Validate independently.** Prefer an independent permitted HCC spatial cohort with usable marker overlap; otherwise use orthogonal published/experimental evidence and state clearly that it is not an independent outcome validation. Cohort/checkpoint training exposure must be disclosed.
+6. **Test mechanism separately.** An association or model counterfactual is not a causal effect. Claims that a cell interaction drives immune escape require orthogonal experimental evidence.
 
-1. Marker reconstruction accuracy and counterfactual recommendation fidelity may diverge: similar marker-level errors may lead to different signed target sets.
-2. Whole-channel masking, which mimics real assay-panel differences, may distort recommendations more than cell-wise random masking at comparable missing fractions.
-3. A validation-calibrated reliability/abstention rule may identify recommendations with lower disagreement or lower model-based reference regret, at the cost of reduced recommendation coverage.
+## AI role
 
-No result is assumed in advance.
+AI can support discovery by learning or ranking multivariate cell-state/spatial relationships, identifying feature interactions not captured by additive baselines, and prioritizing falsifiable hypotheses. It must not invent cell identities, infer channel ordering from expected biology, or be treated as ground truth. A foundation model is optional; direct outcome-blind image/cell analysis may be the more defensible first step if the VirTues input-compatibility gate remains blocked.
 
-## Study scope
+The missing-marker / counterfactual recommendation-fidelity analysis is now **secondary**. It may strengthen robustness evaluation but does not replace the biological objective.
 
-- Spatial-proteomics panel missingness and virtual staining.
-- A published and reproducible counterfactual target-discovery baseline (Morpheus-style if compatible, or a clearly labelled surrogate if the original implementation cannot be fairly reproduced).
-- Candidate data from the public spora collection or another cohort with explicit terms and required markers.
-- Patient/core-grouped split and evaluation; cells/tiles are nested measurements, not independent patients.
-- Full measured-channel reference, no-imputation baseline, simple imputation baseline, and foundation-model reconstruction condition.
-- Secondary clinical response datasets only if marker overlap and endpoint interpretation support a fair exploratory analysis.
+## Hard data gates
 
-## Primary measures
+- Exact panel-plane mapping with source evidence.
+- Source-defined cell/stromal/tumour mask semantics and representative overlays.
+- Resolution of ICI_24 / ICI_39 ROI discrepancies or exclusion under a frozen, outcome-independent rule.
+- Documented image preprocessing and appropriate input compatibility.
+- Clinical outcome dictionary, including event/censor definitions, verified from source metadata.
+- Model-training exposure and licence review before any held-out-model claim.
+- Frozen feature definitions, outcomes, contrasts, thresholds and statistical plan before response-linked analysis.
 
-- Signed target-set Jaccard similarity between the full-measurement reference and reconstructed-panel strategy.
-- Signed precision/recall and direction-flip rate.
-- Difference in held-out patient-level model-predicted CD8+ infiltration uplift.
-- Marker-level MAE/RMSE/correlation as secondary measures.
-- Optional coverage-versus-error/regret curve for an abstention rule.
+## Go / no-go criteria
 
-All uplift is model-predicted unless independently measured in an intervention experiment. Agreement with a full-measurement model is not a known biological ground truth.
+A candidate biological finding proceeds only if it is interpretable, adds value beyond simpler explanations, survives prespecified sensitivity analyses and patient-level uncertainty analysis, and is corroborated in independent data or orthogonal evidence. If any criterion fails, the correct result is a negative/feasibility conclusion, not a post-hoc marker claim.
 
-## Data and implementation gates
-
-1. Read the full prior art on VirTues, Spatium, Spora, Celcomen, SPAD-CFR, Morpheus and counterfactual robustness.
-2. Audit rigamonti2024integrating first as a potential held-out cohort (spora lists 108 patients / 158 IMC images and CD8 T-cell annotation), but verify panel target suitability, exact data terms and use of a VirTues checkpoint trained without the cohort. Audit hoch2022multiplexed as a biologically relevant development cohort, with explicit handling of possible VirTues exposure.
-3. Confirm whether any foundation model was trained on the selected cohort; use a documented holdout or leave-one-dataset-out setup to avoid data leakage.
-4. Reproduce a small baseline and one masked-marker reconstruction example before developing the full benchmark.
-5. Decide if a genuine contribution remains after testing the pipeline against prior methods.
-
-## Out of scope
-
-- Claims of clinical treatment efficacy or causal target validation from observed marker associations.
-- Direct pooling of spatial protein profiles and bulk RNA-seq.
-- Reuse or redistribution of data without verified permission.
-- Claims of novelty, patentability, or clinical utility before evidence.
-
-## Decision
-
-**Conditional GO for a feasibility pilot. No-go for claiming novelty until exact downstream intervention-recommendation fidelity is searched and a permitted dataset can support the test.**
+**Current status: hypothesis and executable analysis scaffolding only. No marker combination, causal mechanism, independent validation, clinical utility, novelty, or patentability is established.**

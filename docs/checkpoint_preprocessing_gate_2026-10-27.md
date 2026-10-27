@@ -12,7 +12,7 @@ Sources: [Zenodo HCC ICI cohort, record 10794904](https://zenodo.org/records/107
 
 ## 2. Candidate model and cohort-exposure decision
 
-**Use `virtues-imc14` as the candidate checkpoint; exclude `virtues-sp32` from a held-out HCC evaluation.** The published VirTues methods describe the HCC ICI study by Salié et al. as one of seven additional IMC cohorts added to the expanded 32-cohort multi-technology corpus, whereas the released `virtues-imc14` is described as an IMC-only checkpoint trained on 14 IMC datasets. The expanded `virtues-sp32` corpus includes these additional cohorts, so it is not appropriate for claiming held-out HCC transfer.
+**Exclude `virtues-sp32` from a held-out HCC evaluation. Treat `virtues-imc14` as the leading candidate, not yet fully exposure-cleared.** The published VirTues methods place the Salié HCC ICI study among additional IMC cohorts in the expanded 32-cohort multi-technology corpus. Therefore `virtues-sp32` is directly exposed to HCC and cannot support a held-out HCC transfer claim. The published model card describes `virtues-imc14` as an IMC-only checkpoint trained on 14 datasets, but the exact checkpoint-specific 14-dataset training manifest was not available in the inspected materials. We must obtain and check that manifest before asserting definitively that `virtues-imc14` had no HCC-cohort exposure.
 
 Checkpoint pin recorded from the specific Hugging Face file page:
 - Repository: `bunnelab/virtues`
@@ -22,7 +22,7 @@ Checkpoint pin recorded from the specific Hugging Face file page:
 - Xet hash: `4ce9adfb786c209633ad356d9a92537ab08b22f166f225b44cb272470bec07bc`
 - Published weight licence: CC BY-NC 4.0; use is non-commercial and requires compliance with that licence.
 
-This is a **publication-level no-direct-cohort-overlap decision**, not a substitute for recording the actual local file SHA-256 and the exact source commit when downloading. Verify that the local checkpoint matches the values above before inference. Do not use the SHA reported for the root `model.safetensors` as an identity for another file unless they match exactly.
+This is a pinned public file identity, not proof of training-cohort eligibility. A new tool, `scripts/verify_virtues_checkpoint.py`, now verifies the local file against the pinned SHA-256 and blocks any mismatch. Before any HCC biological evaluation, also obtain the exact training manifest for this checkpoint and document cohort overlap. Do not use the SHA reported for the root `model.safetensors` as an identity for another file unless they match exactly.
 
 Sources: [VirTues paper, Nature (2026)](https://www.nature.com/articles/s41586-026-10884-y); [official model repository](https://huggingface.co/bunnelab/virtues); [pinned imc14 file](https://huggingface.co/bunnelab/virtues/blob/9d1250295536cc8c72360677e3db86a7b849e5cd/virtues-imc14/model.safetensors).
 
@@ -38,9 +38,10 @@ Decision:
 ## 4. Remaining hard gates before a biological claim
 
 1. Run the panel validator on the actual `ICICohort_panel.xlsx` in the existing Colab and retain the JSON/CSV result. The structural audit confirms 45 channels first in every inspected image; that does not by itself independently prove marker names are ordered identically to image planes.
-2. Obtain an authoritative encoding for values 3–9 in `ICI_stromamasks`, or keep stromal compartment analyses disabled.
-3. Run the outcome-blind normalized-domain pilot, if the panel and checkpoint gates pass.
-4. Any later outcome analysis is exploratory with only five PR cases, patient-level aggregation and patient-grouped uncertainty. No robust target or clinical performance claim is established until independently evaluated.
+2. Obtain the exact training-data manifest for `virtues-imc14`; until then its HCC exposure is provisional, not confirmed.
+3. Obtain an authoritative encoding for values 3–9 in `ICI_stromamasks`, or keep stromal compartment analyses disabled.
+4. After those checks, run the outcome-blind normalized-domain pilot. The official preprocessing reproduction remains blocked on the released normalized TIFFs unless the original transformation is established.
+5. Any later outcome analysis is exploratory with only five PR cases, patient-level aggregation and patient-grouped uncertainty. No robust target or clinical performance claim is established until independently evaluated.
 
 ## Status vocabulary
 

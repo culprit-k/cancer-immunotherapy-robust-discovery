@@ -88,3 +88,18 @@ python scripts/validate_hcc_roi_crosswalk.py \
 Adjust `--images-dir` to the actual image folder in the existing workspace. The script's pass means only that the supplied crosswalk is internally complete and marked resolved with source references; it cannot independently authenticate those source references. No crosswalk has been populated or validated in this environment because the private workbook, clinical table, and image inventory are not mounted here.
 
 The HCC CI workflow was extended to compile this script and run its unit tests. The workflow run for the latest commit must be checked before claiming these new tests passed.
+
+
+## Reconciled patient-level ROI inventory from available audit files (2026-10-27)
+
+I compared the extracted Supplementary Table 3 patient rows with the 86-row structural TIFF inventory already available in the project. The analysis found 42 clinical patient rows and 42 unique patient prefixes represented among 86 image files. Every image prefix matches a patient row; no clinical patient is absent from the image inventory. The sum of Table 3's `No. of ROIs` entries is 84, compared with 86 image files.
+
+The only count conflicts are:
+- `ICI_24`: Table 3 reports 2 ROIs; the structural inventory contains `ICI_24_ROI1`, `ICI_24_ROI2`, and `ICI_24_ROI3`.
+- `ICI_39`: Table 3 reports 1 ROI; the inventory contains `ICI_39_ROI1` and `ICI_39_ROI2`.
+
+The publication's description of the ICI cohort reports 86 ROIs, and the filename prefixes explicitly identify their patient. Therefore, the **patient mapping is resolved for inventory purposes**, but the supplementary ROI-count discrepancy remains an audit caveat. The derived crosswalk is stored at `data/derived/hcc_roi_patient_crosswalk_2026-10-27.csv`; the quantitative reconciliation is stored at `data/derived/hcc_roi_count_reconciliation_2026-10-27.json`.
+
+Important analysis constraint: Supplementary Table 3 outcomes are patient-level. Do not interpret per-ROI images as independent patient outcomes; aggregate ROI-level imaging features to the patient level before outcome modelling, and split/evaluate at patient level. The crosswalk's `clinical_roi_id` is the ROI ordinal parsed from the released filename, not a separate source-provided ROI clinical record.
+
+Sources: [Zenodo ICI cohort record](https://zenodo.org/records/10794904) describes the 42-patient dataset, channel-per-stack images, and panel file; [Salié et al., Gut](https://gut.bmj.com/content/74/3/451) provides the published cohort context.

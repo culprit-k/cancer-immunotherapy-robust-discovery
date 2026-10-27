@@ -13,7 +13,8 @@ from pathlib import Path
 
 PINNED_REPOSITORY = "bunnelab/virtues"
 PINNED_PATH = "virtues-imc14/model.safetensors"
-PINNED_REVISION = "9d1250295536cc8c72360677e3db86a7b849e5cd"
+# Keep this aligned with resolve_virtues_imc14_checkpoint.py and the decision memo.
+PINNED_REVISION = "43fd00fce052c46f9e0cc1a87f42806620632319"
 PINNED_SHA256 = "714efed862f4a4b5cfd13f91e1ab8a7589f1295bd1735f827b4f8d4806cde28f"
 
 

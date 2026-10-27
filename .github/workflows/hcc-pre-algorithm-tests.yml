@@ -20,9 +20,10 @@ jobs:
         run: python -m pip install pandas openpyxl
       - name: Compile local QC scripts
         run: |
-          python -m py_compile scripts/validate_hcc_manifest.py scripts/hcc_tensor_qc.py scripts/hcc_preinference_preflight.py scripts/hcc_reconstruction_pilot_gate.py scripts/validate_hcc_panel.py
+          python -m py_compile scripts/validate_hcc_manifest.py scripts/hcc_tensor_qc.py scripts/hcc_preinference_preflight.py scripts/hcc_reconstruction_pilot_gate.py scripts/validate_hcc_panel.py scripts/validate_hcc_roi_crosswalk.py
           bash -n scripts/bootstrap_hcc_public_data.sh
       - name: Run metadata-validator unit tests
         run: |
           python -m unittest discover -s tests -p 'test_validate_hcc_manifest.py' -v
           python -m unittest discover -s tests -p 'test_validate_hcc_panel.py' -v
+          python -m unittest discover -s tests -p 'test_validate_hcc_roi_crosswalk.py' -v

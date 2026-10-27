@@ -19,6 +19,14 @@ import torch.nn.functional as F
 {IMPORT}
 
 class Example:
+    def __init__(self):
+        self.dropout = 0.0
+        self.training = False
+        self.embed_dim = 16
+        self.num_heads = 4
+        self.head_dim = 4
+        self.W_o = torch.nn.Identity()
+
     def forward(self, Q, K, V, B, L, S, cu_seq_len, max_seq_len):
 {START}
         attn_out = flash_attn_varlen_qkvpacked_func(
@@ -112,3 +120,35 @@ def test_cli_apply_creates_backup_and_patches(tmp_path, source_fixture):
     patched = target.read_text(encoding="utf-8")
     assert BEGIN_MARKER in patched
     compile(patched, str(target), "exec")
+
+
+def test_packed_cpu_fallback_matches_independent_sdpa_segments(source_fixture):
+    import torch
+    import torch.nn.functional as F
+
+    namespace = {}
+    exec(compile(patch_source(source_fixture), "patched_attention_fixture.py", "exec"), namespace)
+    example = namespace["Example"]()
+
+    torch.manual_seed(123)
+    q = torch.randn(1, 7, 16)
+    k = torch.randn(1, 7, 16)
+    v = torch.randn(1, 7, 16)
+    cu = torch.tensor([0, 3, 7], dtype=torch.int32)
+
+    actual = example.forward(q, k, v, 1, 7, 7, cu, 4)
+
+    expected_chunks = []
+    for start, end in ((0, 3), (3, 7)):
+        qs = q[:, start:end, :].view(1, end - start, 4, 4).transpose(1, 2)
+        ks = k[:, start:end, :].view(1, end - start, 4, 4).transpose(1, 2)
+        vs = v[:, start:end, :].view(1, end - start, 4, 4).transpose(1, 2)
+        expected = F.scaled_dot_product_attention(qs, ks, vs, dropout_p=0.0)
+        expected_chunks.append(
+            expected.transpose(1, 2).contiguous().view(1, end - start, 16)
+        )
+    reference = torch.cat(expected_chunks, dim=1)
+
+    assert actual.shape == (1, 7, 16)
+    assert torch.isfinite(actual).all()
+    torch.testing.assert_close(actual, reference, rtol=1e-6, atol=1e-6)

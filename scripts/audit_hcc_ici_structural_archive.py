@@ -228,7 +228,8 @@ def main() -> int:
             except Exception:
                 image_read_errors += 1
                 image_spatial = None
-                del image if "image" in locals() else None
+                if "image" in locals():
+                    del image
                 continue
 
             for kind in ("cell", "stroma"):
@@ -316,7 +317,7 @@ def main() -> int:
         and report["image_tensor_qc"].get("image_read_errors") == 0
         and report["image_tensor_qc"].get("all_images_finite_count") == 86
         and report["image_tensor_qc"].get("images_with_all_values_in_0_1_count") == 86
-        and report["image_tensor_qc"].get("observed_channel_count_distribution") == {"45": 86}
+        and report["image_tensor_qc"].get("observed_channel_count_distribution") == {45: 86}
         and report["mask_shape_alignment"].get("cell_mask_shape_matches_image_count") == 86
         and report["mask_shape_alignment"].get("stromal_mask_shape_matches_image_count") == 86
         and report["mask_shape_alignment"].get("mask_read_errors_or_non_2d") == 0

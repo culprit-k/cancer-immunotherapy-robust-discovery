@@ -50,3 +50,16 @@ Decision:
 - `PINNED CANDIDATE`: `virtues-imc14` model file revision and SHA as above.
 - `BLOCKED`: official preprocessing reproduction on normalised inputs and numeric stromal-mask class mapping.
 - `NOT YET RUN`: panel validation against the actual workbook in Colab, and any VirTues inference on the HCC images.
+
+
+## Local checkpoint verification command
+
+After the exact file is available in the existing Colab runtime, run:
+
+```bash
+python scripts/verify_virtues_checkpoint.py \\
+  --weights /path/to/virtues-imc14/model.safetensors \\
+  --out-json /content/hcc_virtues_audit/next_gate/virtues_imc14_hash_check.json
+```
+
+Replace the weights path with the actual file path; the script does not download weights. A passing hash verifies only that the local bytes match the pinned public file. It does not establish the exact training-cohort manifest or preprocessing compatibility.
